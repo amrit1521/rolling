@@ -1,0 +1,31 @@
+
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.gotmytag.pointhunter" version="1.1.9" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
+  <name>Point Hunter</name>
+  <description>
+    An app for looking up your hunting preference points
+  </description>
+  <author email="support@gotmytag.com" href="https://test.gotmytag.com">
+    Ryan Oldham
+  </author>
+  <!-- Override PhoneGap default configurations here -->
+  <preference name="UIWebViewBounce" value="false" />
+  <preference name="AutoHideSplashScreen" value="true" />
+  <preference name="load-url-timeout" value="60000" />
+  <preference name="KeyboardDisplayRequiresUserAction" value="false" />
+  <preference name="ShowSplashScreenSpinner" value="false" />
+  <access origin="https://test.gotmytag.com" />
+  <access origin="*" />
+  <!-- Default Icon -->
+  <icon src="icon.png" width="144" height="144" />
+  <!-- iOS Icons and splash pages -->
+  <icon src="icons/ios/AppIcon57x57.png"   gap:platform="ios" width="57"  height="57"  />
+  <icon src="icons/ios/AppIcon72x72.png"   gap:platform="ios" width="72"  height="72"  />
+  <icon src="icons/ios/AppIcon144x144.png" gap:platform="ios" width="144" height="144" />
+  <!-- Android Icons and splash pages -->
+  <icon src="icons/android/ldpi.png" gap:platform="android" gap:density="ldpi" />
+  <icon src="icons/android/mdpi.png" gap:platform="android" gap:density="mdpi" />
+  <icon src="icons/android/hdpi.png" gap:platform="android" gap:density="hdpi" />
+  <icon src="icons/android/xhdpi.png" gap:platform="android" gap:density="xhdpi" />
+  <icon src="icons/android/xxhdpi.png" gap:platform="android" gap:density="xxhdpi" />
+</widget>

@@ -1,0 +1,93 @@
+#AdminReportsUsers.container( ng-controller="AdminReportsUsers" )
+  .page-header
+    h3 Users
+  .row
+    .col-md-12
+      form.form-inline(style="margin-bottom: 15px;")
+        .form-group
+          input.form-control( type='text', placeholder="quick search text ...", ng-model='quicksearch')
+        .form-group
+          button.btn.btn-primary(ng-click="runQuickSearch(quicksearch, false)") Search
+        .form-group
+          button.btn.btn-primary(ng-click="runQuickSearch(quicksearch, true)") Show All
+        .div(ng-show="adminFullEdit()")
+          .form-group.pull-right
+            button.btn.btn-primary(ng-click="addNewUser()") Add New User
+          .form-group.pull-right
+            button.btn.btn-primary(ng-click="importUsers()") Import Users
+
+  //.row(ng-show="showTabs")
+    .col-md-12
+      ul.nav.nav-tabs
+        li
+          a.gmt-reporttabs(ng-click="toogleTab($event, 'users')", data-toggle="tab") Users & Members
+        li
+          a.gmt-reporttabs(ng-click="toogleTab($event, 'family')", data-toggle="tab") Family
+  .row(ng-show="showGrid")
+    .col-md-12
+      img( src="img/spinner.gif", ng-show="loading" )
+      form.form-inline
+        .form-group(ng-hide="loading", style="margin-top: 10px;")
+          .col-md-push-1
+            select#savedViewsGrid.form-control.col-md-12(ng-show="customViews && customViews.length > 0", ng-model="customView", ng-change="loadGridView(customView)", ng-options="view as view.name for view in customViews" )
+              option( value="" ) Select a Report
+        .pull-right
+          .form-group(ng-hide="loading", style="margin-top: 10px; margin-right: 30px;")
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="this_week", ng-change="applyDateFilterType(dateFilterType)", style="margin-right:5px;")
+              | This Week
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="this_month", ng-change="applyDateFilterType(dateFilterType)", style="margin-right:5px;")
+              | This Month
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="this_year", ng-change="applyDateFilterType(dateFilterType)", style="margin-right:5px;")
+              | This Year
+          .form-group(ng-hide="loading", style="margin-top: 10px; margin-right: 10px;")
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="last_week", ng-change="applyDateFilterType(dateFilterType)", style="margin-right:5px;")
+              | Last Week
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="last_month", ng-change="applyDateFilterType(dateFilterType)", style="margin-right:5px;")
+              | Last Month
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="last_year", ng-change="applyDateFilterType(dateFilterType)", style="margin-right:5px;")
+              | Last Year
+  div#reportsUserGrid(ng-show="showGrid")
+
+  .row(ng-show="showTree")
+    .col-md-12
+      img( src="img/spinner.gif", ng-show="loadingTree" )
+      form.form-inline(ng-hide="loadingTree")
+        .pull-right
+          .form-group(ng-hide="loading", style="margin-top: 10px; margin-right: 30px;")
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="toogleTree", value="expand", ng-change="toogleTreeExpand(toogleTree)", style="margin-right:5px;")
+              | Expand All
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="toogleTree", value="collapse", ng-change="toogleTreeExpand(toogleTree)", style="margin-right:5px;")
+              | Collapse All
+          .form-group(ng-hide="loading", style="margin-top: 10px; margin-right: 30px;")
+            label.control-label(style="margin-left: 5px;")
+              input(type="checkbox", ng-model="membersAndRepsOnly", ng-click="refreshTreeView($event, membersAndRepsOnly)", style="margin-right:5px;")
+              | Exclude Prospects
+        .pull-left(style="margin-top:5px; margin-bottom:10px;")
+          .form-group(ng-hide="loading", style="margin-top: 10px; margin-right: 30px;")
+            span
+              | Color Key: &nbsp;
+            span.rbo_am
+              | AM, &nbsp;
+            span.rbo_shs
+              | SHS, &nbsp;
+            span.rbo_fshs
+              | FSHS, &nbsp;
+            span.rbo_member
+              | Member, &nbsp;
+            span
+              | Prospect
+
+
+  div#reportsUserTree(ng-show="showTree")
+
+
+
+  div#treeView

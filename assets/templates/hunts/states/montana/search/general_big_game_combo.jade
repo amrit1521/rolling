@@ -1,0 +1,29 @@
+.row
+  .form-group
+
+    .checkbox
+      label
+        input( type="checkbox", ng-model="hunt.choice.generalCombo", ng-true-value="'salesItems[2009100_20160301_20170228].checked'" )
+        |  Purchase General Combo
+
+  .form-group.select-list( ng-show="hunt.enabled" )
+
+    .radio
+      label
+        input( type="radio" name="unsuccessfulPermitQuestions" value="" ng-model="hunt.params.unsuccessfulPermitQuestions" )
+        |  Not applying for elk permit
+
+    .radio
+      label
+        input( type="radio" name="unsuccessfulPermitQuestions" value="K" ng-model="hunt.params.unsuccessfulPermitQuestions" )
+        |  If successful in drawing a Big Game Combination or Elk Combination license and unsuccessful in drawing a special elk permit, I wish to retain my Big Game Combination or Elk Combination license and understand that I have a "General" elk license and can hunt elk in Montana following the regulations for General Elk. (Big Game Combinations include general Elk and Deer licenses)
+
+    .radio
+      label
+        input( type="radio" name="unsuccessfulPermitQuestions" value="C" ng-model="hunt.params.unsuccessfulPermitQuestions" )
+        |  If successful in drawing a Big Game or Elk Combination license and unsuccessful in drawing a special elk permit, I wish to receive an 80% refund of the license.
+
+    .radio
+      label
+        input( type="radio" name="unsuccessfulPermitQuestions" value="E" ng-model="hunt.params.unsuccessfulPermitQuestions" )
+        |  If successful in drawing a Big Game Combination license and unsuccessful in drawing a special elk permit, I request a refund of $306.00 for the Elk license and will be issued a Deer Combination license. (Does not apply to Elk Combination licenses)

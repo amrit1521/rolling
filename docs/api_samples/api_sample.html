@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+	</head>
+	<body>
+
+		<div class="container">
+		    <div class="row">
+		    	<div class="col-lg-6">
+					<form id="coloradoSearch" class="form-horizontal">
+			    		<fieldset>
+			    			<legend>Lookup Colorado Points</legend>
+
+							<div class="form-group">
+								<label for="inputLastName" class="col-sm-3 control-label">Last Name</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="inputLastName" placeholder="Last Name">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="inputBirthDate" class="col-sm-3 control-label">Birth Date</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="inputBirthDate" placeholder="MM/DD/YYYY">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="inputZipCode" class="col-sm-3 control-label">Zip Code</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="inputZipCode" placeholder="Zip Code">
+								</div>
+							</div>
+
+							<button class="btn btn-primary pull-right">Search</button>
+			    		</fieldset>
+					</form>
+		    	</div>
+		    </div>
+
+		    <div class="row" id="result">
+		    </div>
+
+		    <div class="row" id="error">
+		    </div>
+		</div>
+
+		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
+
+		<script>
+			APITOKEN = "[PUT THE API TOKEN HERE]";
+
+			jQuery(document).ready(function () {
+				jQuery('#coloradoSearch').on('submit', function () {
+					var apiUrl, data;
+
+					if (APITOKEN.length == 24) {
+						alert("Please edit the source of the api_sample.html file and enter the API TOKEN where it says: " + APITOKEN);
+						return false;
+					}
+
+					jQuery('#error').empty();
+					jQuery('#result').empty();
+
+
+                    apiUrl = "https://www.huntintool.com/api/v1/points/client/state";
+					data = {
+						"token": APITOKEN,
+						"state": "Colorado",
+						"dob": moment(jQuery('#inputBirthDate').val(), 'MM/DD/YYYY').format('YYYY-MM-DD'),
+						"last_name": jQuery('#inputLastName').val(),
+						"mail_postal": jQuery('#inputZipCode').val()
+					};
+
+					jQuery.ajax({
+						"type": "POST",
+						"url": apiUrl,
+						"data": data,
+						"success": function (data, status, request) {
+							var i, table, tbody, result;
+
+							if (!data.length) {
+								jQuery('#result').append('<h1>No points found</h1>');
+								return;
+							}
+
+							result = jQuery('#result');
+
+							table = jQuery('<table class="table table-striped"></table>');
+							result.append(table);
+
+							table.append('<thead><tr><th>Animal</th><th>Points</th></tr></thead>');
+
+							tbody = jQuery('<tbody></tbody>');
+							table.append(tbody);
+
+							for (i = 0; i < data.length; i++) {
+								point = data[i];
+
+								tbody.append('<tr><td>' + point.animal + '</td><td>' + point.points + '</td></tr>');
+							}
+
+						},
+						"error": function (request, status, err) {
+							console.log("request:", request);
+							var error;
+							error = jQuery('#error');
+							error.append('<div><h3>Error status code</h3><span>' + request.status + '</span></div>');
+							error.append('<div><h3>Error message</h3><span class="error">' + request.responseJSON.error + '</span></div>');
+						}
+					});
+
+					return false;
+				});
+			});
+		</script>
+	</body>
+</html>

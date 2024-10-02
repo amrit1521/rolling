@@ -1,0 +1,14 @@
+{
+  "apps" : [
+    {
+      "name"        : "drawresult_gmt",
+      "script"      : "scripts/batch_points.coffee",
+      "instances"   : 1,
+      "exec_mode"   : "cluster",
+      "args"        : "Wyoming 53a28a303f1e0cc459000127 false -1 -1",
+      "env": {
+        "DISPLAY": ":1"
+      }
+    }
+  ]
+}

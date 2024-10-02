@@ -1,0 +1,63 @@
+.container
+  .page-header
+    h2 FAQ
+  .row(ng-hide="tenant._id == '5684a2fc68e9aa863e7bf182' || tenant._id == '54a8389952bf6b5852000007'")
+    .col-md-8
+      img( src="img/dad-with-manti-bull.jpg", class="rounded", style="max-width: 100%; float: right; width: 400px;" )
+      P
+        strong Q.
+        |  Why does PointHunter only cost $1.99?
+        br
+        strong A.
+        |  Every hunter needs this.  At $1.99 every hunter can afford PointHunter.
+      p
+        strong Q.
+        |  Why do you need my SSN Number?
+        br
+        strong A.
+        |  It isn't required to show you your points, as you can enter your customer ID for each state instead.  Supplying your SS# allows us to automatically show you your data for each state so you only have to supply your information once.  When you apply for hunts the states require your SS# so we must have it in order to submit your applications for you.  We store your data in a secure PCI compliant system.  We can assure you that it is safe.
+      P
+        strong Q.
+        |  Will GotMyTag sell or give others access to my personal information?
+        br
+        strong A.
+        |  No, GotMyTag will never share any of this information with anyone.  All of your data is kept in a secure cloud database. GotMyTag data is PCI compliant.
+      P
+        strong Q.
+        |  Why is my state, or "x" state not available.
+        br
+        strong A.
+        |  More states are in our plans.  Please contact us with any questions.
+
+      a.btn.btn-primary.col-xs-12.col-sm-6.col-md-4( href="#!/setup", ng-show="isPhoneNotAuthed()" ) Setup
+
+
+  .row(ng-show="tenant._id == '5684a2fc68e9aa863e7bf182' || tenant._id == '54a8389952bf6b5852000007'")
+    .col-md-8
+      img( src="img/dad-with-manti-bull.jpg", class="rounded", style="max-width: 100%; float: right; width: 400px;" )
+      P
+        strong Q.
+        |  Why does RADS only cost $1.99?
+        br
+        strong A.
+        |  We want every hunter to have an affordable and effective tool to access great hunts.
+      p
+        strong Q.
+        |  Why do you need my SSN?
+        br
+        strong A.
+        |  It's not required.  You can enter your customer ID for each state individually instead.  Supplying your SSN once allows RADS to automatically provide you with your data from each state.  We need your SSN the same way some states require it in order to submit your applications.  Your data is stored in a secured system to assure the information is safe.
+      P
+        strong Q.
+        |  Will RADS sell or give access to my personal information?
+        br
+        strong A.
+        |  No.  RADS will never share any of your information with anyone.  Your data is stored in a secure, cloud database.
+      P
+        strong Q.
+        |  Why are not all states available?
+        br
+        strong A.
+        |  RADS plans to add more states.  Please contact us with questions.
+
+      a.btn.btn-primary.col-xs-12.col-sm-6.col-md-4( href="#!/setup", ng-show="isPhoneNotAuthed()" ) Setup

@@ -1,0 +1,26 @@
+<% include ../head %>
+
+<%- header %>
+
+<%
+var point, state;
+for ( var i = 0; i < states.length; i++ ) {
+  state = states[i];
+%>
+
+
+<%= state.name %>
+  <% if (state.hasPoints) { %>
+Hunt | # Points | Hunt Area | Applied Date
+<%
+  for ( var j = 0; j < state.points.length; j++ ) {
+  point = state.points[j];
+  %>
+<%= point.name %> | <%= point.count %> | <%= point.area %> | <%= point.lastPoint %>
+<% }
+} else { %>
+No results found
+<% } %>
+<% } %>
+<%- footer %>
+<% include ../foot %>

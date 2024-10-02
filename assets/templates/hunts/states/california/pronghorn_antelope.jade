@@ -1,0 +1,13 @@
+div( ng-controller="HuntsOregonHunts" )
+  .invidualChoices( ng-show="!choice.group_id.length" )
+
+    .form-group
+      .col-lg-12
+        fieldset
+          legend First Choice
+          .col-md-4
+            select.form-control( ng-model="choice.FirstChoice", ng-options="option.value + ' ' + option.name for option in huntOptions[hunt._id] | orderBy:'value'" )
+              option( value="" )
+
+  .form-group( ng-include="'templates/hunts/group_id.html'" )
+  .form-group( ng-include="'templates/hunts/hunt_buttons.html'" )

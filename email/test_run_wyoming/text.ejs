@@ -1,0 +1,18 @@
+<% include ../head %>
+<br>
+License 1 2 3 Party Price
+<%
+var item;
+for (var i = 0; i < items.length; i++) {
+  item = items[i];
+%>
+<%= item.license %>
+<%= item['1'] %>
+<%= item['2'] %>
+<%= item['3'] %>
+<%= item.party %>
+<%= item.price %>
+<% } %>
+
+Total = <%= total %>
+<% include ../foot %>

@@ -1,0 +1,12 @@
+.modal-header
+  h3 This is the last page encountered while processing the application request.
+  span(ng-show="error", style="color:red") Reported errors: {{error}}
+.modal-body
+  .result-display
+    iframe( ng-src="{{pageUrl}}", style="width: 100%; height: 100%" )
+
+.modal-footer
+
+  // Right side in reverse order from how they appear
+  button.btn.btn-primary.pull-right(ng-click='ok()') Ok
+

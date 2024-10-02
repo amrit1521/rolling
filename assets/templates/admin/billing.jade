@@ -1,0 +1,92 @@
+#AdminTenants.container( ng-controller="AdminBilling" )
+  .page-header
+    h3(ng-hide='tenants.length == 1') Billing Summary
+    h3(ng-show='tenants.length == 1') {{tenants[0].name}} Billing Summary
+    img.pull-left(src='img/arrow_spinner.gif', ng-show="loading", style="margin-top:15px;")
+    span.pull-left(ng-show="loading", style="margin-top:15px;")   Loading {{currentTenant}}...
+  .row
+    .col-lg-12.col-md-12
+
+      h4.pull-left(ng-show="tenants.length == 1 && loading == false")  Usage Report
+      table.table.table-striped.table-hover( ng-show='tenants.length' )
+        thead
+          tr
+            th(ng-show='tenants.length > 1' ) Name
+            th Users Total
+            th Messages ({{thisMonth}})
+            th Draw Results ({{thisMonth}})
+            th Applications ({{thisMonth}})
+            th Messages ({{lastMonth}})
+            th Draw Results ({{lastMonth}})
+            th Applications ({{lastMonth}})
+
+        tbody
+          tr( ng-repeat="tenant in tenants | orderBy:'-billingStats.total'" )
+            td(ng-show='tenants.length > 1' ) {{tenant.name}}
+            td {{tenant.billingStats.total}}
+            td {{tenant.billingStats.messages_thisMonth}}
+            td {{tenant.billingStats.drawresults_thisMonth}}
+            td {{tenant.billingStats.applications_thisMonth}}
+            td {{tenant.billingStats.messages_lastMonth}}
+            td {{tenant.billingStats.drawresults_lastMonth}}
+            td {{tenant.billingStats.applications_lastMonth}}
+
+
+      h4.pull-left(ng-show="tenants.length == 1 && loading == false", style="margin-top:30px;")  User Report
+      table.table.table-striped.table-hover( ng-show='tenants.length == 1' )
+        thead
+          tr
+            th Users Total
+            th Users (this Week)
+            th Users (last Week)
+            th Users ({{thisMonth}})
+            th Users ({{lastMonth}})
+
+        tbody
+          tr( ng-repeat="tenant in tenants | orderBy:'-userTotal'" )
+            td {{tenant.billingStats.total}}
+            td {{tenant.billingStats.total_thisWeek}}
+            td {{tenant.billingStats.total_lastWeek}}
+            td {{tenant.billingStats.total_thisMonth}}
+            td {{tenant.billingStats.total_lastMonth}}
+
+
+      h4.pull-left(ng-show="tenants.length == 1 && loading == false", style="margin-top:30px;")  Member Report
+      table.table.table-striped.table-hover( ng-show='tenants.length == 1' )
+        thead
+          tr
+            th Member Total
+            th Members (this Week)
+            th Members (last Week)
+            th Members ({{thisMonth}})
+            th Members ({{lastMonth}})
+
+        tbody
+          tr( ng-repeat="tenant in tenants" )
+            td {{tenant.billingStats.members}}
+            td {{tenant.billingStats.members_thisWeek}}
+            td {{tenant.billingStats.members_lastWeek}}
+            td {{tenant.billingStats.members_thisMonth}}
+            td {{tenant.billingStats.members_lastMonth}}
+
+
+
+      h4.pull-left(ng-show="tenants.length == 1 && loading == false", style="margin-top:30px;")  New Members List (this month)
+      table.table.table-striped.table-hover( ng-show='tenants.length == 1' )
+        thead
+          tr
+            th Name
+            th Client Id
+            th Member Id
+            th Member Type
+            th Created
+
+        tbody
+          tr( ng-repeat="member in tenants[0].billingStats.memberList | orderBy:'-created'" )
+            td
+              a( href="#!/admin/masquerade/{{member.userId}}" ) {{member.name}}
+            td {{member.clientId}}
+            td {{member.memberId}}
+            td {{member.memberType}}
+            td {{member.created_str}}
+

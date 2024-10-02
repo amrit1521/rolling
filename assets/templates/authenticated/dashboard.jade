@@ -1,0 +1,70 @@
+.container( class="main-content" )
+
+  .user-points( ng-controller="UsersPoints", id="UsersPoints" )
+
+    //.row.text-center( ng-hide="user.dob" )
+      a.btn.btn-default( href="#!/profile", style ) To find your points, please enter the Date Of Birth in your profile
+
+
+    //.showPoints( ng-show="user.dob" )
+      .row
+        fieldset
+          legend.category Points
+            button.reload.pull-right( title = "Click to refresh points" ng-click='refresh($event)' )
+              img(src='img/reload.gif', ng-hide="refreshing")
+              span.user-search(ng-show="refreshing") searching for points... {{findingState}} &nbsp;
+              img(src='img/arrow_spinner.gif', ng-show="refreshing")
+
+        div( ng-hide="searchingUser" )
+          .col-xs-12( ng-repeat="state in states | orderBy:'name' track by state._id", ng-show='state.show' )
+            .tabContainer( ng-include="'templates/partials/state_details.html'" )
+
+          button.btn.btn-default.center-block( ng-click="showMoreStates = true", ng-hide="showMoreStates" ) Find more points
+          .col-xs-12(ng-show="showMoreStates")
+            h4 Input the additional information needed to find your points in the following states:
+            .row.tabContainer( ng-repeat="state in states | orderBy:'name' track by state._id", ng-show="showStateForm(state)" )
+              fieldset
+                legend {{state.name}}
+                form( ng-submit="findStatePoints(state, user)" )
+                  .col-xs-12( ng-include="stateForm(state)" )
+                  button.btn.btn-default.inline-buttons Submit&nbsp;
+                    img( src="img/ajax-loader.gif", ng-show="state.searchingUser" )
+                  button.btn.btn-default.inline-buttons(ng-click="clearCID($event, state)" style="float: right;") Clear State Id&nbsp;
+                    img( src="img/ajax-loader.gif", ng-show="state.searchingUser" )
+
+        .col-md-6( ng-show="searchingUser" )
+          h1.center Loading&nbsp;
+            img( src="img/spinner.gif" )
+
+  .user-reminders( ng-controller="UserReminders" )
+
+    .row
+      fieldset
+        legend.category Reminders
+          //button.white-settings.pull-right( title="Click to manage reminders" ng-click="showSettings()" )
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+
+
+        // Method of notification
+        // Timing of notification
+        // States of concern
+        // Animals of concern
+
+        .tabContainer
+          fieldset( style="margin-top: 2em;", ng-repeat="state in reminderStates" )
+            legend {{state.name}}
+
+            table.table-striped.col-xs-12
+              tbody
+                tr( ng-repeat="reminder in state.reminders" )
+                  td
+                    | {{reminder.title}}
+
+                    br
+
+                    | Opens:&nbsp;
+                    strong.smaller {{reminder.start | nicedate}}
+                    | &nbsp;Closes:&nbsp;
+                    strong.smaller {{reminder.end | nicedate}}

@@ -1,0 +1,37 @@
+div( ng-controller="HuntsNevadaHunts" )
+  div( ng-controller="HuntsNevadaNRCaliforniaBighorn" )
+    .invidualChoices( ng-show="!choice.group_id.length" )
+
+      .form-group
+        .col-lg-12
+          fieldset
+            legend First Choice
+            .col-md-4
+              select.form-control( ng-model="choice.Ans1", ng-options="option.data.hunterChoice + ' / ' + option.data.hunt + ' / ' + option.data.unitGroupDescription + ' / ' + option.data.weapon for option in huntOptions" )
+                option( value="" )
+
+      .form-group
+        .col-lg-12
+          fieldset
+            legend Second Choice
+            .col-md-4
+              select.form-control( ng-model="choice.Ans2", ng-options="option.data.hunterChoice + ' / ' + option.data.hunt + ' / ' + option.data.unitGroupDescription + ' / ' + option.data.weapon for option in huntOptions" )
+                option( value="" )
+
+      .form-group
+        .col-lg-12
+          fieldset
+            legend Third Choice
+            .col-md-4
+              select.form-control( ng-model="choice.Ans3", ng-options="option.data.hunterChoice + ' / ' + option.data.hunt + ' / ' + option.data.unitGroupDescription + ' / ' + option.data.weapon for option in huntOptions" )
+                option( value="" )
+
+      .form-group
+        .col-lg-12
+          fieldset
+            legend Third Choice
+            .col-md-4
+              select.form-control( ng-model="choice.Ans4", ng-options="option.data.hunterChoice + ' / ' + option.data.hunt + ' / ' + option.data.unitGroupDescription + ' / ' + option.data.weapon for option in huntOptions" )
+                option( value="" )
+
+    .form-group( ng-include="'templates/hunts/hunt_buttons.html'" )

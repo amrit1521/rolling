@@ -1,0 +1,75 @@
+#AdminReminder.container( ng-controller="AdminReminder" )
+  .row
+    .col-lg-11.col-md-11
+      img( src="img/spinner.gif", ng-show="loadingReminder" )
+      .well
+        form.form-horizontal(ng-submit="submit($event, reminder)" )
+          fieldset
+            legend Item: {{reminder.title}}
+              button.btn.btn-primary.pull-right(ng-click="sendTestAndSave($event, reminder, false)") Send Test
+              button.btn.btn-primary.pull-right(ng-click="sendTestAndSave($event, reminder, true)", style="margin-right:15px;") Save and Send Test
+              button.btn.btn-primary.pull-right(ng-click="validateAndSave($event, reminder)", style="margin-right:15px;") Save and Validate
+
+          .form-group()
+            label.col-lg-4.control-label Reminder Type
+            .col-lg-8
+              select#selectType.form-control( ng-model="reminder.reminderType", ng-options="type.value as type.name for type in reminderTypes" )
+                option( value="" )
+          .form-group()
+            label.col-lg-4.control-label Reminder Is Active
+            .col-lg-8
+              input.form-control( type='checkbox', ng-model="reminder.active" )
+          .form-group()
+            label.col-lg-4.control-label State
+            .col-lg-8
+              select#selectState.form-control( ng-model="reminder.state", ng-options="state for state in states" )
+                option( value="" ) State
+          .form-group()
+            label.col-lg-4.control-label Title
+            .col-lg-8
+              textarea.form-control.short(ng-model="reminder.title")
+          .form-group()
+            label.col-lg-4.control-label Open Date
+            .col-lg-8
+              input.kendo-date-time-picker.form-control(ng-change="changeDates($event, reminder)", type='date', ng-model="reminder.start" )
+          .form-group()
+            label.col-lg-4.control-label End Date
+            .col-lg-8
+              input.kendo-date-time-picker.form-control(ng-change="changeDates($event, reminder)", type='date', ng-model="reminder.end" )
+          .form-group()
+            label.col-lg-4.control-label Text Start Msg
+            .col-lg-8
+              textarea.form-control.short(ng-model="reminder.txtStart")
+          .form-group()
+            label.col-lg-4.control-label Text End Msg
+            .col-lg-8
+              textarea.form-control.short(ng-model="reminder.txtEnd")
+          .form-group()
+            label.col-lg-4.control-label Send Open On
+            .col-lg-8
+              input.kendo-date-time-picker.form-control(type='date', ng-model="reminder.send_open" )
+          .form-group()
+            label.col-lg-4.control-label Send Close On
+            .col-lg-8
+              input.kendo-date-time-picker.form-control(type='date', ng-model="reminder.send_close" )
+          .form-group()
+            label.col-lg-4.control-label Website Link
+            .col-lg-8
+              input.form-control( type='text', ng-model="reminder.website_link" )
+          .form-group()
+            label.col-lg-4.control-label Test User
+            .col-lg-8
+              select#selectUser.form-control( ng-model="reminder.testUserId", ng-options="testUser._id as testUser.displayName for testUser in testUsers" )
+                option( value="" )
+          .form-group()
+            label.col-lg-4.control-label Return message from last test
+            .col-lg-8
+              input.form-control(ng-readonly="true" type='text', ng-model="reminder.testLastMsg" )
+          .form-group()
+            label.col-lg-4.control-label Validated On
+            .col-lg-8
+              input.kendo-date-time-picker.form-control(type='date', ng-model="reminder.validatedOn" )
+
+
+          button.btn.btn-primary.pull-right(style="margin-top: 30px;") Save
+          button.btn.btn-primary.pull-left(style="margin-top: 30px;", ng-click="cancel($event)") Cancel

@@ -1,0 +1,13 @@
+.form-group.select-list
+
+  select.form-control(ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice1_hunt_id", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+    option( value="" )
+
+  select.form-control(ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice2_hunt_id", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+    option( value="" )
+
+  select.form-control(ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice3_hunt_id", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+    option( value="" )
+
+  label.form-control-small(ng-disabled="huntNotEditable(hunt)") Outfitter #: O-
+    input( type="text", ng-model="hunt.choice.outfitter_num" )

@@ -1,0 +1,20 @@
+.enclose-group
+  | North Dakota
+  .form-group
+    label.col-lg-4.control-label( for='firstName' ) First Name
+    .col-lg-8
+      input#firstName.form-control( type='text', ng-model="user.first_name" )
+  .form-group
+    label.col-lg-4.control-label( for='lastName' ) Last Name
+    .col-lg-8
+      input#lastName.form-control( type='text', ng-model="user.last_name" )
+  .enclose-group
+    .form-group
+      label.col-lg-4.control-label( for='inputSSN' ) Social Security #
+      .col-lg-8
+        input#inputSSN.form-control( type='text', ng-model="user.ssn", placeholder="XXX-XX-XXXX" )
+    .form-group
+      label.center - OR -
+      label.col-lg-4.control-label( for='inputSSN4' ) Last 4 Digits of SSN #
+      .col-lg-8
+        input#inputSSN4.form-control( type='text', ng-model="user.ssnx", placeholder="XXXX" )

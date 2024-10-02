@@ -1,0 +1,15 @@
+.modal-header
+  h3 Please click on the correct captcha images and hit ok when complete.
+  span note: This make take a few iterations to complete. {{hey}}
+.modal-body
+  .result-display
+    h1(ng-hide="application.tmpScreen") Waiting for login page...
+    img(ng-click="imgClick($event)", ng-show="application.tmpScreen", data-ng-src="{{application.tmpScreen}}")
+
+.modal-footer
+
+  // Right side in reverse order from how they appear
+  button.btn.btn-primary.pull-right(ng-click='ok()') Continue
+
+  // Left side
+  button.btn.btn-default.pull-left(ng-click='cancel()') Cancel

@@ -1,0 +1,65 @@
+.container( ng-controller="Register" )
+  .page-header
+  .row
+    .col-lg-6.col-md-6
+      .well
+        form.form-horizontal( ng-submit="submit(user, state)" )
+          fieldset
+            legend Register New User
+            fieldset
+              label Entering this data will show you your points in many states:
+              .form-group
+                label.col-lg-4.control-label( for='inputPostal' ) Zip Code
+                .col-lg-8
+                  input#inputPostal.form-control( type='text', placeholder="Zip Code", ng-model="user.mail_postal" )
+              .form-group( ng-show="showStates" )
+                label.col-lg-4.control-label( for='states' ) I have points in
+                .col-lg-8
+                  select#states.form-control.btn-info( ng-model="stateTemplate", ng-options="state for state in pointStates" )
+              .form-group
+                label.col-lg-4.control-label( for='inputBirthDate' ) Birth Date
+                .col-lg-8
+                  input#inputBirthDate.form-control(type='date', placeholder="MM/DD/YYYY", ng-model="user.dob" )
+
+              .state-info( ng-include="getStatePage(stateTemplate)" )
+
+            br
+            fieldset
+              label Enter your new user login credentials:
+              .form-group
+                label.col-lg-4.control-label( for='inputEmail' ) Email
+                .col-lg-8
+                  input#inputEmail.form-control( type='email', required='required', placeholder='Email', ng-model="user.email" )
+              .form-group
+                label.col-lg-4.control-label( for='inputPassword' ) Password
+                .col-lg-8
+                  input#inputPassword.form-control( type='password', required='required', placeholder='New User Password', ng-model="user.password")
+
+            br
+            .input-group
+              label( for='inputCheckbox' )
+                input(type='checkbox', ng-click="toggleNoPointsUser()")
+                |  Sign-up without points
+            div(ng-show="createUserWithNoPoints")
+              fieldset
+                label To sign-up without finding your points please fill in this additional information:
+              .form-group
+                label.col-lg-4.control-label( for='inputFirstName' ) Name
+                .col-lg-8
+                  input#inputFirstName.form-control( type='text', placeholder="First Name", ng-model="user.first_name" )
+                  input.form-control( type='text', placeholder="Last Name", ng-model="user.last_name" )
+            .form-group
+              label.col-lg-4.control-label( for='termsandconditions') Terms and Conditions
+              .col-lg-8
+               textarea(style="width:100%")
+                | LICENSE AGREEMENT - TERMS AND CONDITIONS You must agree to the following terms and conditions of this license agreement (&quot;Agreement&quot;) before downloading and using the software.   By clicking the acceptance button immediately following these terms and conditions you acknowledge your agreement to these terms and conditions. By accepting the terms of this agreement you are hereby granted a license to access the GotMyTag.com website and use the services and tools therein provided (collectively, &quot;GotMyTag Services&quot;). The term of the license herein granted is one year and shall automatically renew each year unless (i) you notify us by sending a notice of non-renewal to support@gotmytag.com or (ii) we notify you by sending a notice of non-renewal to the e-mail address you enter when registering. 1. General. A. The GotMyTag Services are licensed, not sold, to you for your personal use in accordance with the terms and conditions of the Agreement.  B. Title and intellectual property rights in and to any content displayed by or accessed through the gotmytag.com website belong to the respective content owner and no rights to such content are granted by this Agreement. C. Compliance with Laws and Good Conduct. You agree to use the GotMyTag Services in compliance with all applicable laws.  You agree that you will not use the GotMyTag Services in any manner that is illegal or in any manner that promotes, encourages or aids in the commission of an illegal activity.  You also agree that you will not use the GotMyTag Services in a way that is injurious to GotMyTag or other users of the GotMyTag Services. 2. Consent to Use of Data. You agree that GotMyTag and its subsidiaries and agents may collect, maintain, process and use information related to your use of the GotMyTag Services, including, but not limited to, location, unique system or hardware identifiers, information about your computing device, computer, system and application software, and peripherals.  You also agree that your credit card data may be securely stored in order to process state application charges.  Except as necessary to obtain payment for hunt applications and the license to use the GotMyTag Software, none of your personally identifiable information will be disclosed to third parties. 3. Limitation of Warranty. GotMyTag warrants that the GotMyTag Services will perform substantially in conformance with their description as provided by GotMyTag. GotMyTag's sole obligation under this warranty shall be to correct the GotMyTag Services to perform as warranted after notification by you of any non-conformance. If correction is required, you shall provide written notice thereof to GotMyTag. Such written notice shall describe the non-conformity and the events leading up the discovery of the non-conformity.  GotMyTag will, within a reasonable time of receipt of such notice make the necessary corrections. THE FOREGOING WARRANTY IS IN LIEU OF ALL OTHER WARRANTIES, EXPRESS, IMPLIED, OR STATUTORY, INCLUDING WITHOUT LIMITATION ALL WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND/OR NON-INFRINGEMENT. GOTMYTAG MAKES NO REPRESENTATION OR WARRANTY THAT THE GOTMYTAG SERVICES WILL MEET YOUR REQUIREMENTS, BE ERROR FREE, OR OPERATE WITHOUT INTERRUPTION. NO EMPLOYEE, AGENT OR REPRESENTATIVE OF GOTMYTAG HAS AUTHORITY TO BIND GOTMYTAG TO ANY ADDITIONAL OR OTHER REPRESENTATION OR WARRANTY CONCERNING THE GOTMYTAG SERVICES. 4. Limitation of Liability. The cumulative liability of GotMyTag for any and all claims whatsoever related to or arising out this Agreement shall not exceed the cumulative amount of payments made under this Agreement by you to GotMyTag in the previous year. 5.  Excluded Damages. IN NO EVENT SHALL GOTMYTAG BE LIABLE FOR ANY INCIDENTAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES EVEN IF ADVISED OR AWARE OF THE POSSIBILITY THEREOF.6. Miscellaneous.This Agreement shall be governed by and construed in accordance with the laws of the State of Utah, excluding its conflict of law principles.  Any civil action related to this agreement must be brought exclusively within the State of Utah.  Headings are for convenience only and shall not be used in the interpretation of this Agreement. This Agreement constitutes the entire agreement between you and GotMyTag with respect to the subject matter hereof and supersedes all prior or contemporaneous understandings and agreement regarding such subject matter. No amendment to or modification of this Agreement will be binding unless in writing and signed by GotMyTag.
+            .form-group
+              label.col-lg-4.control-label( for='inputCheckbox' )
+                input(type='checkbox', required='required', ngmodel="user.checkbox")
+                |  I accept
+
+            button.btn.btn-primary.col-lg-offset-4.col-lg-8.col-md-12.col-sm-12.col-xs-12 Show me my points
+
+    .col-md-6(ng-show="searchingUser")
+      h1.center Setting up new user...&nbsp;
+        img( src="img/spinner.gif" )

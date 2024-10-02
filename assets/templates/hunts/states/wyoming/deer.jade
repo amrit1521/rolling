@@ -1,0 +1,68 @@
+div( ng-controller="HuntsWyomingDeer" )
+  .form-group
+    .col-sm-2
+      .radio
+        label
+          input( type='radio', ng-model="huntType", value="btnApply5" )
+          |  Full Price
+  .form-group
+    .col-sm-2
+      .radio
+        label
+          input( type='radio', ng-model="huntType", value="btnApply4" )
+          |  Special
+  .form-group
+    .col-xs-12
+      .checkbox
+        label
+          input( type='checkbox', ng-model="choice.cbEnterDrawing1A", ng-true-value="on" )
+          | Preference Point
+  br
+  br
+  .form-group
+    .col-lg-12
+      fieldset
+        legend First Choice
+        .col-md-4
+          .form-group
+            label Hunt
+            select.form-control( ng-model="choice.comboHuntArea11", ng-options="hunt for hunt in hunts['comboHuntArea11']" )
+              option( value="" )
+        .col-md-4
+          .form-group
+            label Type
+            select.form-control( ng-model="choice.comboType11", ng-options="type for type in types['comboType11']" )
+              option( value="" )
+  .form-group
+    .col-lg-12
+      fieldset
+        legend Second Choice
+        .col-md-4
+          .form-group
+            label Hunt
+            select.form-control( ng-model="choice.comboHuntArea21", ng-options="hunt for hunt in hunts['comboHuntArea21']" )
+              option( value="" )
+        .col-md-4
+          .form-group
+            label Type
+            select.form-control( ng-model="choice.comboType21", ng-options="type for type in types['comboType21']" )
+              option( value="" )
+  .form-group
+    .col-lg-12
+      fieldset
+        legend Third Choice
+        .col-md-4
+          .form-group
+            label Hunt
+            select.form-control( ng-model="choice.comboHuntArea31", ng-options="hunt for hunt in hunts['comboHuntArea31']" )
+              option( value="" )
+        .col-md-4
+          .form-group
+            label Type
+            select.form-control( ng-model="choice.comboType31", ng-options="type for type in types['comboType31']" )
+              option( value="" )
+  .form-group
+    .col-md-8
+      button.btn.btn-default.pull-right.col-sm-3.col-xs-12( ng-click="save(choice)" ) Save
+      button.btn.btn-default.col-sm-3.col-xs-12( ng-click="testRun(choice)" ) Test Run
+      button.btn.btn-default.col-sm-3.col-xs-12( ng-click="run(choice)" ) Run

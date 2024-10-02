@@ -1,0 +1,18 @@
+div( ng-controller="HuntsWyomingMoose" )
+  .form-group
+    .col-lg-12
+      fieldset
+        legend First Choice
+        .col-md-4
+          .form-group
+            label Hunt
+            select.form-control( ng-model="choice.comboHuntArea1", ng-options="hunt for hunt in hunts" )
+        .col-md-4
+          .form-group
+            label Type
+            select.form-control( ng-model="choice.comboType1", ng-options="type for type in types" )
+
+  .form-group
+    .col-md-8
+      button.btn.btn-default.col-sm-3.col-xs-12( ng-click="testRun(choice)" ) Test Run
+      button.btn.btn-default.pull-right.col-sm-3.col-xs-12( ng-click="save(choice)" ) Save

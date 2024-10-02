@@ -1,0 +1,7 @@
+.form-group.select-list
+
+  select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.ch_choice_1", ng-options="option.value as option.value + ' [' + option.area + '] ' + option['season '] for option in huntOptions[hunt._id] | orderBy: 'value'" )
+    option( value="" )
+
+  select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.ch_choice_2", ng-options="option.value as option.value + ' [' + option.area + '] ' + option['season '] for option in huntOptions[hunt._id] | orderBy: 'value'" )
+    option( value="" )

@@ -1,0 +1,14 @@
+.container( ng-controller="FGSites" )
+  .page-header
+    h2 Fish & Game Websites
+  .row
+    .col-lg-6.col-md-6( style="float: right;" )
+      img.rounded( src='img/deer4.jpg', style='max-width: 100%; float: right; width: 400px;' )
+    .col-lg-6.col-md-6
+      p
+        b Click on any links below to go directly to that states website.
+      p.feed.inline-buttons
+        a.btn.btn-default.col-lg-5.col-sm-12.col-xs-12( ng-repeat="state in states | orderBy:'name'", ng-show="state.url", target="_blank", href='{{state.url}}' ) {{state.name}}
+
+      div
+        a.btn.btn-primary.col-xs-12.col-sm-6.col-md-4( href="#!/setup", ng-show="isPhoneNotAuthed()" ) Setup

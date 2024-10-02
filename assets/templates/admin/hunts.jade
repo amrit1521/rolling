@@ -1,0 +1,22 @@
+.container( ng-controller="AdminHunts" )
+  .page-header
+    .row
+      .col-xs-12
+        a.btn.btn-default.btn-sm( href="#!/admin/state/{{stateId}}" ) < Back
+        a.btn.btn-default.pull-right.btn-sm( href="#!/admin/hunts/add/{{stateId}}" ) Add Hunt
+  .row
+    .col-lg-12.col-md-12
+      h3 {{state.name}} Hunts
+
+      table.table.table-striped.table-hover( ng-show='hunts.length' )
+        thead
+          tr
+            th Name
+            th Can have groups
+            th Active
+        tbody
+          tr( ng-repeat="hunt in hunts | orderBy:'name'" )
+            td
+              a( href="#!/admin/hunts/{{hunt._id}}" ) {{hunt.name}}
+            td {{hunt.groupable}}
+            td {{hunt.active}}

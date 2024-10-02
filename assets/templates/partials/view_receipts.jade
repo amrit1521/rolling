@@ -1,0 +1,26 @@
+.modal-header
+  h3 View Receipts
+.modal-body
+
+  table.table.table-striped.table-hover.receipt-list
+    tbody
+      tr( ng-repeat="receipt in receipts | orderBy:'year'", ng-show="receipts.length" )
+        td
+          label {{receipt.name}}
+        td
+          label {{receipt.year}}
+        td.col-sm-1
+          a.btn.btn-default( href="{{receipt.url}}", target="_blank" ) View Receipt
+
+      tr( ng-repeat="license in licenses", ng-show="licenses.length" )
+        td
+          | License
+        td
+          label {{licensesYearIndex[license]}}
+        td.col-sm-1
+          a.btn.btn-default(href="{{license}}", target="_blank" ) View License \#{{$index + 1}}
+
+.modal-footer
+
+  // Left side
+  button.btn.btn-default.pull-left(ng-click='cancel()') Close

@@ -1,0 +1,110 @@
+#AdminTenant.container( ng-controller="AdminTenant" )
+  .page-header
+    .row
+      .col-lg-8.col-md-8
+        .well
+          form.form-horizontal( ng-submit="submit($event, tenant)" )
+            //button.btn.btn-primary.pull-left(ng-click="cancel($event)") Cancel
+            //button.btn.btn-primary.pull-right Save
+
+            fieldset
+              legend
+                img( width="100px", ng-src="{{tenant.logo}}" )
+                | {{tenant.name}}
+              .form-group
+                label.col-lg-4.control-label( for='inputUseProdToken' ) Is Active
+                .col-lg-8
+                  input#inputIsActive.form-control( type='checkbox', ng-model="tenant.isActive" )
+              .form-group
+                label.col-lg-4.control-label( for='inputName' ) Name
+                .col-lg-8
+                  input#inputName.form-control( type='text', placeholder="Tenant Name", ng-model="tenant.name" )
+
+              .form-group
+                label.col-lg-4.control-label( for='inputDomain' ) NRADS Domain
+                .col-lg-8
+                  input#inputDomain.form-control( type='text', placeholder="example.osstnt.com", ng-model="tenant.domain" )
+
+              .form-group
+                label.col-lg-4.control-label( for='inputrradsurl' ) RRADS DOMAIN
+                .col-lg-8
+                  input#inputrradsurl.form-control( type='text', placeholder="example.bookthehunt.com", ng-model="tenant.rrads_api_base_url" )
+
+              .form-group
+                label.col-lg-4.control-label( for='inputUrl' ) Marketing Website URL
+                .col-lg-8
+                  input#inputUrl.form-control( type='text', placeholder='URL', ng-model="tenant.url" )
+
+              .form-group
+                label.col-lg-4.control-label( for='inputLogo' ) Logo URL
+                .col-lg-8
+                  input#inputLogo.form-control( type='text', placeholder='http://www.example.com/logo.png', ng-model="tenant.logo" )
+
+              .form-group
+                label.col-lg-4.control-label( for='inputClientPrefix' ) Tenant Prefix Abbreviation
+                .col-lg-8
+                  input#inputClientPrefix.form-control( type='text', placeholder="EX", ng-model="tenant.clientPrefix" )
+
+              .form-group
+                label.col-lg-4.control-label( for='inputUseProdToken' ) Use Production Token
+                .col-lg-8
+                  input#inputUseProdToken.form-control( type='checkbox', ng-model="tenant.rrads_use_production_token" )
+
+              .form-group
+                label.col-lg-4.control-label( for='inputDisableRep' ) Disable Rep Copy of Email Notifications
+                .col-lg-8
+                  input#inputDisableRep.form-control( type='checkbox', ng-model="tenant.disableReps" )
+
+              .form-group
+                label.col-lg-4.control-label( for='inputwhitelabelHuntsOnly' ) Selling Own Hunts (Not RBO's)
+                .col-lg-8
+                  input#inputwhitelabelHuntsOnly.form-control( type='checkbox', ng-model="tenant.whitelabelHuntsOnly" )
+
+              .form-group
+                label.col-lg-4.control-label( for='inputLogAPI' ) Detailed Logging
+                .col-lg-8
+                  input#inputLogAPI.form-control( type='checkbox', ng-model="tenant.logAPI" )
+
+              .form-group
+                label.col-lg-4.control-label( for='inputEmailTemplatePrefix' ) Mailchimp Template Prefix
+                .col-lg-8
+                  input#inputEmailTemplatePrefix.form-control( type='text', ng-model="tenant.email_template_prefix" )
+
+              .form-group
+                label.col-lg-4.control-label( for='inputEmailFrom' ) Email From Address
+                .col-lg-8
+                  input#inputEmailFrom.form-control( type='text', placeholder="example@outdoorsoftwaresolutions.com", ng-model="tenant.email_from" )
+
+              .form-group
+                label.col-lg-4.control-label( for='inputEmailFromName' ) Email From Name
+                .col-lg-8
+                  input#inputEmailFromName.form-control( type='text', placeholder="Example Tenant", ng-model="tenant.email_from_name" )
+
+              .form-group(ng-show="tenant.name == 'GotMyTag'")
+                label.col-lg-4.control-label( for='textareaSSLKey' ) SSL Key
+                .col-lg-8
+                  textarea#textareaSSLKey.form-control( type='text', placeholder='Copy and paste the contents of the cert key file here ...', ng-model="tenant.ssl_key" )
+
+              .form-group(ng-show="tenant.name == 'GotMyTag'")
+                label.col-lg-4.control-label( for='textareaSSLPem' ) SSL Pem
+                .col-lg-8
+                  textarea#textareaSSLPem.form-control( type='text', placeholder='Copy and paste the contents of the cert pem file here ...', ng-model="tenant.ssl_pem" )
+
+              //button.btn.btn-primary.col-lg-offset-4.col-lg-8.col-md-12.col-sm-12.col-xs-12(ng-click="sendToRRADS($event,tenant)", style="margin-bottom:30px") Force create tenant in RADS
+
+
+              button.btn.btn-primary.pull-left(ng-click="cancel($event)") Cancel
+
+              button.btn.btn-primary.pull-right(ng-click="submit($event, tenant)") Save
+              button.btn.btn-primary.pull-right(ng_show="isUpdate", ng-click="sendToRRADS($event,tenant)", style="margin-right:30px") Force create tenant in RADS
+
+              //div( ng-show="tenant._id" )
+                br
+                br
+                br
+                br
+                br
+                br
+                br
+                span.col-lg-offset-4.text-danger WARNING: Deleting a tenant can not be undone.
+                button.btn.btn-danger.col-lg-offset-4.col-lg-8.col-md-12.col-sm-12.col-xs-12( ng-click="delete($event, tenant)" ) Delete Tenant

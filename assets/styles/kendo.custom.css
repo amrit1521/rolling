@@ -1,0 +1,45 @@
+.k-grid-toolbar {
+  border: none;
+  text-align: right;
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.k-grid-SaveCurrentView, .k-grid-excel, .k-grid-ResendWelcomeEmails {
+  z-index: 1;
+}
+
+.k-grid-toolbar, .k-toggle-button {
+  float: right;
+}
+
+.k-grid td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[role="tooltip"]{
+  visibility: hidden;
+  text-align: left;
+}
+
+.k-filtercell>span>label {
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.k-grid  .k-grid-header  .k-header  .k-link {
+  height: auto;
+}
+
+.k-grid  .k-grid-header  .k-header {
+  white-space: normal;
+}
+
+.k-grid-header th.k-header {
+  vertical-align: top;
+}

@@ -1,0 +1,35 @@
+#AdminServiceRequests.container( ng-controller="Applications" )
+  .page-header
+    h3 State Hunting Applications
+  .row
+    .col-md-12
+      img( src="img/spinner.gif", ng-show="loading" )
+      form.form-inline
+        .form-group(ng-hide="loading", style="margin-top: 10px;")
+          .col-md-push-1
+            select#savedViews.form-control.col-md-12(ng-show="customViews && customViews.length > 0", ng-model="customView", ng-change="loadGridView(customView)", ng-options="view as view.name for view in customViews" )
+              option( value="" ) Select a View
+        //.pull-right
+          .form-group(ng-hide="loading", style="margin-top: 10px; margin-right: 30px;")
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="this_week", ng-change="applyDateFilterType(dateFilterType)", style="margin-right:5px;")
+              | This Week
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="this_month", ng-change="applyDateFilterType(dateFilterType)", style="margin-right:5px;")
+              | This Month
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="this_year", ng-change="applyDateFilterType(dateFilterType)", style="margin-right:5px;")
+              | This Year
+          .form-group(ng-hide="loading", style="margin-top: 10px; margin-right: 10px;")
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="last_week", ng-change="applyDateFilterType(dateFilterType)", style="margin-right:5px;")
+              | Last Week
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="last_month", ng-change="applyDateFilterType(dateFilterType)", style="margin-right:5px;")
+              | Last Month
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="last_year", ng-change="applyDateFilterType(dateFilterType)", style="margin-right:5px;")
+              | Last Year
+
+
+  div#applicationsGrid

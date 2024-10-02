@@ -1,0 +1,34 @@
+.container(ng-controller="RBO_REP_USERS")
+  .page-header
+    h3 Welcome {{user.first_name}},
+    h4 congratulations and welcome to the {{user.repType}} Rolling Bones Family.
+  .row
+    .col-md-12
+      p.lead
+        | Reports: Users within your agency
+
+  .row
+    .col-md-12
+      form.form-inline(style="margin-bottom: 15px;")
+        .form-group
+          input.form-control( type='text', placeholder="quick search text ...", ng-model='quicksearch')
+        .form-group
+          button.btn.btn-primary(ng-click="submit($event, quicksearch, false)") Search
+        .form-group
+          button.btn.btn-primary(ng-click="submit($event, quicksearch, true)") Show All
+        .form-group.pull-right
+          button.btn.btn-primary(ng-click="addNewUser()") Add New User
+      .form-group.pull-left
+        label.col-lg-12.control-label
+        .col-lg-12(style="padding-left:0")
+          input(type='checkbox', ng-model="includeProspects")
+          |  Include Prospects
+
+  .row
+    .col-md-12
+      img( src="img/spinner.gif", ng-show="loading" )
+
+
+  .row
+    .col-md-12
+      div#repUsersGrid

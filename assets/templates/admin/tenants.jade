@@ -1,0 +1,28 @@
+#AdminTenants.container( ng-controller="AdminTenants" )
+  .page-header
+    h3 Manage Tenants
+      a.btn.btn-default.pull-right.btn-sm(href="#!/admin/tenant/new") New Tenant
+  .row
+    .col-lg-12.col-md-12
+
+      table.table.table-striped.table-hover( ng-show='tenants.length' )
+        thead
+          tr
+            th Logo
+            th Name
+            th Tenant Prefix
+            th.hidden-xs NRADS Domain
+            th.hidden-xs RRADS Domain
+            th.hidden-xs Detailed Logging
+            th.hidden-xs Use Production Tokens
+        tbody
+          tr( ng-repeat="tenant in tenants | orderBy:'name'" )
+            td
+              img( width="50px", ng-src="{{tenant.logo}}" )
+            td
+              a( href="#!/admin/tenant/{{tenant._id}}" ) {{tenant.name}}
+            td.hidden-xs {{tenant.clientPrefix}}
+            td.hidden-xs {{tenant.domain}}
+            td.hidden-xs {{tenant.rrads_api_base_url}}
+            td.hidden-xs {{tenant.logAPI}}
+            td.hidden-xs {{tenant.rrads_use_production_token}}

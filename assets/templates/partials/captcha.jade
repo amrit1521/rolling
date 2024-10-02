@@ -1,0 +1,17 @@
+.captcha
+  .form-group
+    label.col-lg-4.control-label( for='inputCID' ) Montana ALS #
+    .col-lg-8
+      span {{formatDOB(user.dob)}}&nbsp;-&nbsp;
+      input#inputCID.form-control( type='text', ng-model="state.cid", style="width: 60px; text-align: center; display: inline-block;" )
+
+  .form-group
+    .col-md-12
+      label Type the characters you see below. Letters are not case-sensitive. There are no zeros or spaces.
+
+  .form-group
+    .col-md-12
+      img( ng-src="{{user.captcha.image}}" )
+    .col-md-12
+      input.form-control( type="text", ng-model="user.captcha.text", style="width: 30%; display: inline-block; margin-top: 5px; margin-left: -2px;" )
+      button.btn.btn-default.btn-sm( ng-click="resetCaptcha($event)" ) Reset Captcha

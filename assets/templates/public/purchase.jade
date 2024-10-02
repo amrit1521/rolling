@@ -1,0 +1,326 @@
+#purchase.container( ng-controller="Purchase" )
+  .row
+    .col-lg-11.col-md-11
+      .well
+        form.form-horizontal()
+          fieldset
+            legend Purchase: {{huntCatalog.huntNumber}} {{huntCatalog.title}}
+
+            fieldset
+              legend Details
+              .form-group.purchase(ng-show="huntCatalog.state || huntCatalog.country")
+                label.col-lg-3.control-label Location:
+                .col-lg-8
+                  span.form-control
+                    div(ng-show="huntCatalog.state")
+                      span {{huntCatalog.state}}
+                    div(ng-hide="huntCatalog.state")
+                      span {{huntCatalog.country}}
+              .form-group.purchase(ng-show="huntCatalog.dateRange && huntCatalog.dateRange != '12/31/1969 - 12/31/1969'")
+                label.col-lg-3.control-label Dates:
+                .col-lg-8
+                  span.form-control {{huntCatalog.dateRange}}
+              .form-group.purchase(ng-show="huntCatalog.species")
+                label.col-lg-3.control-label Species:
+                .col-lg-8
+                  span.form-control {{huntCatalog.species}}
+              .form-group.purchase(ng-show="userIsMember")
+                label.col-lg-3.control-label(ng-show="huntCatalog.type == 'hunt' && huntCatalog.paymentPlan != 'subscription_monthly' && huntCatalog.paymentPlan != 'subscription_yearly'") Base Price:
+                label.col-lg-3.control-label(ng-show="huntCatalog.type != 'hunt' && huntCatalog.paymentPlan != 'subscription_monthly' && huntCatalog.paymentPlan != 'subscription_yearly'") Price:
+                label.col-lg-3.control-label(ng-show="huntCatalog.paymentPlan == 'subscription_monthly'") Monthly Subscription:
+                label.col-lg-3.control-label(ng-show="huntCatalog.paymentPlan == 'subscription_yearly'") Yearly Subscription:
+                .col-lg-8
+                  span.form-control {{formatMoneyStr(huntCatalog.price_total)}}
+                  div(ng-show="huntCatalog.type == 'hunt'", style="margin-left:15px;")
+                    | *The hunt price is subject to change, and does not include add-ons or upgrades provided as options by the outfitter.
+              .form-group.purchase(ng-hide="userIsMember")
+                label.col-lg-3.control-label(ng-show="huntCatalog.type == 'hunt' && huntCatalog.paymentPlan != 'subscription_monthly' && huntCatalog.paymentPlan != 'subscription_yearly'") Base Price:
+                label.col-lg-3.control-label(ng-show="huntCatalog.type != 'hunt' && huntCatalog.paymentPlan != 'subscription_monthly' && huntCatalog.paymentPlan != 'subscription_yearly'") Price:
+                label.col-lg-3.control-label(ng-show="huntCatalog.paymentPlan == 'subscription_monthly'") Monthly Subscription:
+                label.col-lg-3.control-label(ng-show="huntCatalog.paymentPlan == 'subscription_yearly'") Yearly Subscription:
+                .col-lg-8
+                  span.form-control {{formatMoneyStr(huntCatalog.price_nom)}}
+                  div(ng-show="huntCatalog.type =='hunt'", style="margin-left:15px;")
+                    | *The hunt price is subject to change, and does not include add-ons or upgrades provided as options by the outfitter.
+              .form-group.purchase(ng-show="huntCatalog.paymentPlan == 'months'")
+                label.col-lg-3.control-label Choose Payment Plan
+                .col-lg-8
+                  label.radio-inline Full Payment Now
+                    input.form-control(type="radio", value="0", ng-change="calcMonthlyPayment(purchaseItem.amount)", ng-model="purchaseItem.monthlyPaymentNumberMonths", style="margin-left:0px;")
+                  label.radio-inline 6 months
+                    input.form-control(type="radio", value="6", ng-change="calcMonthlyPayment(purchaseItem.amount)", ng-model="purchaseItem.monthlyPaymentNumberMonths", style="margin-left:0px;")
+                  label.radio-inline 12 months
+                    input.form-control(type="radio", value="12", ng-change="calcMonthlyPayment(purchaseItem.amount)", ng-model="purchaseItem.monthlyPaymentNumberMonths", style="margin-left:0px;")
+                  label.radio-inline 18 months
+                    input.form-control(type="radio", value="18", ng-change="calcMonthlyPayment(purchaseItem.amount)", ng-model="purchaseItem.monthlyPaymentNumberMonths", style="margin-left:0px;")
+              .form-group.purchase.note(ng-show="huntCatalog.pricingNotesAsHTML")
+                label.col-lg-3.control-label Pricing Options:
+                .col-lg-8
+                  span.form-control(style="display:table;" ng-bind-html="huntCatalog.pricingNotesAsHTML")
+              .form-group.purchase()
+                label.col-lg-3.control-label Purchase Notes
+                .col-lg-8
+                  textarea.form-control.short(ng-model="purchaseItem.notes")
+
+            fieldset(style="margin-top: 15px;")
+              legend Account Holder Information
+              div(ng-show="!user._id")
+                .form-group.purchase
+                  label.col-lg-3.control-label Choose Account
+                  .col-lg-8
+                    label.radio-inline I have an existing account
+                      input.form-control(type="radio", value="true", ng-model="useExistingAccount", style="margin-left:0px;")
+                    label.radio-inline Create a new account
+                      input.form-control(type="radio", value="false", ng-model="useExistingAccount", style="margin-left:0px;")
+                .form-group.purchase
+                  label.col-lg-3.control-label Email
+                  .col-lg-8
+                    input#inputEmail.form-control( type='email', required='required', ng-model="user.email" )
+                .form-group.purchase
+                  label.col-lg-3.control-label( for='inputPassword' ) Password
+                  .col-lg-8
+                    input#inputPassword.form-control( type='password', required='required', ng-model="user.password")
+                .form-group.purchase
+                  label.col-lg-3.control-label
+                  .col-lg-8
+                    button.btn.btn-primary(ng-hide="useExistingAccount == 'false'" ng-click="login($event, user)") Find My Account
+
+              div(ng-show="user._id || useExistingAccount == 'false'")
+                .form-group.purchase(ng-show="user.memberId")
+                  label.col-lg-3.control-label Member Number:
+                  .col-lg-8
+                    span.form-control {{user.memberId}}
+                .form-group.purchase(ng-hide="user.memberId || useExistingAccount == 'false'")
+                  label.col-lg-3.control-label Member Number:
+                  .col-lg-8
+                    span.form-control Not a member
+                .form-group.purchase
+                  label.col-lg-3.control-label First Name:
+                  .col-lg-8
+                    input.form-control(ng-model="user.first_name", required='required')
+                .form-group.purchase
+                  label.col-lg-3.control-label Last Name:
+                  .col-lg-8
+                    input.form-control(ng-model="user.last_name", required='required')
+                .form-group.purchase(ng-show="user._id")
+                  label.col-lg-3.control-label Email:
+                  .col-lg-8
+                    input.form-control(ng-model="user.email", required='required')
+                .form-group.purchase()
+                  label.col-lg-3.control-label Cell Phone:
+                  .col-lg-8
+                    input.form-control(ng-model="user.phone_cell", required='required')
+                .form-group.purchase()
+                  label.col-lg-3.control-label Phone:
+                  .col-lg-8
+                    input.form-control(ng-model="user.phone_day")
+                .form-group.purchase
+                  label.col-lg-3.control-label Mailing Address:
+                  .col-lg-8
+                    input.form-control(ng-model="user.mail_address", required='required')
+                .form-group.purchase
+                  label.col-lg-3.control-label City:
+                  .col-lg-8
+                    input.form-control(ng-model="user.mail_city", required='required')
+                .form-group.purchase
+                  label.col-lg-3.control-label State:
+                  .col-lg-8
+                    select.form-control( ng-model="user.mail_state", ng-options="state for state in states", required='required' )
+                      option( value="" )
+                .form-group.purchase
+                  label.col-lg-3.control-label Country:
+                  .col-lg-8
+                    select.form-control( ng-model="user.mail_country", ng-options="country for country in countries", required='required' )
+                      option( value="United States" )
+                .form-group.purchase
+                  label.col-lg-3.control-label Zip:
+                  .col-lg-8
+                    input.form-control(ng-model="user.mail_postal", required='required')
+                .form-group.purchase(ng-show="useExistingAccount == 'false'")
+                  label.col-lg-3.control-label Referred By:
+                  .col-lg-8
+                    input.form-control(ng-model="user.referredBy", placeholder='(optional) name of person who referred you')
+                //div(style = "color:red;", ng-hide="user.first_name && user.last_name && user.email && (user.phone_cell || user.phone_day) && user.mail_address && user.mail_city && user.mail_state && user.mail_country && user.mail_postal")
+                  div The account holder is missing contact information which must be entered before continuing the purchase.
+                  div Please update this information by editing the user's profile before proceeding.
+            fieldset(style="margin-top: 15px;")
+              legend Payment Method
+              .form-group.purchase()
+                label.col-lg-3.control-label Choose Payment Method
+                .col-lg-8
+                  label.radio-inline Online with Credit Card
+                    input.form-control(type="radio", value="cc", ng-model="purchaseItem.paymentMethod", style="margin-left:0px;")
+                  label.radio-inline(ng-show="allowCheck") Bank Check
+                    input.form-control(type="radio", value="check", ng-model="purchaseItem.paymentMethod", style="margin-left:0px;")
+              .form-group.purchase
+                label.col-lg-3.control-label() Billing Email
+                .col-lg-8
+                  input.form-control( placeholder='Email', ng-model="card.email", required='required' )
+              .form-group.purchase
+                label.col-lg-3.control-label() Billing Phone
+                .col-lg-8
+                  input.form-control( placeholder='Billing Phone', ng-model="card.phone" )
+
+              .div(ng-show="purchaseItem.paymentMethod == 'check'")
+                .form-group.purchase.note()
+                  label.col-lg-3.control-label Instructions:
+                  .col-lg-8
+                    span.form-control(style="display:table;" ng-bind="PAYMENT_BY_CHECK_INSTRUCTIONS")
+                .form-group.purchase
+                  label.col-lg-3.control-label() Check Number
+                  .col-lg-8
+                    input.form-control( placeholder='Check #', ng-model="purchaseItem.check_number" )
+                .form-group.purchase
+                  label.col-lg-3.control-label() Name of person on check
+                  .col-lg-8
+                    input.form-control( placeholder='Name', ng-model="purchaseItem.check_name" )
+
+
+              .div(ng-show="purchaseItem.paymentMethod == 'cc'")
+                .form-group.purchase
+                  label.col-lg-3.control-label() Billing Zip Code
+                  .col-lg-8
+                    input.form-control( placeholder='Billing Zip Code', ng-model="card.postal", required='required' )
+                .form-group.purchase
+                  label.col-lg-3.control-label() Name on Card
+                  .col-lg-8
+                    input#inputName.form-control( placeholder='Name on Card', ng-model="card.name", required='required' )
+                .form-group.purchase
+                  label.col-lg-3.control-label() Card Type
+                  .col-lg-8
+                    select#inputType.form-control( ng-model="card.type", ng-options="type for type in cardTypes" )
+                      option( value="" ) Card Type
+                .form-group.purchase
+                  label.col-lg-3.control-label( for='inputNumber' ) Credit Card Number
+                  .col-lg-8
+                    input#inputNumber.form-control( placeholder='Credit Card Number', ng-model="card.number", required='required' )
+                .form-group.purchase
+                  label.col-lg-3.control-label( for='inputVerificationCode' ) Credit Card Verification Code
+                  .col-lg-8
+                    input#inputVerificationCode.form-control( placeholder='Credit Card Verification Code', ng-model="card.code", required='required' )
+                .form-group.purchase
+                  label.col-lg-3.control-label( for='inputExpiration' ) Expiration Date
+                  .col-lg-4
+                    select#inputExpiration.form-control( ng-model="card.month", ng-options="month for month in months", required='required' )
+                      option( value="" ) Month
+                  .col-lg-4
+                    select.form-control( ng-model="card.year", ng-options="year for year in years", required='required' )
+                      option( value="" ) Year
+              .form-group.purchase
+                label.col-lg-3.control-label(ng-hide="huntCatalog.paymentPlan == 'full' || huntCatalog.paymentPlan == 'subscription_monthly' || huntCatalog.paymentPlan == 'subscription_yearly'") Down Payment Required:
+                label.col-lg-3.control-label(ng-show="huntCatalog.paymentPlan == 'full'") Payment Required:
+                label.col-lg-3.control-label(ng-show="huntCatalog.paymentPlan == 'subscription_monthly'") Monthly Subscription:
+                label.col-lg-3.control-label(ng-show="huntCatalog.paymentPlan == 'subscription_yearly'") Yearly Subscription:
+                .col-lg-8
+                  span.form-control ${{formatMoneyStr(purchaseItem.minPaymentRequired)}}
+              .form-group.purchase(ng-hide="huntCatalog.paymentPlan == 'full' || huntCatalog.paymentPlan == 'subscription_monthly' || huntCatalog.paymentPlan == 'subscription_yearly'")
+                label.col-lg-3.control-label(ng-hide="huntCatalog.paymentPlan == 'full' || huntCatalog.paymentPlan == 'subscription_monthly' || huntCatalog.paymentPlan == 'subscription_yearly'") Enter Down Payment $
+                .col-lg-8
+                  input.form-control(type='number', ng-model="purchaseItem.amount", ng-change="calcMonthlyPayment(purchaseItem.amount)")
+              .form-group.purchase(ng-hide="huntCatalog.paymentPlan == 'full' || huntCatalog.paymentPlan == 'subscription_monthly' || huntCatalog.paymentPlan == 'subscription_yearly'", style="margin-bottom: 15px;")
+                label.col-lg-3.control-label() Estimated Monthly Payment:
+                .col-lg-8
+                  span.form-control() ${{purchaseItem.monthlyPaymentStr}}
+                    div(ng-show="userIsMember", style="font-size: small; margin-bottom:5px;")
+                      | {{formatMoneyStr(huntCatalog.price_total)}} (base price*) - ${{formatMoneyStr(purchaseItem.amount)}} (down payment) / {{monthDiffDisplay()}} (months)
+                    div(ng-hide="userIsMember", style="font-size: small; margin-bottom:5px;")
+                      | {{formatMoneyStr(huntCatalog.price_nom)}} (base price*) - ${{formatMoneyStr(purchaseItem.amount)}} (down payment) / {{monthDiffDisplay()}} (months)
+              .form-group.purchase(ng-show="huntCatalog.paymentPlan == 'subscription_monthly'")
+                label.col-lg-3.control-label
+                .col-lg-8(style="font-size: small;")
+                  | Your credit card will be charged ${{purchaseItem.amount}} each month for this service.  You can cancel at anytime by contacting us. {{tenantURL}}
+              .form-group.purchase(ng-show="huntCatalog.paymentPlan == 'subscription_yearly'")
+                label.col-lg-3.control-label
+                .col-lg-8(style="font-size: small;")
+                  | Your credit card will be charged ${{purchaseItem.amount}} each year for this service.  You can cancel at anytime by contacting us. {{tenantURL}}
+              .form-group.purchase(ng-show="showOptOut")
+                label.col-lg-3.control-label
+                .col-lg-8(style="font-size: small;")
+                  input(type='checkbox', ng-model="sub_opt_out", ng-click="toggleOptOut('yearly', sub_opt_out)")
+                  |  I do not wish to auto-renew my membership.  (Note by checking this box your membership will be good for one year only)
+
+
+            fieldset(ng-show="showRep && isRBO", style="margin-top: 15px;")
+              legend Sales Representative Agreement
+              div
+                .form-group.purchase()
+                  textarea#repAgreement.form-control-tall(readonly)
+                    | ROLLING BONES OUTFITTERS, INC.
+                    | Sales Representative Agreement – USA
+                    | #{''}
+                    | This Sales Representative Agreement – USA (“Agreement”) is made and entered into on {{monthNames[today.getMonth()]}} {{today.getDate()}}, {{today.getFullYear()}} by and between {{user.first_name}} {{user.last_name}} as a contact sales representative for the company (“CSR”), an individual residing at {{getAddress(user)}} (address), {{getCity(user)}}, {{getState(user)}}, {{getZip(user)}} (city, state, zip) and Rolling Bones Outfitters, Inc. (the “Company”), a South Dakota corporation having offices at 801 North Main Street, Spearfish, South Dakota 57783.
+                    | #{''}
+                    | WITNESSETH
+                    | WHEREAS, the contract sales representative is willing to enter into this Agreement with the Company upon the conditions and terms herein set forth.
+                    | NOW THEREFORE, for the valuable consideration set forth in this Agreement and intending to be legally bound, the contract sales representative and the Company mutually promise and agree as follows:
+                    | 1.	Contractor Obligations.  During the time this Agreement is in effect, the Company will contract with the CSR to be an independent sales representative to promote, sell and distribute services (booking of hunting expeditions and services related thereto) and products (certain ammunition, hunting gear and other related products), provided by or through the Company, or the Company’s affiliates, and such other services or products as may be offered from time to time, as mutually agreed upon by the Company and the CSR.  The CSR will devote sufficient time and attention to, and will use good faith and best efforts, energies and abilities in the performance of the undertakings as set forth in this paragraph so as to attain such minimum sales levels as the CSR and the Company shall set, from time to time.
+                    | #{''}
+                    | 2.	Commission.  The Company shall pay the CSR, for the CSR’s sales efforts pursuant to paragraph 1 above, and in part as consideration for the other promises of the CSR as set forth in this Agreement, commissions based on the following schedule:
+                    | a)	Commission Structure.
+                    |    A percentage of all prepaid Net Sales, except as stated below, up to unlimited in sales.
+                    | For purposes of this Agreement, “Net Sales” shall mean gross sales price, net sales use or other similar taxes, and net of discounts, commissions, cancellations, or other charges or offsets on sale proceeds and net of all other costs of sale incurred by the Company (all collectively referred to as “Refund Claims”).
+                    | b)	Excluded Sales.  Except by special arrangement, the following shall not be included in commissioned sales:
+                    | Gallery of Guns or any unarranged products
+                    | Rolling Bones Application And Deadline Service of any other services provided by Rolling Bones that are not previously stated
+                    | c)	Payment of Commissions.  The Company shall pay the commissions earned by the CSR in accordance with subparagraph a) above, up to 30 days after payment in full is received by the Company.  The CSR shall refund to the Company, upon demand by the Company and any commission paid to the CSR attributable to any subsequent Refund Claims honored by the Company.
+                    | d)	Annual Review.  The commission structure shall be reviewed annually on the 15th day of each January.  The Company shall determine changes of the commission structure and the CSR based upon mutual agreement.  Prior performance of the CSR in meeting the results of the targeted sales levels shall be considered, but shall not be the sole determination factor in any adjustment discussions.
+                    | e)	Taxes, Benefits:  The CSR is being engaged by the Company as an independent contractor and not as an employee of the Company.  The Company shall issue to the CSR the appropriate IRS Forms 1099 and such other federal and state tax forms that are required of the Company with respect to commissions and other remuneration paid to the CSR by the Company.  The CSR shall report all such paid commissions and other remunerations from the Company in a manner consistent with the Company, and the CSR shall be solely responsible for all FICA, FUTA, income tax withholding and unemployment taxes as the same may be come due.  The Company shall have no obligation to pay to or on behalf of the CSR any taxes, insurance, or other benefits.
+                    | #{''}
+                    | 3.	Term.  This Agreement shall be for a term of 12 months and shall renew automatically for the same number of months, unless terminated by either party as provided for herein.
+                    | #{''}
+                    | 4.	Termination.  This Agreement may be terminated pursuant to the following:
+                    | a)	Without Cause.  By either party, without cause upon ten (10) business days prior written notice to the other party.
+                    | b)	With Cause.   By the Company, with cause, immediately upon the giving of notice to the CSR. As used in this Agreement, "cause" shall mean a termination based upon the dishonesty, gross negligence, incompetence or moral turpitude of the CSR or any failure by the CSR to comply with and observe the material, provisions of this Agreement, or the failure of the CSR to obtain minimum agreed upon sales levels.
+                    | #{''}
+                    | 5.	Sales Area.   The CSR’s sales area with respect to the services, products and business of the company shall be non-exclusive covering an unlimited area within the USA or worldwide.
+                    | #{''}
+                    | 6.	Business Protection Agreements/Enforcement.
+                    | a)	Business Protections.  During the time of the CSR’s position in the Company, and for a period of two (2) years thereafter, the CSR shall not, directly or indirectly, acting alone or in conjunction with others:
+                    | •	Request, assist, solicit or entice any customer of the Company to in any way reduce, curtail, eliminate or cancel any business, discussions, negotiations or future business with the Company;
+                    | •	Solicit, canvass, sell, promote or accept any business or transaction for any other persons, firms or entities providing products, services or having business similar to, or in any way competing with the products, services and business of the Company, including products, services and business substantially similar to those offered by or through the Company from any past or existing vendors, suppliers, contractors, subscribers, clients or customers of the Company, or any potential vendors, suppliers, contractors, subscribers, clients or customers of the Company,  contacted by the Company or the CSR at any time while this Agreement is in effect;
+                    | •	Induce, or attempt to influence, any employee, officer, agent, contractor, other sales or other representative of the Company to terminate or alter in any manner their relationship with the Company, whether detrimental to the Company, or detrimental to such persons performance with the Company, or otherwise;
+                    | •	Enter into any employment, agency, advisory, independent contractor or other relationship or arrangement with any other person (including the CSR), or entity that in anyway competes with or which offers products, services or whose business similar to the Company’s;
+                    | •	Act or engage in any conduct which in any manner is detrimental to the Company or would result in negative publicity or perceptions of the Company or its products, services or business;
+                    | •	Use, deliver, provide or disclose any business plan, projection, financial information, customer lists, sales promotional materials sales data and information, product information, contact lists, operational information, information regarding other CSR’s of the Company, compensation levels, commissions schedules, names, addresses, phone numbers or email addresses of the Company or the customers or potential customers of the Company of the CSR’s engaged by the Company, except to the extent any such Confidential Information is already in the public domain; or
+                    | •	Engage as a director, officer, shareholder, manager, member, partner, employee, agent, contractor or act in any other capacity, or in any business which competes, conflicts or interferes with the performance of the CSR in promoting, selling or distributing the services and products of the Company, or the business of the Company, in any way.
+                    | b)	Trade Secrets/Confidential Information.  Without the express written consent of the Company setting forth the terms and conditions of such use, the CSR will not in any manner use any of the Company's proprietary confidential information.  The CSR shall not, at any time or in any manner divulge, disclose or communicate to any person, Company records, documents, financial information, trade, technical or technological secrets; any details of the Company's organization or business affairs, its manner of operation, its business plans, processes, and/or other data; any names of past, present or potential vendors, suppliers, contractors, subscribers, clients or customers of the Company; any potential financiers, partners, investors, acquirers of the Company or any persons or entities to be acquired by or are targets of the Company; or any other information relating to the products, services or business of the Company.
+                    | c)	Company Name and Marks.  The CSR shall use the Company name, trade names and trademarks only with respect to the services and products of the Company and for no other purpose without the express written consent of the Company, and the CSR shall not operate under this Agreement under any Company name, trademark or trade name without a separate written agreement between the Company and the CSR detailing such use.  The CSR shall not hold itself out as an employee, agent, officer, member, partner, shareholder or franchisee of the Company or take any action that would cause the general public or any third party to believe or rely upon the CSR being any of the foregoing.  The CSR shall be liable to the Company for any and all damages caused in any way by the CSR’s violation of this provision of the Agreement.
+                    | d)	Company Definition.  For purposes of this paragraph 6, the term “Company” shall include all affiliates or other independent contractors of the Company.  The term “Affiliate” shall mean any person or entity having any common ownership or control by the Company or its shareholders, directors, officers or key employees; provided however, that this shall not include ownership in publically traded companies of less then 5% of the total outstanding voting securities.
+                    | e)	Benefit of Doubt.  The CSR shall abide by the terms of this paragraph 6, without regard to whether all of the matters set forth herein are or will be found to be confidential, material, or important, all such determinations to go to the amount of damages, if any, to the Company and shall not be used by the CSR as a defense to enforcement by the Company of any specific provision of this paragraph 6.
+                    | f)	Enforcement.  The CSR recognizes that immediate and irreparable damage will result to the Company if the CSR breaches any of the terms and conditions of this Paragraph 4 and, accordingly, the CSR hereby consents to the entry by any court of competent jurisdiction of an injunction against the CSR to restrain any such breach, in addition to any other remedies or claims for money or damages which the Company may seek. The CSR represents and warrants to the Company that the CSR’s experience and capabilities are such that the CSR can obtain other or consulting arrangement employment in business without breaching the terms and conditions of this Paragraph 6, and that the obligations under the provisions of this Paragraph 6 (and the enforcement thereof by injunction or otherwise) are reasonable in scope and time will not prevent the CSR from earning a livelihood. The CSR agrees to pay any and all reasonable attorney fees sustained by the Company in connection with the enforcement of this Agreement.
+                    | #{''}
+                    | 7.	Assignment.
+                    | a)	CSR Non-Assignment.  The benefits of this Agreement are and shall be personal to the CSR, and none thereof shall inure to the benefit of his heirs, personal representatives, or assigns. The obligations and duties of the CSR hereunder shall be personal and not assignable or delegable by him in any manner, whatsoever.
+                    | b)	Company Assignment Permissible.  This Agreement shall be binding upon and inure to the benefit of the Company and it shall be assignable by the Company to any entity, which may acquire substantially all of the business and assets of the Company, or with or into which the Company may be merged or consolidated.
+                    | #{''}
+                    | 8.	Dispute Resolution.  The parties will negotiate in good faith for a period of thirty (30) days to resolve any dispute between them regarding any provision of this Agreement.  If such negotiations do not resolve the dispute to the satisfaction of both parties, then either party may institute legal action.
+                    | #{''}
+                    | 9.	Notices.  All notices, requests, demands and other communications hereunder shall be in writing and shall be deemed to have been duly giving if personally delivered, sent via overnight courier, or, if mailed, when mailed one (1) business day after mailed by United States Postal Service, certified or registered mail, postage prepaid, to the parties or their assignees at the following addressed (or at such other address as shell be given in writing by any party to the other):
+                    | #{''}
+                    | If to the Company:				If to CSR:
+                    | 810 N Main Street				Address On File
+                    | Spearfish, SD  57783
+                    | #{''}
+                    | 10.	Attorney’s Fees.   Except as herein set forth, in any litigation, arbitration or mediation relating to this Agreement, including litigation or arbitration with respect to any instrument, document or agreement made under or in connection with this Agreement, the prevailing party shall be entitled to recover its costs and reasonable attorney’s fees; provided however, that notwithstanding this or any other provision of this Agreement to the contrary, the CSR shall reimburse the Company for all reasonable attorneys’ fees and all accountants’, consultants and expert fees and other costs incurred by the Company in enforcing any provision of paragraph 6 hereof, regardless of the outcome of such proceeding.
+                    | #{''}
+                    | 11.	Counterparts.  This Agreement may be executed in one or more counterparts, each of which shall be deemed an original, but all of which together shall constitute one and the same instrument.
+                    | #{''}
+                    | 12.	General. The headings of the Articles and Paragraphs of this Agreement are for the convenience of reference and not to be used to interpret or construe any provisions of this Agreement.
+                    | #{''}
+                    | 13.	Venue.  The parties agree that any action or proceeding commenced under or with respect to this Agreement shall be brought only in the count or district courts of Lawrence County, South Dakota, and the parties irrevocably consent to the jurisdiction of such courts and waive any right to alter or change venue, including by removal.  Each party hereto hereby waives its respective rights to trail by jury of any suit, claims, cause of action or other action to enforce any term or condition of this Agreement or otherwise arising out of or related to this Agreement.
+                    | #{''}
+                    | 14.	Governing Law.  This Agreement shall be construed and enforced in accordance with and governed by the laws of South Dakota to the extent any provision of this Agreement is found to be unenforceable under any law, rule or regulation of any state or the federal government, the remaining provisions of this Agreement shall remind in full force and effect and this Agreement shall be interpreted and enforced in a manner to allow the remaining provisions hereof to be enforceable to the greatest extent possible.
+                    | #{''}
+                    | 15.	Entire Agreement, Amendment. This Agreement constitutes the entire agreement between the parties with respect to the hiring of the contract sales representative by the Company and shall be deemed to supersede and cancel any other written agreements between the parties hereto relating to the transactions herein contemplated. No representation, inducement or condition set forth herein has been made or relied upon by any party. This Agreement may be amended, modified or waived only by an instrument in writing signed by the CSR and an authorized executive officer of the Company.
+                    | #{''}
+                    | IN WITNESS WHEREOF, the parties have executed this Agreement on the date first above written.
+                    | Name of CSR/Adventure Advisor: {{user.first_name}} {{user.last_name}}
+                .form-group
+                  label.form-control-wide
+                    input(type='checkbox', ng-model="purchaseAgreementChecked")
+                    |  I, {{user.first_name}} {{user.last_name}}, have read and agree to the terms of the ROLLING BONES OUTFITTERS, INC. Sales Representative Agreement.
+
+
+
+          button.btn.btn-primary.pull-right(style="margin-top: 30px;", ng-click="continue($event, card, user, huntCatalog, purchaseItem)") Continue
+          button.btn.btn-primary.pull-left(style="margin-top: 30px;", ng-click="cancel($event)") Cancel

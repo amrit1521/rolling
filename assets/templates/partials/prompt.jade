@@ -1,0 +1,18 @@
+.modal-header
+  span {{message}}
+.modal-body
+  div( ng-if="label" )
+    label {{label}}
+      input( ng-model="answers", type="text" )
+
+  div( ng-if="inputs" )
+    label( ng-repeat="input in inputs" ) {{input}}
+      input( ng-model="answers[input]", type="text" )
+
+.modal-footer.prompt
+
+  // Right side in reverse order from how they appear
+  button.btn.btn-primary.pull-right( ng-repeat="button in buttons", ng-click='ok(button, answers)') {{button}}
+
+  // Left side
+  button.btn.btn-default.pull-left(ng-click='cancel()') Cancel

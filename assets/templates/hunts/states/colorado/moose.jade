@@ -1,0 +1,61 @@
+div( ng-controller="HuntsColoradoHunts" )
+  div( ng-controller="HuntsColoradoMoose" )
+    .invidualChoices( ng-show="!choice.group_id.length" )
+      .form-group
+        .col-lg-12
+          fieldset
+            legend First Choice
+            .col-md-12
+              span.col-md-1 B &mdash;
+              input.col-md-1( ng-model="choice.hunt_code1_1" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code1_2" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code1_3" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code1_4" )
+
+      .form-group
+        .col-lg-12
+          fieldset
+            legend Second Choice
+            .col-md-12
+              span.col-md-1 B &mdash;
+              input.col-md-1( ng-model="choice.hunt_code2_1" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code2_2" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code2_3" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code2_4" )
+
+      .form-group
+        .col-lg-12
+          fieldset
+            legend Third Choice
+            .col-md-12
+              span.col-md-1 B &mdash;
+              input.col-md-1( ng-model="choice.hunt_code3_1" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code3_2" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code3_3" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code3_4" )
+
+      .form-group
+        .col-lg-12
+          fieldset
+            legend Fourth Choice
+            .col-md-12
+              span.col-md-1 B &mdash;
+              input.col-md-1( ng-model="choice.hunt_code4_1" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code4_2" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code4_3" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code4_4" )
+
+    .form-group( ng-include="'templates/hunts/group_id.html'" )
+    .form-group( ng-include="'templates/hunts/hunt_buttons.html'" )

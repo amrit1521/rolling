@@ -1,0 +1,74 @@
+#AdminState.container( ng-controller="AdminState" )
+  .page-header
+    .row
+      .col-lg-12.col-md-12
+        a.btn.btn-default.btn-sm( href="#!/admin/states" ) < Back
+        a.btn.btn-default.pull-right.btn-sm(href="#!/admin/state/hunts/{{state._id}}") Manage Hunts
+  .row
+    .col-lg-6.col-md-6
+      .well
+        form.form-horizontal( ng-submit="submit(state)" )
+          fieldset
+            legend {{state.name}}
+            .form-group
+              label.col-lg-4.control-label( for='inputName' ) Name
+              .col-lg-8
+                input#inputName.form-control( type='text', placeholder="State Name", ng-model="state.name" )
+
+            .form-group
+              label.col-lg-4.control-label( for='inputAbbreviation' ) Abbreviation
+              .col-lg-8
+                input#inputAbbreviation.form-control( type='text', placeholder='2 Letter State Abbreviation', ng-model="state.abbreviation" )
+
+            .form-group
+              label.col-lg-4.control-label( for='inputIdTitle' ) State ID Title
+              .col-lg-8
+                input#inputIdTitle.form-control( type='text', placeholder="State ID Title", ng-model="state.idTitle" )
+            .form-group
+              .col-lg-offset-4.col-lg-8
+                .checkbox
+                  label
+                    input( type='checkbox', ng-model="state.active" )
+                    | Active
+            .form-group
+              .col-lg-offset-4.col-lg-8
+                .checkbox
+                  label
+                    input( type='checkbox', ng-model="state.idRequired" )
+                    | State ID Required
+            .form-group
+              .col-lg-offset-4.col-lg-8
+                .checkbox
+                  label
+                    input( type='checkbox', ng-model="state.hasPoints" )
+                    | Has Points
+            .form-group
+              .col-lg-offset-4.col-lg-8
+                .checkbox
+                  label
+                    input( type='checkbox', ng-model="state.applicationReady" )
+                    | Application Ready
+            .form-group
+              label.col-lg-4.control-label( for='inputUrl' ) Website URL
+              .col-lg-8
+                input#inputUrl.form-control( type='text', placeholder='URL', ng-model="state.url" )
+
+            .form-group
+              label.col-lg-4.control-label( for='inputApplicationUrl' ) Application URL
+              .col-lg-8
+                input#inputApplicationUrl.form-control( type='text', placeholder='URL', ng-model="state.applicationUrl" )
+
+            .form-group
+              label.col-lg-4.control-label( for='inputOddsUrl' ) Draw Odds URL
+              .col-lg-8
+                input#inputOddsUrl.form-control( type='text', placeholder='URL', ng-model="state.oddsUrl" )
+
+            .form-group
+              label.col-lg-4.control-label( for='inputPointsUrl' ) Points URL
+              .col-lg-8
+                input#inputPointsUrl.form-control( type='text', placeholder='URL', ng-model="state.pointsUrl" )
+
+            button.btn.btn-primary.pull-right.col-lg-4.col-xs-12 Save
+            a.btn.btn-default.col-lg-4.col-xs-12( href="#!/admin/states" ) Cancel
+
+            // a.btn.btn-default.col-lg-4.col-xs-12( href="#", ng-click="initState($event, state)", ng-show="user.isAdmin" ) Init State

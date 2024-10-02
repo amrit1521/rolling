@@ -1,0 +1,102 @@
+#AdminEmailsPoints.container( ng-controller="AdminEmailsPoints" )
+  .page-header
+    .row
+    .col-md-6
+      .well
+        form.form-horizontal
+          fieldset
+          span
+            legend(style="padding-bottom: 5px;") Yearly Points Email
+              button.btn.btn-primary.pull-right( ng-click="sendAll(email)" ) Send to all users
+            .form-group
+              label.form-control-wide( for='inputbox' )
+                input#inputbox(type='checkbox', ng-model="email.enabled")
+                |  Enable sending yearly points emails
+            .form-group
+              label.col-lg-4.control-label( for='textSubject' ) Email Subject
+              .col-lg-8
+                input#textSubject.form-control( type='text', placeholder='Email Subject', ng-model="email.subject" )
+            .form-group
+              label.col-lg-4.control-label( for='textareaBefore' ) Email HTML
+              .col-lg-8
+                textarea#textareaBefore.form-control( type='text', placeholder='Text of the email as HTML.  To personalize the email, see the Legend for tags that can be used as placeholders for user specific text...', ng-model="email.email_html" )
+            .form-group
+              label.col-lg-4.control-label( for='textareaBefore' ) Email Plain Text
+              .col-lg-8
+                textarea#textareaBefore.form-control( type='text', placeholder='Text of the email as plain text.  To personalize the email, see the Legend for tags that can be used as placeholders for user specific text...', ng-model="email.email_text" )
+            .form-group
+              label.col-lg-4.control-label Test User
+              .col-lg-8
+                select#selectUser.form-control( ng-model="email.testUserId", ng-options="testUser._id as testUser.displayName for testUser in testUsersOptions" )
+                  option( value="" )
+                button.btn.btn-primary.pull-right( style="margin:5px;", ng-click="sendTestEmail(email)" ) Send Test Email
+
+            button.btn.btn-primary.pull-right( ng-click="submit(email)" ) Save
+            a.btn.btn-primary( href="#!/admin/emails" ) Cancel
+
+
+    .col-md-6
+      h3 Legend
+
+      table.table.table-bordered
+        tbody
+          tr
+            td <%- HuntingProfileAndPoints %>
+            td All the users hunting profile notes and points for each state
+          tr
+            td <%= user.name %>
+            td Full Name
+          tr
+            td <%= user.first_name %>
+            td First Name
+          tr
+            td <%= user.last_name %>
+            td Last Name
+          tr
+            td <%= user.email %>
+            td Email Address
+          tr
+            td <%= user.mail_address %>
+            td Address
+          tr
+            td <%= user.mail_city %>
+            td City
+          tr
+            td <%= user.mail_state %>
+            td State of Residence
+          tr
+            td <%= user.mail_postal %>
+            td Zip Code
+          tr
+            td <%= user.dob %>
+            td Date of Birth
+          tr
+            td <%= user.eyes %>
+            td Eye Color
+          tr
+            td <%= user.gender %>
+            td Gender (Male or Female)
+          tr
+            td <%= user.hair %>
+            td Hair Color
+          tr
+            td <%= user.heightFeet %>
+            td Feet Portion of Height
+          tr
+            td <%= user.heightInches %>
+            td Inches Portion of Height
+          tr
+            td <%= user.phone_day %>
+            td Day Time Phone #
+          tr
+            td <%= user.phone_home %>
+            td Home Phone #
+          tr
+            td <%= user.res_months %>
+            td Months Portion of Residence
+          tr
+            td <%= user.res_years %>
+            td Years Portion of Residence
+          tr
+            td <%= user.weight %>
+            td Weight in lbs.

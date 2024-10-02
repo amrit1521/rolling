@@ -1,0 +1,18 @@
+.row
+  .form-group.select-list
+
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice[0]", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+      option( value="" )
+
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice[1]", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+      option( value="" )
+
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice[2]", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+      option( value="" )
+
+.row
+  .form-group
+    .checkbox
+      label
+        input( ng-disabled="huntNotEditable(hunt)", type="checkbox", ng-model="hunt.choice.elkCombo", ng-true-value="'salesItems[2009150_20160301_20170228].checked'" )
+        |  Purchase Elk Combo

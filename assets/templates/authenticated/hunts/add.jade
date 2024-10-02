@@ -1,0 +1,15 @@
+.container( ng-controller="HuntsAdd" )
+  .page-header
+  .row
+    .col-lg-6.col-sm-12
+      h3 Choose a hunt you would like to add
+
+      table.table.table-striped.table-hover( ng-show='hunts.length' )
+        thead
+          tr
+            th Name
+        tbody
+          tr( ng-repeat="hunt in hunts | orderBy:'name'" )
+            td {{hunt.name}}
+            td
+              a.btn.btn-default( href="#!/hunts/application/{{hunt._id}}" ) Add

@@ -1,0 +1,31 @@
+.row
+  .col-sm-12
+    fieldset
+      legend {{state.name}}
+
+      div
+        table( ng-show='state.userHasPoints', class="table table-striped table-bordered table-hover" )
+          thead
+            tr
+              th Hunt
+              th # Points
+              th.hidden-xs Hunt Area
+              th Applied Date
+              //th( ng-show="showApplications(state)" ) Edit Choices
+          tbody
+            tr.oddgold(ng-repeat="hunt in state.hunts | orderBy:huntSort", ng-show="showHunt(state, hunt)")
+              td {{hunt.name}}
+              td {{hunt.point.count}}
+                a( href="#", ng-show="hunt.point.weight != null", tooltip="Points weight", ng-click="explainWeight($event, hunt.point)" )  / {{hunt.point.weight}}
+              td.hidden-xs {{hunt.point.area}}
+              td {{hunt.point.lastPoint}}
+              //td( ng-show="showApplications(state)" )
+                a.btn.btn-default.btn-sm.col-xs-12( href="#!/hunts/editHunt/{{state._id}}/{{hunt._id}}/{{urlify(hunt.name)}}/{{hunt.name}}" )
+                  span Apply
+        div(ng-show='state.loading')
+          | Loading
+          img(src='img/ajax-loader.gif')
+      div(ng-hide='state.active', style='background-color: #fff; min-height: 300px; border-radius: 5px; margin-left: 122px; padding: 10px;')
+        h1 {{state.name}}
+        br
+        | | Coming Soon

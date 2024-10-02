@@ -1,0 +1,28 @@
+#ChangePassword.container( ng-controller="ChangeParent" )
+  .page-header
+  .row
+    .col-lg-6.col-md-6
+      .well
+        form.form-horizontal( ng-submit="submit(newParent)" )
+          fieldset
+            legend Change Parent
+            div
+              .form-group(ng-show="user.parentId")
+                label.col-lg-4.control-label Current Parent:
+                .col-lg-8(style="padding-top: 5px;")
+                  span(ng-show="user.parent_clientId") {{user.parent_name}} ({{user.parent_clientId}})
+                  span(ng-hide="user.parent_clientId") {{user.parent_name}}
+
+            .form-group
+              label.col-lg-4.control-label() New Parent's Client Id
+              .col-lg-8
+                input.form-control( type='text', placeholder='Client Id', ng-model="newParentClientId", ng-blur="findParent($event, newParentClientId)" )
+
+            .form-group()
+              label.col-lg-4.control-label New Parent:
+              .col-lg-8(style="padding-top: 5px;")
+                span(ng-show="newParent.clientId") {{newParent.name}} ({{newParent.clientId}})
+                span(ng-hide="newParent.clientId") {{newParent.name}}
+
+
+            button.btn.btn-primary.col-lg-offset-4.col-lg-8.col-xs-12 Submit

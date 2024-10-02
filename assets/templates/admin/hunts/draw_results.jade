@@ -1,0 +1,31 @@
+.container( ng-controller="AdminDrawResults" )
+  .page-header
+    span
+      h3 {{state}} Draw Results
+      .form-group(style="margin-top: 10px; float:right;")
+        .col-md-push-1
+          label(style="float:left;")
+            | Status
+          select#statusType.form-control.col-md-12( ng-model="statusType", ng-change="getDrawResults(statusType)", ng-options="key as value for (key , value) in statusTypes | orderBy:'name'" style="margin: 0px 0px 10px 10px; width: auto; text-align: right;" )
+
+  .row
+    table.table.table-striped.table-hover( ng-show='drawResults.length' )
+        thead
+
+          // Client name, phone #, email address, Hunt Series, Status
+          tr
+            th Name
+            th Phone #
+            th Email Address
+            th Hunt Series
+            th Notes
+            th Status
+        tbody
+          tr( ng-repeat="drawResult in drawResults | orderBy:'last_name'" )
+            td
+              a( href="#!/admin/masquerade/{{drawResult.userId}}" ) {{drawResult.userName}} {{drawResult.suffix}} ({{drawResult.clientId}})
+            td {{drawResult.phone_day}}
+            td {{drawResult.email}}
+            td {{drawResult.name}} - {{drawResult.unit}}
+            td {{drawResult.notes}}
+            td {{drawResult.status}}

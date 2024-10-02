@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="com.gotmytag.receiver.Receiver" version="0.1.0">
+    <name>Receiver</name>
+    <description>Android Receiver Plugin</description>
+    <license>Private</license>
+    <keywords>phonegap,receiver</keywords>
+
+    <js-module src="www/receiver.js" name="gmtReceiver">
+        <clobbers target="gmtReceiver" />
+    </js-module>
+
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="Receiver">
+                <param name="android-package" value="com.gotmytag.receiver.Receiver"/>
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <receiver android:exported="true" android:name="com.gotmytag.receiver.Receiver">
+                <intent-filter>
+                    <action android:name="com.android.vending.INSTALL_REFERRER" />
+                </intent-filter>
+            </receiver>
+        </config-file>
+
+        <source-file src="src/com/gotmytag/receiver/Receiver.java" target-dir="src/com/gotmytag/receiver" />
+    </platform>
+</plugin>

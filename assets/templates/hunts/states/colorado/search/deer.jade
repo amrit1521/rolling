@@ -1,0 +1,22 @@
+.select-list
+  .form-group
+    input(ng-disabled="huntNotEditable(hunt)", type="text", ng-model="hunt.choice.hunt_code1" )
+  .form-group
+    input(ng-disabled="huntNotEditable(hunt)", type="text", ng-model="hunt.choice.hunt_code2" )
+  .form-group
+    input(ng-disabled="huntNotEditable(hunt)", type="text", ng-model="hunt.choice.hunt_code3" )
+  .form-group
+    input(ng-disabled="huntNotEditable(hunt)", type="text", ng-model="hunt.choice.hunt_code4" )
+  label.form-control-small Group Id:
+    input(ng-disabled="huntNotEditable(hunt)", type="text", ng-model="hunt.choice.group_number" )
+
+  .row
+    .col-md-12( ng-init="choice.unsuccess = '1,REFUND'" )
+      .radio
+        label
+          input( type='radio', ng-model="hunt.choice.unsuccess", value="2,LEFTOVER DRAW" )
+          |  LEFTOVER DRAW
+      .radio
+        label
+          input( type='radio', ng-model="hunt.choice.unsuccess", value="1,REFUND" )
+          |  REFUND

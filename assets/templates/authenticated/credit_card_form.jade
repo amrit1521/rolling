@@ -1,0 +1,64 @@
+form.form-horizontal( ng-submit="submit(card)" )
+
+  // We need to add this a select box in the future, but for now, we will just assume all customers are from the USA
+  input.form-control( type="hidden", ng-model="card.country", value="USA" )
+
+  fieldset
+    legend Enter Credit Card
+
+    .form-group
+      label.col-lg-4.control-label( for='inputName' ) Name on Card
+      .col-lg-8
+        input#inputName.form-control( placeholder='Name on Card', ng-model="card.name" )
+
+    .form-group
+      label.col-lg-4.control-label( for='inputPhone' ) Billing Phone
+      .col-lg-8
+        input#inputPhone.form-control( placeholder='Billing Phone', ng-model="card.phone" )
+
+    .form-group
+      label.col-lg-4.control-label( for='inputAddress' ) Address
+      .col-lg-8
+        input.form-control( type='address', placeholder="Street 1", ng-model="card.address" )
+      .col-lg-8.col-lg-offset-4
+        input.form-control( type='address', placeholder="Street 2", ng-model="card.address2" )
+      .col-lg-8.col-lg-offset-4
+        input.form-control( type='city', placeholder="City", ng-model="card.city" )
+      .col-lg-8.col-lg-offset-4
+        select.form-control( ng-model="card.state", ng-options="state for state in states" )
+          option( value="" ) State
+      .col-lg-8.col-lg-offset-4
+        select.form-control( ng-model="card.country", ng-options="country for country in countries" )
+          option( value="" ) Country
+      .col-lg-8.col-lg-offset-4
+        input.form-control( type='text', placeholder="Zip Code", ng-model="card.postal" )
+
+    .form-group
+      label.col-lg-4.control-label( for='inputType' ) Card Type
+      .col-lg-8
+        select#select.form-control( ng-model="card.type", ng-options="type for type in cardTypes" )
+          option( value="" )
+
+    .form-group
+      label.col-lg-4.control-label( for='inputNumber' ) Credit Card Number
+      .col-lg-8
+        input#inputNumber.form-control( placeholder='Credit Card Number', ng-model="card.number" )
+
+    .form-group
+      label.col-lg-4.control-label( for='inputVerificationCode' ) Credit Card Verification Code
+      .col-lg-8
+        input#inputVerificationCode.form-control( placeholder='Credit Card Verification Code', ng-model="card.code" )
+
+    .form-group
+      label.col-lg-4.control-label( for='inputExpiration' ) Expiration Date
+      .col-lg-4
+        input#inputExpirationMonth.form-control( placeholder='Month', ng-model="card.month" )
+      .col-lg-4
+        input#inputExpirationYear.form-control( placeholder='Year', ng-model="card.year" )
+
+    .cc-buttons
+      button.btn.btn-primary.pull-right Checkout&nbsp;
+        img( src="img/ajax-loader.gif", ng-show="running" )
+      a.btn.btn-default.col-sm-3.pull-right( href="{{receiptURL}}", target="_blank", ng-show="receiptURL" ) View Receipt
+      a.btn.btn-default.col-sm-3.pull-right( href="{{license}}", target="_blank", ng-show="licenseUrls", ng-repeat="license in licenseUrls") View License # {{$index}}
+      a.btn.btn-default.pull-left( href="#", ng-click="back($event)" ) < Back

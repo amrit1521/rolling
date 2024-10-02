@@ -1,0 +1,21 @@
+div( ng-controller="HuntsIdahoHunts" )
+  .invidualChoices( ng-show="!choice.group_id.length" )
+
+    .form-group
+      .col-lg-12
+        fieldset
+          legend First Choice
+          .col-md-4
+            select.form-control( ng-model="choice.ch_choice_1", ng-options="option.value + ' ' + option.area + ' ' + option.permitsAvailable + ' ' + option.start + ' ' + option.end for option in huntOptions[hunt._id]" )
+              option( value="" )
+
+    .form-group
+      .col-lg-12
+        fieldset
+          legend Second Choice
+          .col-md-4
+            select.form-control( ng-model="choice.ch_choice_2", ng-options="option.value + ' ' + option.area + ' ' + option.permitsAvailable + ' ' + option.start + ' ' + option.end for option in huntOptions[hunt._id]" )
+              option( value="" )
+
+  .form-group( ng-include="'templates/hunts/group_id.html'" )
+  .form-group( ng-include="'templates/hunts/hunt_buttons.html'" )

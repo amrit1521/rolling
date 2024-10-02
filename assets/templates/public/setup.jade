@@ -1,0 +1,118 @@
+.container
+  .row
+    .col-lg-11.col-md-11(ng-hide="searchingUser")
+      .well
+        form.form-horizontal( ng-submit="submit(user, state)" )
+          fieldset
+            legend Add New User
+
+            //.state-info( ng-include="getStatePage(stateTemplate)" )
+            .input-group(ng-cloak, ng-show="isRBO()", style="margin-top:5px; margin-bottom: 25px;")
+              label( for='inputCheckbox' )
+                input(type='checkbox', ng-model="sendWelcomeEmail")
+                |  Send welcome email to this user?
+
+            .input-group(ng-cloak, ng-show="isRBO()")
+              label
+                input(type='checkbox', ng-model="subscribe_all")
+                |  Subscribe to Rolling Bones hunts, rifles, and product special emails?
+                .div(style="margin-top:5px; margin-bottom: 25px;")
+                  |  You may only check this box if this person gave you permission to send Rolling Bones Outfitter emails to them.
+
+            fieldset(style="margin-top:5px; margin-bottom: 25px;")
+              legend Contact Info
+              .form-group
+                label.col-lg-2.control-label() Email
+                .col-lg-8
+                  input#inputEmail.form-control( type='email', placeholder='Required', ng-model="user.email" )
+              .form-group
+                label.col-lg-2.control-label() First Name
+                .col-lg-8
+                  input#inputFirstName.form-control( type='text', placeholder="First Name", ng-model="user.first_name" )
+              .form-group
+                label.col-lg-2.control-label() Middle Name
+                .col-lg-8
+                  input#inputMiddleName.form-control( type='text', placeholder="Middle Name", ng-model="user.middle_name" )
+              .form-group
+                label.col-lg-2.control-label() Last Name
+                .col-lg-8
+                  input#inputLastName.form-control( type='text', placeholder="Last Name", ng-model="user.last_name" )
+              .form-group
+                label.col-lg-2.control-label() Suffix i.e.: Jr
+                .col-lg-8
+                  input#inputSuffixName.form-control( type='text', placeholder="Suffix i.e.: Jr", ng-model="user.suffix" )
+              .form-group
+                label.col-lg-2.control-label() Phone
+                .col-lg-8
+                  input#inputCell.form-control( type='phone', placeholder='Cell Phone', ng-model="user.phone_cell" )
+
+            // Mailing Address
+            fieldset(style="margin-top:5px; margin-bottom: 25px;")
+              legend Mailing Address
+              .form-group
+                label.col-lg-2.control-label Address
+                .col-lg-8
+                  input.form-control( type='address', placeholder="Street", ng-model="user.mail_address" )
+              .form-group
+                label.col-lg-2.control-label City
+                .col-lg-8
+                  input.form-control( type='city', placeholder="City", ng-model="user.mail_city" )
+              .form-group
+                label.col-lg-2.control-label State
+                .col-lg-8
+                  select.form-control( ng-model="user.mail_state", ng-options="state for state in states" )
+                    option( value="" ) State
+              .form-group
+                label.col-lg-2.control-label Zip Code
+                .col-lg-8
+                  input.form-control( type='text', placeholder="Zip Code", ng-model="user.mail_postal" )
+              .form-group
+                label.col-lg-2.control-label Country
+                .col-lg-8
+                  select.form-control( ng-model="user.mail_country", ng-options="country for country in countries" )
+                    option( value="" ) Country
+
+
+            // Physical Address
+            fieldset(style="margin-top:5px; margin-bottom: 25px;")
+              legend Physical Address
+              .form-group
+                label.col-lg-2.control-label Address
+                .col-lg-8
+                  input.form-control( type='address', placeholder="Street", ng-model="user.physical_address" )
+              .form-group
+                label.col-lg-2.control-label City
+                .col-lg-8
+                  input.form-control( type='city', placeholder="City", ng-model="user.physical_city" )
+              .form-group
+                label.col-lg-2.control-label State
+                .col-lg-8
+                  select.form-control( ng-model="user.physical_state", ng-options="state for state in states" )
+                    option( value="" ) State
+              .form-group
+                label.col-lg-2.control-label Zip Code
+                .col-lg-8
+                  input.form-control( type='text', placeholder="Zip Code", ng-model="user.physical_postal" )
+              .form-group
+                label.col-lg-2.control-label Country
+                .col-lg-8
+                  select.form-control( ng-model="user.physical_country", ng-options="country for country in countries" )
+                    option( value="" ) Country
+
+            fieldset(ng-cloak, ng-show="adminTenantEdit()", style="margin-top:5px; margin-bottom: 25px;")
+              legend Other Info
+              .input-group()
+                label
+                  input(type='checkbox', ng-model="user.isOutfitter")
+                  |  Is Outfitter
+              .input-group()
+                label
+                  input(type='checkbox', ng-model="user.isVendor")
+                  |  Is Vendor
+
+          .text-center
+              button.btn.btn-primary Submit
+
+    .col-md-6(ng-show="searchingUser")
+      h1.center Setting up new user&nbsp;
+        img( src="img/spinner.gif" )

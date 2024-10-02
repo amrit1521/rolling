@@ -1,0 +1,14 @@
+.container( ng-controller="UserNotifications" )
+  .row
+    .col-md-6
+      ul.list-group( ng-show="notifications.messages.length" )
+        li.notification( ng-repeat="notification in notifications.messages", ng-swipe-left="showButtons(notification, true)", ng-swipe-right="showButtons(notification, false)" )
+          .tools.pull-right( ng-class="{shown: notification.showButtons}" )
+            | &#8230;&nbsp;
+            button.btn.btn-danger Delete
+            | &nbsp;
+            button.btn.btn-info Share
+          .content
+            pre {{notification.message}}
+
+      div( ng-hide="notifications.messages.length" ) Message count: 0

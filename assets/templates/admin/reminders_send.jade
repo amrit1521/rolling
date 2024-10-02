@@ -1,0 +1,12 @@
+#AdminServiceRequests.container( ng-controller="ReminderSend" )
+  .page-header
+    h3 Preview: {{reminder.title}}
+    span(ng-hide="loading") Found {{total}} Draw Results
+  .row
+    .col-md-12
+      span(ng-show="loading") Loading...
+      img( src="img/spinner.gif", ng-show="loading" )
+
+      div#grid
+
+

@@ -1,0 +1,11 @@
+| <script type="text/ng-template" id="partials/navs/authenticated.html">
+div( ng-controller="Navigation" )
+  .top-nav
+    ul( class="pull-right inline" )
+
+      li {{"logged in as" | tl}} {{user.name}}
+
+      li( class="form-inline" )
+        a( href="#", class="signout", ng-click="logout()" ) {{"sign out" | tl}}
+    .clearfix
+| </script>

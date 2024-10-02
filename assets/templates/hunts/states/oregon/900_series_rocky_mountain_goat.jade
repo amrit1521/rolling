@@ -1,0 +1,45 @@
+div( ng-controller="HuntsOregonHunts" )
+  .invidualChoices( ng-show="!choice.group_id.length" )
+
+    .form-group
+      .col-lg-12
+        fieldset
+          legend First Choice
+          .col-md-4
+            select.form-control( ng-model="choice.choice_1", ng-options="option.value + ' ' + option.area for option in huntOptions[hunt._id] | orderBy:'value'" )
+              option( value="" )
+
+    .form-group
+      .col-lg-12
+        fieldset
+          legend Second Choice
+          .col-md-4
+            select.form-control( ng-model="choice.choice_2", ng-options="option.value + ' ' + option.area for option in huntOptions[hunt._id] | orderBy:'value'" )
+              option( value="" )
+
+    .form-group
+      .col-lg-12
+        fieldset
+          legend Third Choice
+          .col-md-4
+            select.form-control( ng-model="choice.choice_3", ng-options="option.value + ' ' + option.area for option in huntOptions[hunt._id] | orderBy:'value'" )
+              option( value="" )
+
+    .form-group
+      .col-lg-12
+        fieldset
+          legend Fourth Choice
+          .col-md-4
+            select.form-control( ng-model="choice.choice_4", ng-options="option.value + ' ' + option.area for option in huntOptions[hunt._id] | orderBy:'value'" )
+              option( value="" )
+
+    .form-group
+      .col-lg-12
+        fieldset
+          legend Fifth Choice
+          .col-md-4
+            select.form-control( ng-model="choice.choice_5", ng-options="option.value + ' ' + option.area for option in huntOptions[hunt._id] | orderBy:'value'" )
+              option( value="" )
+
+  .form-group( ng-include="'templates/hunts/group_id.html'" )
+  .form-group( ng-include="'templates/hunts/hunt_buttons.html'" )

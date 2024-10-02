@@ -1,0 +1,18 @@
+.form-group
+  .col-lg-12
+    fieldset
+      legend First Choice
+      .col-md-4
+        .form-group
+          label Hunt
+          select.form-control( ng-model="hunt.firstChoice.hunt", ng-options="state for state in states" )
+            option( value="" ) Select a hunt
+      .col-md-4
+        .form-group
+          label Type
+          select.form-control( ng-model="hunt.firstChoice.type", ng-options="state for state in states" )
+            option( value="" ) Select a type
+.form-group
+  .col-md-8
+    button.btn.btn-default.pull-right.col-sm-3.col-xs-12 Save
+    button.btn.btn-default.col-sm-3.col-xs-12( ng-click="testRun(hunt)" ) Test Run

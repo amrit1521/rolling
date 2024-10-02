@@ -1,0 +1,23 @@
+#AdminStates.container( ng-controller="AdminStates" )
+  .page-header
+    .row
+      .col-xs-12
+        h3 Manage States
+          a.btn.btn-default.pull-right.btn-sm( href="#!/admin/states/add" ) Add
+  .row
+    .col-lg-12.col-md-12
+
+      table.table.table-striped.table-hover( ng-show='states.length' )
+        thead
+          tr
+            th Name
+            th Active
+            th.hidden-xs Has Points
+            th.hidden-xs URL
+        tbody
+          tr( ng-repeat="state in states | orderBy:'name'" )
+            td
+              a( href="#!/admin/state/{{state._id}}" ) {{state.name}}
+            td {{state.active}}
+            td.hidden-xs {{state.hasPoints}}
+            td.hidden-xs {{state.url}}

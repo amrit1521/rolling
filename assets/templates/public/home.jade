@@ -1,0 +1,65 @@
+.container
+  .page-header
+    h2( ng-hide="tenant._id == '5684a2fc68e9aa863e7bf182' || tenant._id == '54a8389952bf6b5852000007'" style="padding-top: 21px;" ) Be a more successful hunter.
+    h2( ng-show="tenant._id == '5684a2fc68e9aa863e7bf182' || tenant._id == '54a8389952bf6b5852000007'" style="padding-top: 21px;" ) Get better hunts more often with RADS.
+  .row( ng-hide="tenant._id == '5684a2fc68e9aa863e7bf182' || tenant._id == '54a8389952bf6b5852000007'" style="padding-top: 21px;" )
+    .col-md-8
+      img.home-img.rounded(src='img/app1.png')
+      p.lead.
+        PointHunter is the fastest and easiest way to know your points in the western states. The Point Hunter application shows you bonus and preference points for each big game species. Bonus and Preference points are difficult to find. Each state has different systems and requires you to fill out a bunch of information. Enter your information once and have all your preference points displayed. Once logged in, you will have these points displayed at your fingertips year round. At the click of a button see your updated points at any time in any state. You will plan ways to receive hard to get tags more effectively. This can help you go on better hunts more often.
+      .video-container
+        iframe.col-md-8(src='//www.youtube.com/embed/bwWaV0trHrw', frameborder='0', allowfullscreen='allowfullscreen')
+
+    .col-md-4( style="margin-bottom: 1em" )
+      a.add-referrer(href='https://itunes.apple.com/us/app/pointhunter/id900742380?mt=8&uo=4&at=1l3vpF5&ct=', target='itunes_store')
+        img(alt='Get it on Google Play', src='/img/available-on-the-app-store.png' )
+    .col-md-4( style="margin-bottom: 1em" )
+      a.add-referrer(href='https://play.google.com/store/apps/details?id=com.gotmytag.pointhunter&referrer=utm_source%3Daffiliate%26utm_medium%3Dwebsite%26utm_campaign%3D', target='play_store')
+        img(alt='Get it on Google Play', src='/img/en_generic_rgb_wo_60.png', style="max-width: 163px;" )
+
+    .col-lg-12.col-md-12.col-sm-12.col-xs-12.inline-buttons
+      a.btn.btn-default( href="#!/fg_sites", class="col-xs-12 col-sm-6 col-md-4" ) Fish & Game Websites
+      a.btn.btn-default( href="#!/fg_apps", class="col-xs-12 col-sm-6 col-md-4" ) Fish & Game Applications
+      a.btn.btn-default( href="#!/fg_odds", class="col-xs-12 col-sm-6 col-md-4" ) Fish & Game Draw Odds
+
+  .row( ng-show="tenant._id == '5684a2fc68e9aa863e7bf182' || tenant._id == '54a8389952bf6b5852000007'" style="padding-top: 21px;" )
+    .col-md-8
+      img.home-img.rounded(src='img/app1.png')
+      p.lead.
+        Every hunter wants to draw great tags, but each state uses a different system and preference points are hard to find.  RADS, Rolling Bones Application and Deadline Service, is a fast and easy way to know your points for each big game specie.  You fill out your information once and have your updated bonus and preference points displayed for all states and species.  Ever miss an application deadline?  Choose your states and RADS will notify you when application periods are open and again 2 days before they end.  RADS can help you plan to get tags more effectively and, most importantly, will notify you with your draw results!!
+      .video-container
+        iframe.col-md-8(src='//www.youtube.com/embed/bwWaV0trHrw', frameborder='0', allowfullscreen='allowfullscreen')
+
+    .col-md-4( style="margin-bottom: 1em" )
+      a.add-referrer(href='https://itunes.apple.com/us/app/pointhunter/id900742380?mt=8&uo=4&at=1l3vpF5&ct=', target='itunes_store')
+        img(alt='Get it on Google Play', src='/img/available-on-the-app-store.png' )
+    .col-md-4( style="margin-bottom: 1em" )
+      a.add-referrer(href='https://play.google.com/store/apps/details?id=com.gotmytag.pointhunter&referrer=utm_source%3Daffiliate%26utm_medium%3Dwebsite%26utm_campaign%3D', target='play_store')
+        img(alt='Get it on Google Play', src='/img/en_generic_rgb_wo_60.png', style="max-width: 163px;" )
+
+    .col-lg-12.col-md-12.col-sm-12.col-xs-12.inline-buttons
+      a.btn.btn-default( href="#!/fg_sites", class="col-xs-12 col-sm-6 col-md-4" ) Fish & Game Websites
+      a.btn.btn-default( href="#!/fg_apps", class="col-xs-12 col-sm-6 col-md-4" ) Fish & Game Applications
+      a.btn.btn-default( href="#!/fg_odds", class="col-xs-12 col-sm-6 col-md-4" ) Fish & Game Draw Odds
+
+
+
+  script.
+    jQuery(document).ready(function () {
+      var params, referrer;
+      if (window.location.search.length > 1) {
+        params = jQuery.parseParams(window.location.search.substr(1));
+        referrer = params.referrer;
+      }
+
+      if (!referrer || referrer.length == 0) {
+        referrer = 'website';
+      }
+
+      jQuery('.add-referrer').each(function (index, element) {
+        var href, $element;
+        $element = jQuery(element);
+        href = $element.attr('href');
+        jQuery(element).attr('href', href+referrer);
+      });
+    });

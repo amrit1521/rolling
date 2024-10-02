@@ -1,0 +1,44 @@
+div( ng-controller="HuntsNewMexicoBigHornSheep" )
+
+  .form-group.select-list
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice1_hunt_id", ng-change="setHuntOptions('choice1_hunt_id', hunt._id, hunt.choice.choice1_hunt_id)", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+      option( value="" )
+    br
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice1_option1", ng-show="hunt.choice.choice1_hunt_id", ng-options="param.value as param.name for param in hunt.BigHornOptions['choice1_hunt_id'] | orderBy:'name'" )
+      option( value="" ) Select hunt area choice 1
+    br
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice1_option2", ng-show="hunt.BigHornOptions['choice1_hunt_id'].length > 1", ng-options="param.value as param.name for param in hunt.BigHornOptions['choice1_hunt_id'] | orderBy:'name'" )
+      option( value="" ) Select hunt area choice 1
+    br
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice1_option3", ng-show="hunt.BigHornOptions['choice1_hunt_id'].length > 2", ng-options="param.value as param.name for param in hunt.BigHornOptions['choice1_hunt_id'] | orderBy:'name'" )
+      option( value="" ) Select hunt area choice 1
+
+  .form-group.select-list
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice2_hunt_id", ng-change="setHuntOptions('choice2_hunt_id', hunt._id, hunt.choice.choice2_hunt_id)", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+      option( value="" )
+    br
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice2_option1", ng-show="hunt.choice.choice2_hunt_id", ng-options="param.value as param.name for param in hunt.BigHornOptions['choice2_hunt_id'] | orderBy:'name'" )
+      option( value="" ) Select hunt area choice 2
+    br
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice2_option2", ng-show="hunt.BigHornOptions['choice2_hunt_id'].length > 1", ng-options="param.value as param.name for param in hunt.BigHornOptions['choice2_hunt_id'] | orderBy:'name'" )
+      option( value="" ) Select hunt area choice 2
+    br
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice2_option3", ng-show="hunt.BigHornOptions['choice2_hunt_id'].length > 2", ng-options="param.value as param.name for param in hunt.BigHornOptions['choice2_hunt_id'] | orderBy:'name'" )
+      option( value="" ) Select hunt area choice 2
+
+  .form-group.select-list
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice3_hunt_id", ng-change="setHuntOptions('choice3_hunt_id', hunt._id, hunt.choice.choice3_hunt_id)", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+      option( value="" )
+    br
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice3_option1", ng-show="hunt.choice.choice3_hunt_id", ng-options="param.value as param.name for param in hunt.BigHornOptions['choice3_hunt_id'] | orderBy:'name'" )
+      option( value="" ) Select hunt area choice 3
+    br
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice3_option2", ng-show="hunt.BigHornOptions['choice3_hunt_id'].length > 1", ng-options="param.value as param.name for param in hunt.BigHornOptions['choice3_hunt_id'] | orderBy:'name'" )
+      option( value="" ) Select hunt area choice 3
+    br
+    select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.choice3_option3", ng-show="hunt.BigHornOptions['choice3_hunt_id'].length > 2", ng-options="param.value as param.name for param in hunt.BigHornOptions['choice3_hunt_id'] | orderBy:'name'" )
+      option( value="" ) Select hunt area choice 3
+
+  .form-group.select-list
+    label.form-control-small(ng-disabled="huntNotEditable(hunt)") Outfitter #: O-
+      input( type="text", ng-model="hunt.choice.outfitter_num" )

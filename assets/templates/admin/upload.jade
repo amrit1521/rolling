@@ -1,0 +1,31 @@
+.container( ng-controller="AdminFileMakeUpload" )
+  .page-header
+  .row( flow-init="{target:'#{apiUrl}/uploader'}" )
+    .col-lg-6.col-md-6
+      .well
+        form.form-horizontal( ng-submit="submit(tenant)" )
+          fieldset
+            legend Upload your updates
+            //.form-group
+            //  label.col-lg-4.control-label( for='inputName' ) Name
+            //  .col-lg-8
+            //    input#inputName.form-control( type='text', placeholder="Tenant Name", ng-model="tenant.name" )
+            //
+            //.form-group
+            //  label.col-lg-4.control-label( for='inputDomain' ) Domain
+            //  .col-lg-8
+            //    input#inputDomain.form-control( type='text', placeholder="www.example.com", ng-model="tenant.domain" )
+            //
+            //button.btn.btn-primary.col-lg-offset-4.col-lg-8 Upload
+
+
+            .form-group
+            input(type='text', ng-model='myModelObj')
+
+            .form-group
+            input.btn.btn-default(type='file', ng-file-select='onFileSelect($files)')
+
+            .form-group
+            input.btn.btn-default(type='file', ng-file-select='onFileSelect($files)', multiple='multiple')
+
+            button(ng-click='upload.abort()') Cancel Upload

@@ -1,0 +1,21 @@
+div( ng-controller="HuntsMontanaHunts" )
+  .invidualChoices( ng-show="!choice.group_id.length" )
+
+    .form-group
+      .col-lg-12
+        fieldset
+          legend First Choice
+          .col-md-4
+            select.form-control( ng-model="choice.0", ng-options="option.name for option in huntOptions[hunt._id]" )
+              option( value="" )
+
+    .form-group
+      .col-lg-12
+        fieldset
+          legend Second Choice
+          .col-md-4
+            select.form-control( ng-model="choice.1", ng-options="option.name for option in huntFilter(huntOptions[hunt._id], 'COW')" )
+              option( value="" )
+
+  .form-group( ng-include="'templates/hunts/group_id.html'" )
+  .form-group( ng-include="'templates/hunts/hunt_buttons.html'" )

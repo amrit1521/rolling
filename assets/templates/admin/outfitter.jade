@@ -1,0 +1,123 @@
+#AdminServiceRequest.container( ng-controller="Outfitter" )
+  .row
+    .col-lg-9.col-md-9
+      img( src="img/spinner.gif", ng-show="loadingOutfitter" )
+      .well
+        form.form-horizontal( ng-submit="submit(outfitter)" )
+          fieldset
+            legend Outfitter: {{outfitter.name}}
+              button.btn.btn-primary.pull-right() Save
+          fieldset.address
+            legend Details
+            .form-group
+              label.col-lg-4.control-label() Name
+              .col-lg-8
+                input.form-control( type='text', placeholder="Name", ng-model="outfitter.name" )
+            .form-group
+              label.col-lg-4.control-label Default Commission %
+              .col-lg-8
+                input#commission.form-control(ng-model="outfitter.commission" )
+                //select.form-control( ng-model="outfitter.commission", ng-options="commission.value as commission.name for commission in outfitterComissions" )
+                  option( value="" )
+            .form-group()
+              label.col-lg-4.control-label Status
+              .col-lg-8
+                select.form-control( ng-model="outfitter.status", ng-options="status.value as status.name for status in outfitterStatus" )
+                  option( value="" )
+            .form-group
+              label.col-lg-4.control-label(for='contractEnd' ) Contract Ends
+              .col-lg-8
+                input#contractEnd.kendo-date-time-picker.form-control(type='date', ng-model="outfitter.contractEnd" )
+            .form-group()
+              label.col-lg-4.control-label Admin Only Notes
+              .col-lg-8
+                textarea.form-control(ng-model="outfitter.internalNotes")
+
+          // Contact
+          fieldset.address
+            legend Contact
+            .form-group
+              label.col-lg-4.control-label Business Email
+              .col-lg-8
+                input.form-control( type='email', placeholder='Email', ng-model="outfitter.business_email" )
+            .form-group
+              label.col-lg-4.control-label Business Phone
+              .col-lg-8
+                input.form-control( type='tel', placeholder='Email', ng-model="outfitter.business_phone" )
+            .form-group
+              label.col-lg-4.control-label( for='inputEmail' ) Personal Email
+              .col-lg-8
+                input#inputEmail.form-control( type='email', placeholder='Email', ng-model="outfitter.email" )
+            .form-group
+              label.col-lg-4.control-label( for='inputCellPhone' ) Personal Cell Phone
+              .col-lg-8
+                input#inputCellPhone.form-control( type='tel', ng-model="outfitter.phone_cell" )
+
+          // Mailing Address
+          fieldset.address
+            legend Mailing Address
+            .form-group
+              label.col-lg-4.control-label Address
+              .col-lg-8
+                input.form-control( type='address', placeholder="Street", ng-model="outfitter.mail_address" )
+            .form-group
+              label.col-lg-4.control-label City
+              .col-lg-8
+                input.form-control( type='city', placeholder="City", ng-model="outfitter.mail_city" )
+            .form-group
+              label.col-lg-4.control-label State
+              .col-lg-8
+                select#select.form-control( ng-model="outfitter.mail_state", ng-options="state for state in states" )
+                  option( value="" ) State
+            .form-group
+              label.col-lg-4.control-label Zip Code
+              .col-lg-8
+                input.form-control( type='text', placeholder="Zip Code", ng-model="outfitter.mail_postal" )
+            .form-group
+              label.col-lg-4.control-label Country
+              .col-lg-8
+                select#select.form-control( ng-model="outfitter.mail_country", ng-options="country for country in countries" )
+                  option( value="" ) Country
+
+
+          // Physical Address
+          fieldset.address
+            legend Physical Address
+            .form-group
+              label.col-lg-4.control-label Address
+              .col-lg-8
+                input.form-control( type='address', placeholder="Street", ng-model="outfitter.physical_address" )
+            .form-group
+              label.col-lg-4.control-label City
+              .col-lg-8
+                input.form-control( type='city', placeholder="City", ng-model="outfitter.physical_city" )
+            .form-group
+              label.col-lg-4.control-label State
+              .col-lg-8
+                select#select.form-control( ng-model="outfitter.physical_state", ng-options="state for state in states" )
+                  option( value="" ) State
+            .form-group
+              label.col-lg-4.control-label Zip Code
+              .col-lg-8
+                input.form-control( type='text', placeholder="Zip Code", ng-model="outfitter.physical_postal" )
+            .form-group
+              label.col-lg-4.control-label Country
+              .col-lg-8
+                select#select.form-control( ng-model="outfitter.physical_country", ng-options="country for country in countries" )
+                  option( value="" ) Country
+
+          // Files
+          fieldset.address
+            legend Attached Files
+            .form-group.dropZone
+              label.col-lg-4.control-label Files (contract, info, etc)
+              .col-lg-8
+                input#files(name="uploadedFiles" type="file" )
+
+            .form-group(ng-repeat="file in outfitter.files")
+              label.col-lg-4.control-label {{file.originalName}}
+              .col-lg-8
+                img.form-control(ng-src="{{file.url}}" alt="{{file.originalName}}" style="width:100%;height:inherit;")
+
+          button.btn.btn-primary.pull-right(style="margin-top: 30px;") Save
+          button.btn.btn-primary.pull-left(style="margin-top: 30px;", ng-click="cancel()") Cancel

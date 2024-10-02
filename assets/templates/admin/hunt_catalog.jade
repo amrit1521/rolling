@@ -1,0 +1,162 @@
+#AdminHuntCatalog.container( ng-controller="AdminHuntCatalog" )
+  .row
+    .col-lg-11.col-md-11
+      img( src="img/spinner.gif", ng-show="loadingHuntCatalog" )
+      .well
+        form.form-horizontal(ng-submit="submit(huntCatalog)" )
+          fieldset
+            legend Item: {{huntCatalog.huntNumber}} {{huntCatalog.title}}
+              button.btn.btn-primary.pull-right(ng-click="sendEmail($event, huntCatalog)") Send Email
+              button.btn.btn-primary.pull-right(ng-click="switchToPurchaseView($event, huntCatalog)", style="margin-right:15px;") View to purchase
+
+          .form-group()
+            label.col-lg-4.control-label Item is Viewable
+            .col-lg-8
+              input.form-control(ng-show='enableFull', type='checkbox', ng-model="huntCatalog.isActive", style="width: 50%; display: inline;" )
+              span.form-control(ng-hide='enableFull') {{huntCatalog.isActive}}
+              button.btn.btn-primary.pull-right(style="margin-top: 30px;") Save
+          .form-group()
+            label.col-lg-4.control-label Status
+            .col-lg-8
+              select.form-control( ng-model="huntCatalog.status", ng-change="statusChanged(huntCatalog.status)", ng-options="status.value as status.name for status in status" )
+                option( value="" )
+          .form-group(ng-hide="isNew")
+            label.col-lg-4.control-label Date Created
+            .col-lg-8
+              input.form-control(ng-readonly="true", type='text', ng-model="huntCatalog.createdAt" )
+          .form-group(ng-hide="isNew")
+            label.col-lg-4.control-label Last Updated
+            .col-lg-8
+              input.form-control(ng-readonly="true" type='text', ng-model="huntCatalog.updatedAt" )
+          .form-group
+            label().col-lg-4.control-label Type
+            .col-lg-8
+              select.form-control( ng-model="huntCatalog.type", ng-change="updatePrice(huntCatalog)", ng-options="type.value as type.name for type in huntCatalogTypes" )
+          .form-group
+            label().col-lg-4.control-label Payment Plan
+            .col-lg-8
+              select.form-control( ng-model="huntCatalog.paymentPlan", ng-options="paymentPlan.value as paymentPlan.name for paymentPlan in paymentPlans" )
+          .form-group()
+            label.col-lg-4.control-label Hunt Catalog Number
+            .col-lg-8
+              input.form-control( type='text', ng-model="huntCatalog.huntNumber" )
+          .form-group()
+            label.col-lg-4.control-label Title
+            .col-lg-8
+              input.form-control( type='text', ng-model="huntCatalog.title" )
+          .form-group(ng-show="huntCatalog.type == 'hunt'")
+            label.col-lg-4.control-label Species
+            .col-lg-8
+              input.form-control( type='text', ng-model="huntCatalog.species" )
+          .form-group(ng-show="huntCatalog.type == 'hunt'")
+            label.col-lg-4.control-label Classification
+            .col-lg-8
+              textarea.form-control.short(type='text', ng-model="huntCatalog.classification" )
+          .form-group
+            a.col-lg-4.control-label(ng-click="editOutfitter($event, huntCatalog)") Outfitter
+            .col-lg-8
+              select#select.form-control( ng-model="huntCatalog.outfitter_userId", ng-change="outfitterChanged(huntCatalog)", ng-options="outfitter._id as outfitter.name + ' (' + outfitter.commission + '%)' for outfitter in outfitters | orderBy:'name'" )
+                option( value="" )
+          .form-group(ng-show="huntCatalog.isHuntSpecial")
+            label.col-lg-4.control-label Additional Message for specials
+            .col-lg-8
+              textarea.form-control.short(ng-model="huntCatalog.huntSpecialMessage")
+          .form-group()
+            label.col-lg-4.control-label Description
+            .col-lg-8
+              textarea.form-control.short(ng-model="huntCatalog.description")
+          .form-group()
+            label.col-lg-4.control-label Run Special
+            .col-lg-8
+              input.form-control( type='checkbox', ng-model="huntCatalog.isHuntSpecial" )
+          .form-group(ng-show="false")
+            label.col-lg-4.control-label Create a Membership
+            .col-lg-8
+              input.form-control( type='checkbox', ng-model="huntCatalog.createMember" )
+          .form-group(ng-show="showRep && false")
+            label.col-lg-4.control-label Create an Adventure Advisor
+            .col-lg-8
+              input.form-control( type='checkbox', ng-model="huntCatalog.createRep" )
+          .form-group(ng-hide="huntCatalog.type == 'product'")
+            label.col-lg-4.control-label Country
+            .col-lg-8
+              select#select.form-control( ng-model="huntCatalog.country", ng-options="country for country in countries" )
+                option( value="" ) Country
+          .form-group(ng-hide="huntCatalog.type == 'product'")
+            label.col-lg-4.control-label State
+            .col-lg-8
+              select#select.form-control( ng-model="huntCatalog.state", ng-options="state for state in states" )
+                option( value="" ) State
+          .form-group(ng-hide="huntCatalog.type == 'product'")
+            label.col-lg-4.control-label Area
+            .col-lg-8
+              input.form-control( type='text', ng-model="huntCatalog.area" )
+          .form-group(ng-show="huntCatalog.type == 'hunt' || huntCatalog.type == 'course'")
+            label.col-lg-4.control-label Weapon
+            .col-lg-8
+              input.form-control( type='text', ng-model="huntCatalog.weapon" )
+          //.form-group
+            label.col-lg-4.control-label Budget Range Start
+            .col-lg-8
+              input.form-control( type='text', ng-model="huntCatalog.budgetStart" )
+          //.form-group
+            label.col-lg-4.control-label Budget Range End
+            .col-lg-8
+              input.form-control( type='text', ng-model="huntCatalog.budgetEnd" )
+          .form-group
+            label.col-lg-4.control-label Member Base Price $
+            .col-lg-8
+              input.form-control( ng-change="updatePrice(huntCatalog)", type='number', step="0.01", ng-model="huntCatalog.price" )
+          .form-group()
+            //label.col-lg-4.control-label RBO {{fee_percentage}}% Processing Fee $
+            label.col-lg-4.control-label RBO Processing Fee $
+            .col-lg-8
+              input.form-control(ng-change="updateProcessingFee(huntCatalog)", type='number', step="0.01", ng-model="huntCatalog.fee_processing" )
+          .form-group(ng-show="huntCatalog.price_total")
+            label.col-lg-4.control-label Total Member Base Price $
+            .col-lg-8
+              span.form-control ${{formatMoneyStr(huntCatalog.price_total)}}
+          .form-group(ng-hide="user.isOutfitter")
+            label.col-lg-4.control-label Commission to RBO $
+            .col-lg-8
+              input.form-control(ng-change="productMarginRep(huntCatalog)", type='number', step="0.01", ng-model="huntCatalog.rbo_commission" )
+          .form-group(ng-hide="user.isOutfitter")
+            label.col-lg-4.control-label Reps Commission Amount $
+            .col-lg-8
+              input.form-control(type='number', step="0.01", ng-model="huntCatalog.rbo_reps_commission" )
+          .form-group()
+            label.col-lg-4.control-label Members get discount
+            .col-lg-8
+              input.form-control( type='checkbox', ng-model="huntCatalog.memberDiscount" )
+          .form-group(ng-show="huntCatalog.memberDiscount")
+            label.col-lg-4.control-label Non-Member Base Price $
+            .col-lg-8
+              span.form-control ${{formatMoneyStr(huntCatalog.price_nom)}}
+          .form-group()
+            label.col-lg-4.control-label Pricing Options
+            .col-lg-8
+              textarea.form-control.short(ng-model="huntCatalog.pricingNotes")
+          .form-group(ng-show="huntCatalog.type == 'hunt' || huntCatalog.type == 'course' || huntCatalog.type == 'advertising'")
+            label.col-lg-4.control-label Start Date
+            .col-lg-8
+              input.kendo-date-time-picker.form-control(id="startDate" type='date', ng-model="huntCatalog.startDate" )
+          .form-group(ng-show="huntCatalog.type == 'hunt' || huntCatalog.type == 'course' || huntCatalog.type == 'advertising'")
+            label.col-lg-4.control-label End Date
+            .col-lg-8
+              input.kendo-date-time-picker.form-control(id="endDate" type='date', ng-model="huntCatalog.endDate" )
+          .form-group()
+            label.col-lg-4.control-label Admin Only Notes
+            .col-lg-8
+              textarea.form-control(ng-model="huntCatalog.internalNotes")
+          .form-group.dropZone(ng-show="allowAddMedia")
+            label.col-lg-4.control-label Media (pictures, movies, etc)
+            .col-lg-8
+              input#files(name="uploadedFiles" type="file" )
+
+          .form-group(ng-repeat="media in huntCatalog.media")
+            label.col-lg-4.control-label {{media.originalName}}
+            .col-lg-8
+              img.form-control(ng-src="{{media.url}}" alt="{{media.originalName}}" style="width:100%;height:inherit;")
+
+          button.btn.btn-primary.pull-right(style="margin-top: 30px;") Save
+          button.btn.btn-primary.pull-left(style="margin-top: 30px;", ng-click="cancel($event)") Cancel

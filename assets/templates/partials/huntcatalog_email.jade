@@ -1,0 +1,27 @@
+.modal-header
+  h3 Hunt Catalog Email
+  //span {{emails}}
+.modal-body
+  .result-display
+    form.form-horizontal( ng-submit="sendEmail()" )
+      fieldset
+        //legend Note to include in them hunt catalog email:
+        //span(ng-show="user.isAdmin") List of User Client Ids (comma delimited) to send this email:
+        //.form-group(ng-show="user.isAdmin")
+          //label.col-lg-4.control-label List of User Client Ids (comma delimited) to send this email:
+          .col-lg-8
+            input#inputClientIds.form-control( ng-model="clientIds", ng-blur="updateEmailList(clientIds)" )
+        span() Send the details for '{{huntCatalog.title}}' to the following email addresses (comma delimited):
+        .form-group()
+          //label.col-lg-4.control-label List of User Client Ids (comma delimited) to send this email:
+          .col-lg-8
+            textarea.form-control.short( ng-model="emails")
+        div Please add any additional notes you would like to include in the email here:
+        .form-group()
+          //label.col-lg-4.control-label
+          .col-lg-8
+            textarea.form-control.short(ng-model="customNote")
+
+.modal-footer
+  button.btn.btn-primary.pull-right(ng-click='sendEmail(clientIds, emails, customNote)') Send Email
+  button.btn.btn-default.pull-left(ng-click='cancel()') Cancel

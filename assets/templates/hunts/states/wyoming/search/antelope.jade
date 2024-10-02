@@ -1,0 +1,50 @@
+.form-group.select-list
+
+  .inline-group
+    .form-group
+      label Hunt
+      select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.comboHuntArea11", ng-options="area as area for (area, types) in huntOptions[hunt._id][0].options.comboHuntArea11 | orderBy:'value'" )
+        option( value="" )
+
+    .form-group
+      label Type
+      select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.comboType11", ng-options="type as type for type in huntOptions[hunt._id][0].options.comboHuntArea11[hunt.choice.comboHuntArea11] | orderBy:'value'" )
+        option( value="" )
+
+  .inline-group
+    .form-group
+      label Hunt
+      select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.comboHuntArea21", ng-options="area as area for (area, types) in huntOptions[hunt._id][0].options.comboHuntArea21 | orderBy:'value'" )
+        option( value="" )
+
+    .form-group
+      label Type
+      select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.comboType21", ng-options="type as type for type in huntOptions[hunt._id][0].options.comboHuntArea21[hunt.choice.comboHuntArea21] | orderBy:'value'" )
+        option( value="" )
+
+  .inline-group
+    .form-group
+      label Hunt
+      select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.comboHuntArea31", ng-options="area as area for (area, types) in huntOptions[hunt._id][0].options.comboHuntArea31 | orderBy:'value'" )
+        option( value="" )
+
+    .form-group
+      label Type
+      select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.comboType31", ng-options="type as type for type in huntOptions[hunt._id][0].options.comboHuntArea31[hunt.choice.comboHuntArea31] | orderBy:'value'" )
+        option( value="" )
+
+
+  .row
+    .col-md-12
+      .radio
+        label
+          input( type='radio', ng-disabled="huntNotEditable(hunt)", ng-model="hunt.params.hunt", value="btnApply2" )
+          |  Full Price
+      .radio
+        label
+          input( type='radio', ng-disabled="huntNotEditable(hunt)", ng-model="hunt.params.hunt", value="btnApply1" )
+          |  Special
+      //.checkbox
+        label
+          input( type='checkbox', ng-model="hunt.choice.cbEnterDrawing1A", ng-true-value="on" )
+          | Preference Point

@@ -1,0 +1,14 @@
+| <script type="text/ng-template" id="partials/navs/setup.html">
+div( class="navbar", ng-controller="Navigation" )
+  div( class="navbar-inner row" )
+    button( type="button", class="btn btn-navbar", data-toggle="collapse", data-target=".nav-collapse" )
+      span( class="icon-bar" )
+      span( class="icon-bar" )
+      span( class="icon-bar" )
+    a( class="brand", href="#dashboard" ) gotmytag
+    div( class="nav-collapse collapse" )
+      ul( class="nav pull-right" )
+        li( class="form-inline" )
+          a( href="#", class="navbar-link signout", ng-click="logout()" ) {{"sign out" | tl}}
+
+| </script>

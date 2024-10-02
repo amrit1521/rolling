@@ -1,0 +1,180 @@
+doctype html
+html( ng-app="APP" )
+  head
+    title #{tenant.name} - Rolling Bones Specialist Service Center Website
+
+    // Viewport mobile tag for sensible mobile support
+    meta( name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1" )
+    meta( name='apple-mobile-web-app-capable', content='yes' )
+    meta( name='description', content='Rolling Bones provides quality hunt experiences, application services, and personalized hunt plans to help achieve your goals.' )
+    meta( name='keywords', content='Rolling Bones,Deer Points,Elk Points,Sheep Points,Moose Points,Antelope Points,Pronghorn Points,Arizona,California,Colorado,Florida,Kansas,Montana,Nevada,Oregon,Pennsylvania,Utah,Washington,Wyoming,Points Needed to Draw,Points Needed For Best Tag,Hunt,Preference Points,Bonus Points,Points Needed to Get a Hunting Permit' )
+
+    // Stylesheets from your assets folder are included here
+    link( rel='stylesheet', href='css/app#{fileDate}.css' )
+    script.
+      window.APIURL = '#{apiUrl}';
+      window.isPhonegap = #{isPhonegap};
+      window.PUBNUB_SUBSCRIBE_KEY = '#{PUBNUB_SUBSCRIBE_KEY}';
+      window.tenant = !{tenantString};
+      window.senderID = '!{senderID}';
+
+    // HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
+    //if lt IE 9
+      script(src='js/html5shiv.js')
+      script(src='js/respond.js')
+
+  body( ng-controller="Main", class="fix-status-bar-{{deviceVersion}}", id="mainctl" )
+    .body-wrapper
+      .status-bar
+      #slide-nav.navbar.navbar-default.navbar-static-top.ng-cloak( ng-controller="Navigation" )
+        .container
+          .header-btns.col-xs-1
+            a.btn.btn-cancel( href="#!/dashboard" ) Cancel
+          .navbar-align
+            .navbar-header
+              a.navbar-toggle
+                span.sr-only Toggle Menu
+                span.icon-bar
+                span.icon-bar
+                span.icon-bar
+
+                span.badge(ng-show="notifications.unread") {{notifications.unread}}
+
+              .navbar-brand.col-xs-8( ng-href="{{tenant.url}}", ng-hide="isPhone()" )
+                .tenant-logo(style="background-image: url(#{tenant.logo})")
+              .navbar-brand( href="#!/dashboard", ng-show="isPhone()" )
+                .tenant-logo(style="background-image: url(#{tenant.logo})")
+            #slidemenu
+              ul.nav.navbar-nav
+                li.sidebar-brand
+                  .tenant-logo(style="background-image: url(#{tenant.logo})")
+                li( ng-cloak, ng-show="user")
+                  a( href="#", ng-click="gotoRRADS($event)") Membership Dashboard
+                li.dropdown(ng-cloak, ng-show="user.isRep")
+                  a.dropdown-toggle(data-toggle='dropdown', href='#')
+                    | Rep Dashboard
+                    span.caret
+                  ul.dropdown-menu
+                    li
+                      a(tabindex='-1', href="#!/repdashboard") Commissions
+                    li
+                      a(tabindex='-1', href="#!/repdashboard/purchases") Purchases
+                    li
+                      a(tabindex='-1', href="#!/repdashboard/users") Users
+
+
+
+                li.dropdown(ng-cloak, ng-show="!isRBO() && user.isAdmin")
+                  a.dropdown-toggle(data-toggle='dropdown', href='#')
+                    | Admin
+                    span.caret
+                  ul.dropdown-menu
+                    li
+                      a(tabindex='-1', href="#!/admin/reports/users") Users
+                    li
+                      a(tabindex='-1', href="#!/admin/outfitters/purchases") Purchases
+                    li
+                      a(tabindex='-1', href="#!/admin/servicerequests") Service Requests
+                    li
+                      a(tabindex='-1', href="#!/admin/record_payment") Record Payment
+
+                li.dropdown(ng-cloak, ng-show="isRBO() && user.isOutfitter")
+                  a.dropdown-toggle(data-toggle='dropdown', href='#')
+                    | Outfitter
+                    span.caret
+                  ul.dropdown-menu
+                    li
+                      a(tabindex='-1', href="#!/admin/outfitters/purchases") Purchases
+                    li
+                      a(tabindex='-1', href="#!/admin/record_payment") Record Payment
+
+                li.dropdown(ng-cloak, ng-show="isRBO() && user.isVendor")
+                  a.dropdown-toggle(data-toggle='dropdown', href='#')
+                    | Vendor
+                    span.caret
+                  ul.dropdown-menu
+                    li
+                      a(tabindex='-1', href="#!/admin/outfitters/purchases") Purchases
+
+                li.dropdown( ng-show="(user.isAdmin && adminFullEdit()) || (isRBO() && adminEdit())" )
+                  a.dropdown-toggle(data-toggle='dropdown', href='#')
+                    | RB Admin
+                    span.caret
+                  ul.dropdown-menu
+                    li
+                      a(tabindex='-1', href="#!/admin/reports/users") Users
+                    li
+                      a(tabindex='-1', href="#!/admin/servicerequests") Service Requests
+                    li( ng-cloak, ng-show="isRBO()")
+                      a(tabindex='-1', href="#!/admin/record_payment") Record Payment
+                    li( ng-cloak, ng-show="isRBO()")
+                      a(tabindex='-1', href="#!/admin/reminders") Reminders
+                    li( ng-cloak, ng-show="isRBO()")
+                      a(tabindex='-1', href="#!/users/search?outfitter=1") Outfitters
+                    li.dropdown-submenu( ng-cloak, ng-show="isRBO()")
+                      a(tabindex='-1', href='#') Reports
+                        ul.dropdown-menu
+                          li()
+                            a(tabindex='-1', href="#!/admin/reports/purchases") Purchases
+                          li()
+                            a(tabindex='-1', href="#!/admin/reports/purchases?view=booking") Booking
+                          li( ng-cloak, ng-show="adminFullEdit()")
+                            a(tabindex='-1', href="#!/admin/reports/commissions") Invoices & Commissions
+                          li( ng-cloak, ng-show="adminFullEdit()")
+                            a(tabindex='-1', href="#!/admin/reports/charts") Charts
+                          li( ng-cloak, ng-show="adminFullEdit()")
+                            a(tabindex='-1', href="#!/admin/reports/accounting") Accounting
+                    li.dropdown-submenu( ng-cloak, ng-show="isRBO()")
+                      a(tabindex='-1', href='#') User State Applications
+                        ul.dropdown-menu
+                          li
+                            a(tabindex='-1', href="#!/admin/applications") User Applications Reports
+                          //li
+                            a(tabindex='-1', href="#!/admin/search") User Applications (old)
+                    li( ng-cloak, ng-show="isRBO() && adminFullEdit()")
+                      a(tabindex='-1', href="#!/admin/huntcatalogs") Hunt Catalog (old for reference only)
+                    li( ng-cloak, ng-show="isRBO() && adminFullEdit()")
+                      a(tabindex='-1', href="#!/admin/tenants") Tenants
+
+
+              ul.nav.navbar-nav.navbar-right( ng-hide="isPhone()" )
+                li
+                  a( href="#!/login", ng-hide="user" ) Login
+                li.dropdown( ng-show="user" )
+                  a.dropdown-toggle(data-toggle='dropdown', href='#', ng-show="user.first_name != user.last_name")
+                    | {{user.first_name}} {{user.last_name}}
+                    span.caret
+                  a.dropdown-toggle(data-toggle='dropdown', href='#', ng-show="user.first_name == user.last_name")
+                    | {{user.first_name}}
+                    span.caret
+                  ul.dropdown-menu
+                    li
+                      a(tabindex='-1', href="#!/profile") User Profile
+                    li(ng-cloak, ng-show="isRBO() && adminEdit()")
+                      a(tabindex='-1', href="#!/huntingprofile") Hunting Profile
+                    li(ng-cloak, ng-show="adminFullEdit()")
+                      a(tabindex='-1', href="#!/purchases") My Orders
+                    li(ng-cloak, ng-show="isRBO() && adminFullEdit()")
+                      a(tabindex='-1', href="#!/users/search") My Users
+                    li
+                      a(tabindex='-1', href="#!/admin/servicerequest/new") Submit a Request
+                    li()
+                      a(tabindex='-1', href="#!/admin/users/new") Add New User
+                    li( ng-show="adminUser" )
+                      a( href="#!/admin/masquerade/backAdmin" ) Switch back to admin user {{adminUser.first_name}} {{adminUser.last_name}}
+                    li( ng-show="prevUser" )
+                      a( href="#!/admin/masquerade/back" ) Switch back to {{prevUser.first_name}} {{prevUser.last_name}}
+                    li
+                      a( ng-click="logout()" ) Sign Out
+
+      ng-view#page-content
+
+      .footer
+
+    if isPhonegap
+      script(type='text/javascript', src='cordova.js')
+
+    script(type='text/javascript', src='js/vendors#{fileDate}.js')
+    script(type='text/javascript', src='js/application#{fileDate}.js')
+    script(type='text/javascript', src='js/browserified#{fileDate}.js')
+    script(type='text/javascript', src='js/templates#{fileDate}.js')

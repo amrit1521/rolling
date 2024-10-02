@@ -1,0 +1,14 @@
+.col-md-12( style="margin-top: 20px;" )
+  button.btn.btn-default.pull-right.col-md-2( ng-click="save(choice)" ) Save&nbsp;
+    img( src="img/ajax-loader.gif", ng-show="saving" )
+  .div( ng-show="showRunButtons()" )
+    button.btn.btn-default.col-sm-2( ng-click="testRun(choice)" ) Test Run&nbsp;
+      img( src="img/ajax-loader.gif", ng-show="testRunning" )
+    button.btn.btn-default.col-sm-2( ng-click="viewTestResult()", ng-show="testResult" ) View Test Result
+    button.btn.btn-default.col-sm-2( ng-click="run(choice)" ) Go To Checkout
+
+div.col-sm-9( ng-show="showResult", style="position: absolute; top: 10px; background-color: #fff; border: 1px solid #ccc; border-radius: 5px;" )
+  div( ng-bind-html="testResultSafe" )
+  button.btn.btn-default.pull-right( ng-click="hideTestResult()" ) Close
+
+

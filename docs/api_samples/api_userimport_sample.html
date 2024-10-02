@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+	</head>
+	<body>
+
+		<div class="container">
+		    <div class="row">
+		    	<div class="col-lg-6">
+					<form id="importUser" class="form-horizontal">
+			    		<fieldset>
+			    			<legend>Import User via API</legend>
+
+							<div class="form-group">
+								<label for="inputUsername" class="col-sm-3 control-label">Username</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="inputUsername" placeholder="Username" value="apitest">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="inputFirstName" class="col-sm-3 control-label">First Name</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="inputFirstName" placeholder="First Name" value="API First Name">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="inputLastName" class="col-sm-3 control-label">Last Name</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="inputLastName" placeholder="Last Name" value="API Last Name">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="inputBirthDate" class="col-sm-3 control-label">Birth Date</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="inputBirthDate" placeholder="MM/DD/YYYY" value="01/01/1980">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="inputMemberId" class="col-sm-3 control-label">MemberId</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="inputMemberId" placeholder="Unique Member Id" value="1111">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="powerOfAttorney" class="col-sm-3 control-label">Power of Attorney granted</label>
+								<div class="col-sm-7">
+									<input type="checkbox" class="form-control" id="powerOfAttorney">
+								</div>
+							</div>
+
+							<button class="btn btn-primary pull-right">Import User</button>
+			    		</fieldset>
+					</form>
+		    	</div>
+		    </div>
+
+		    <div class="row" id="result">
+		    </div>
+
+		    <div class="row" id="error">
+		    </div>
+
+			<div class="row" id="resultState">
+			</div>
+
+			<div class="row" id="errorState">
+			</div>
+
+		</div>
+
+		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
+
+		<script>
+			APITOKEN = "[PUT THE API TOKEN HERE]";
+			APITOKEN = "setWafomheeuveaUisootryadeefoyfojSwietjbeohfyVeaMGlethctVeuefybirrRwcBWUwgatkonugeweUfiydPbnucdisijryetiytpcgliTpsetnaJiUElesoOaeUawakcsOCjschHAhstraweltwmlwhBnejnixJnDyobekeorisarjaokoejjyacverysootnhvGg1rlaDfbOeo2btOrzcnmDDgyesouppJotyaJBicetmyco";
+			APIDOMAIN = "https://www.gotmytag.dev:5001/api/v1/";
+
+			jQuery(document).ready(function () {
+				jQuery('#importUser').on('submit', function () {
+					var apiUrl, data;
+
+					jQuery('#error').empty();
+					jQuery('#result').empty();
+
+                    apiUrl = APIDOMAIN + "user";
+					// memberIds and userIds uniquely identify a user in GotMyTag's system.  Users may also log into the system using their password and either username or email.
+					// input fields with state or country names are to use the full capitalized proper name for the state or country.  Do not abbreviate
+					// date field formats are yyyy-mm-dd
+					data = {
+						token: APITOKEN,
+						dob: moment(jQuery('#inputBirthDate').val(), 'MM/DD/YYYY').format('YYYY-MM-DD'),
+						first_name: jQuery('#inputFirstName').val(),
+						last_name: jQuery('#inputLastName').val(),
+						memberId: jQuery('#inputMemberId').val(),
+						memberType: "Sales Rep",
+						parent_memberId: "00001",
+						username: jQuery('#inputUsername').val(),
+						password: "password",
+						powerOfAttorneyGranted: jQuery('#powerOfAttorney').is(':checked'),
+						dl_state : "Utah",
+						drivers_license : "111111111",
+						email : "test@test.com",
+						eyes : "Green",
+						gender : "Male",
+						hair : "Brown",
+						heightFeet : "6",
+						heightInches : "1",
+						hunter_safety_number : "11111111",
+						hunter_safety_state : "Utah",
+						hunter_safety_type : "Firearm",
+						mail_address : "1180 N. Mtn Springs Parkway",
+						mail_city : "Springville",
+						mail_country : "United States",
+						mail_postal : "84663",
+						mail_state : "Utah",
+						physical_address : "1180 N. Mtn Springs Parkway",
+						physical_city : "Springville",
+						physical_country : "United States",
+						physical_postal : "84663",
+						physical_state : "Utah",
+						middle_name : "",
+						phone_cell : "888-888-8888",
+						phone_day : "888-888-8888",
+						phone_evening : "888-888-8888",
+						res_months : "0",
+						res_years : "2",
+						residence : "Utah",
+						ssn : "999999999",
+						weight : "165",
+						nmUsername: "myNMUsername",
+						nmPassword: "myNMPassword",
+						azUsername: "myAZUsername",
+						azPassword: "myAZPassword"
+
+					};
+
+					/* Example to update an existing user by including the GotMyTag userId
+					data = {
+						token: APITOKEN,
+						userId: "58489281e8542bcaac89ee3c",
+						email: "updatedtest@test.com"
+					}
+					*/
+
+
+					jQuery.ajax({
+						"type": "POST",
+						"url": apiUrl,
+						"data": data,
+						"success": function (data, status, request) {
+							var i, table, tbody, result;
+							console.log("data:", data);
+							console.log("status:", status);
+							console.log("request:", request);
+
+							if (!data.user) {
+								jQuery('#result').append('<h1>User import failed</h1>');
+								return;
+							}
+							else {
+								jQuery('#result').append('<div><span><h1>User imported successfully</h1></span></div>');
+								jQuery('#result').append('<div><span>' + JSON.stringify(data.user) + '</span></div>');
+								return;
+							}
+
+						},
+						"error": function (request, status, err) {
+							console.log("request:", request);
+							console.log("status:", status);
+							console.log("err:", err);
+							var error;
+							error = jQuery('#error');
+							error.append('<div><h3>Error status code</h3><span>' + request.status + '</span></div>');
+							error.append('<div><h3>Error message</h3><span class="error">' + request.responseText + '</span></div>');
+						}
+					});
+
+
+					//2nd API Example for updating a user's state hunting profile and state id (such as utah's sportsman #, or colorado's CID, etc)
+					setTimeout(function () {
+						apiUrl = APIDOMAIN + "state";
+						data = {
+							token: APITOKEN,
+							memberId: jQuery('#inputMemberId').val(),
+							state: "Utah",
+							stateId: "7777777",
+							applicationNotes: "Deer and Elk, Unit: Paunsagunt"
+						};
+
+
+						jQuery.ajax({
+							"type": "POST",
+							"url": apiUrl,
+							"data": data,
+							"success": function (data, status, request) {
+								var i, table, tbody, result;
+								console.log("data:", data);
+								console.log("status:", status);
+								console.log("request:", request);
+
+
+								if (!data.status) {
+									jQuery('#resultState').append('<h1>Failed to update user state info.</h1>');
+									return;
+								}
+								else {
+									jQuery('#result').append('<div><span><h1>User state info updated successfully.</h1></span></div>');
+									jQuery('#result').append('<div><span>'+JSON.stringify(data.status)+'</span></div>');
+									return;
+								}
+
+							},
+							"error": function (request, status, err) {
+								console.log("request:", request);
+								console.log("status:", status);
+								console.log("err:", err);
+								var error;
+								error = jQuery('#error');
+								error.append('<div><h3>Error status code</h3><span>' + request.status + '</span></div>');
+								error.append('<div><h3>Error message</h3><span class="error">' + request.responseText + '</span></div>');
+							}
+						});
+					}, 1000);
+
+
+					return false;
+				});
+			});
+		</script>
+	</body>
+</html>

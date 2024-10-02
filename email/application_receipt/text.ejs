@@ -1,0 +1,11 @@
+<% include ../head %>
+Follow the link to your receipt: <%= fileURL %>
+
+<% if (typeof licenses != 'undefined' && licenses.length) { %>
+  <% for( i in licenses ) { %>
+    <% license = licenses[i]; %>
+    License #<%= i %>: <%= license %>
+  <%  } %>
+<% } %>
+
+<% include ../foot %>

@@ -1,0 +1,12 @@
+.modal-header
+.modal-body
+  .result-display
+    div( ng-include="'templates/authenticated/credit_card_form.html'" )
+
+.modal-footer
+
+  // Right side in reverse order from how they appear
+  button.btn.btn-primary.pull-right(ng-click='save(card)') Save
+
+  // Left side
+  button.btn.btn-default.pull-left(ng-click='cancel()') Close

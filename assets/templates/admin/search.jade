@@ -1,0 +1,142 @@
+#AdminSearch.container( ng-controller="AdminSearch" )
+  .online-status( ng-class="{connected: connected, disconnected: !connected}" )
+    //span( ng-show="connected" ) Connected
+    //span( ng-hide="connected" ) Offline
+  .page-header
+    h3 User Search
+  .row
+    .col-md-12
+      form.form-inline( ng-submit="runSearch(search)" )
+
+        .form-group(style="margin-top: 10px;")
+          input.form-control( type='text', placeholder="search text ...", ng-model='search.text', ng-keypress='runSearch(search)' )
+
+        .form-group.pull-right(style="margin-top: 10px;")
+          a.btn.btn-default( href="#!/admin/users/new" ) Add New User
+        .form-group(style="margin-top: 10px;")
+          button.btn.btn-primary Search
+
+        .form-group(style="margin-top: 10px;")
+          .col-md-push-1
+            select#applications.form-control.col-md-12( ng-model="search.application", ng-options="key as value for (key , value) in applications" )
+              option( value="" ) Applications
+            select#searchRange.form-control.col-md-12( ng-model="search.range", ng-options="key as value for (key , value) in searchRanges" style="margin-left: 10px;" )
+              option( value="" ) All
+            select#searchStatus.form-control.col-md-12( ng-model="search.status", ng-options="key as value for (key , value) in searchStatuses" style="margin-left: 10px;" )
+
+
+
+            img( src="img/spinner.gif", ng-show="loadingApplications" )
+
+      table.search-results.table.table-striped.table-hover(ng-show='results')
+        thead
+          tr
+            th Name
+            th.hidden-xs Client ID
+            th.hidden-xs Zip
+            th.hidden-xs Expire Date
+            th.hidden-xs Phone #
+            th Email
+            th Message
+        tbody
+          tr( ng-repeat='row in results | orderBy:\'name\'' )
+            td
+              a( href="#!/admin/masquerade/{{row._id}}" ) {{row.first_name}} {{row.last_name}} {{row.suffix}}
+            td.hidden-xs {{row.clientId}}
+            td.hidden-xs {{row.mail_postal}}
+            td.hidden-xs
+            td.hidden-xs {{row.phone}}
+            td {{row.email}}
+            td
+              // a.btn.btn-default( ng-click="sendMessage($event, row)", ng-if="row._id=='53a32576f584aca2aa1e7b63'" ) Send Message
+              a.btn.btn-default( ng-click="sendMessage($event, row)", ng-if="row.devices.length" ) Send Message
+
+      div.search-results( ng-show='userApplications' )
+        .menu.row
+          .form-group
+            .col-md-2
+              select.form-control( ng-model="search.filterKey", ng-options="key as key for (key, value) in menu", style="margin-bottom: 10px;")
+            img( src="img/spinner.gif", ng-show="drawingApplications" )
+            .pages( ng-show="showPages()" )
+              a( ng-repeat="num in search.pages", ng-class="{selected: num == search.page}", ng-click="turnPage(num)" ) {{num}}
+
+        fieldset( ng-repeat="application in userApplications", ng-hide="drawingApplications" )
+          legend( style="margin-bottom:0px;")
+            a( href="#!/admin/masquerade/{{application._id}}" ) {{application.name}} {{application.suffix}}
+            |  / {{application.clientId}} / {{application.mail_city}} / {{application.residence}} / {{application.dob | date:'MM-dd-yyyy'}}
+
+          .note( ng-show="application.stateUsername.length" )
+            span Credentials:&nbsp;
+            span {{application.stateUsername}}, {{application.statePassword}}
+
+          .note(ng-show="application.aid.length")
+            span {{application.aid}}{{application.bid}}
+
+          .note( ng-show="application.notes.length" )
+            span Notes:&nbsp;
+            span( ng-bind-html="application.notesAsHTML")
+
+          form.form-inline( ng-submit="purchase(application)" )
+            table.table.table-striped.table-hover
+              thead
+                tr
+                  th( style="width: 25%;" )
+                  th
+              tbody
+                tr( ng-repeat="hunt in application.hunts | orderBy:'name'", ng-show="showHunt(application, hunt)" )
+                  td
+                    .huntName
+                      span {{hunt.name}}
+                      span( ng-show="hunt.point.count" )  ({{hunt.point.count}})
+                    .groupMembers( ng-show="showGroup(application, hunt)" ) Group Members:
+                      ul
+                        li( ng-repeat="member in application.group" )
+                          label
+                            input( type="checkbox", ng-model="hunt.members[$index]", ng-true-value="{{member.clientId}}", ng-change="hideMemberHunt(application, member, hunt, hunt.members[$index])" )
+                            |  {{member.name}} - {{member.clientId}}
+                  td( ng-include="getInclude(hunt.name)", ng-hide="hunt.choices.group_id" )
+                  td( ng-show="hunt.choices.group_id" ) Group Leader: {{hunt.groupLeader.name}} {{hunt.groupLeader.suffix}}
+                  td(ng-click="showTransaction($event, application, hunt)", style="cursor: pointer;")
+                    .huntStatus
+                      span( ng-show="hunt.status && hunt.status != 'purchase_requested'" ng-style="hunt.status=='error' && {'color':'red'} || hunt.status=='purchased' && {'color':'green'}") {{hunt.status}}
+                      span( ng-show="hunt.status && hunt.status == 'purchase_requested'" ng-style="hunt.status=='error' && {'color':'red'} || hunt.status=='purchased' && {'color':'green'}") review completed
+
+            label.col-xs-12( style='text-align: left;', ng-show="showNewUser(application)"  )
+              input( type='checkbox', ng-model="application.newToState", ng-true-value="true", ng-false-value="false", ng-checked="false")
+              |  User is new for this state, run application as a new user
+
+            .form-group(ng-show="showLicense(application)")
+              label Hunting License # (most recent)
+                input( type='text', ng-model="application.licenseNumber" style="width: auto;")
+              label(style="margin-left: 5px;") Hunting license was for year:
+                input( type='text', placeholder="YYYY", ng-model="application.licenseNumberYear" style="width: auto;")
+
+            label.col-xs-12( style='text-align: left;', ng-show="showPurchaseLicenseOnly(application)"  )
+              input( type='checkbox', ng-model="application.purchaseLicenseOnly", ng-true-value="true", ng-false-value="false", ng-checked="false")
+              |  Purchase License Only
+
+            label.col-xs-12( style='text-align: left;', ng-show="showPurchaseLicenseOnly(application)"  )
+              input( type='checkbox', ng-model="application.mentoredYouth", ng-true-value="true", ng-false-value="false", ng-checked="false")
+              |  Purchase Mentored Youth License
+
+            label.col-xs-12( style='text-align: right;', ng-show="showPurchase(application)" )
+              input( type='checkbox', ng-model="application.review", ng-true-value="true", ng-false-value="false", ng-checked="false" )
+              |  Review before purchase
+
+            button.btn.btn-default.pull-right(ng-show="showPurchase(application)") Purchase&nbsp;
+              img( src="img/ajax-loader.gif", ng-show="application.running" )
+            .form-group.pull-right( style="margin-left: 15px;" )
+              select#creditCard.form-control.btn-info( ng-model="application.cardIndex", ng-options="cardInfo.title for cardInfo in application.cards", ng-change="checkCard(application)" )
+            button.btn.btn-default.pull-right(ng-show="application.cardIndex", ng-click="editCard($event, application)") Edit Card&nbsp;
+
+            button.btn.btn-default.pull-right( ng-show="application.hasReceipt", ng-click="viewReceipts($event, application)" ) View Receipts
+            a.btn.btn-default.pull-right( href="{{license}}", target="_blank", ng-show="application.licenseUrls", ng-repeat="license in application.licenseUrls") View License # {{$index}}
+
+            button.btn.btn-info.pull-right( ng-show="application.reviewContent", ng-click="review($event, application)" ) Review
+            button.btn.btn-info.pull-right( ng-show="application.promptContent", ng-click="prompt($event, application)" ) Additional Information Needed
+            button.btn.btn-danger.pull-right( ng-show="application.errors", ng-click="viewErrors($event, application)" ) View Errors
+
+          //don't put save button in the form or it will run purchase on submit
+          button.btn.btn-info.pull-right(ng-click="saveApplication(application)" ) Save
+          div.form-control-small(ng-show="application.running")
+            span(ng-bind="application.appPurchaseMsg")

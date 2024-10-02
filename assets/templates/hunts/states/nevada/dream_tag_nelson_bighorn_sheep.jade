@@ -1,0 +1,13 @@
+div( ng-controller="HuntsNevadaHunts" )
+  div( ng-controller="HuntsNevadaDreamTagNelsonBighornSheep" )
+    .invidualChoices( ng-show="!choice.group_id.length" )
+
+      .form-group
+        .col-lg-12
+          fieldset
+            legend Raffle Tickets
+            .col-md-12
+              label.col-md-5 How many raffle tickets do you wish to purchase?
+              input.col-md-1( ng-model="choice.ctl00$ContentPlaceHolder1$tbNumberRaffle" )
+
+    .form-group( ng-include="'templates/hunts/hunt_buttons.html'" )

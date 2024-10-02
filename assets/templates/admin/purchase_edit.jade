@@ -1,0 +1,636 @@
+#purchase.container( ng-controller="PurchaseEdit" )
+  .row
+    .col-lg-11.col-md-11
+      .col-md-12(ng-hide="purchase")
+        img( src="img/spinner.gif", style="margin-right: 10px;")
+        | Retrieving purchase...
+
+      .well(ng-show="purchase")
+        h3.page-header(ng-show="full") Admin Edit Purchase
+        h3.page-header(ng-show="!full") Purchase Confirmation
+        button.btn.btn-primary.pull-right(ng-show="full", ng-click="update($event, purchase)") Update
+
+        div(ng-show="full", style="margin-bottom:15px")
+          span()
+            | Note, this purchase has already been completed.  Changes made by this admin user will override the original purchase info and may cause information on the Receipt view to change also.
+            | Also, changes made here do not change authorize.net.  Any changes to cc or subscription payments must also be made manually in authorize.net.
+        form.form-horizontal( ng-submit="update($event, purchase)" )
+
+          //Commissions
+          fieldset.gmt
+            legend(data-toggle="collapse", data-target="#main") {{purchase.user.first_name}} {{purchase.user.last_name}} {{huntCatalog.huntNumber}}: {{huntCatalog.title}}
+              a.btn.btn-default.pull-right.btn-sm(data-toggle="collapse", data-target="#main" aria-expanded="false") details
+            .form-group()
+              label.col-lg-3.control-label Invoice #:
+              .col-lg-8(style="padding-top: 5px;")
+                span() {{purchase.invoiceNumber}}
+            .form-group()
+              label.col-lg-3.control-label Purchase Date:
+              .col-lg-8(style="padding-top: 5px;")
+                span() {{purchase.createdAt | date: "MM/dd/yyyy"}}
+            .form-group
+              label.col-lg-3.control-label Purchase Notes:
+              .col-lg-8(style="padding-top: 5px;")
+                span {{purchase.purchaseNotes}}
+            .form-group()
+              label.col-lg-3.control-label Total Client Price:
+              .col-lg-8(style="padding-top: 5px;")
+                span() ${{formatMoneyStr(purchase.TOTAL_PRICE)}}
+            .form-group()
+                label.col-lg-3.control-label
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.basePrice)}} (Item Price) + ${{formatMoneyStr(purchase.options_total)}} (Options) + ${{formatMoneyStr(purchase.tags_licenses)}} (Tags & Lic) + ${{formatMoneyStr(purchase.shipping)}} (Shipping) + ${{formatMoneyStr(purchase.fee_processing)}} (Prc Fee) + ${{formatMoneyStr(purchase.sales_tax)}} (Sales Tax)
+            .form-group()
+              label.col-lg-3.control-label Client Initial Deposit Paid ({{purchase.paymentUsed}}):
+              .col-lg-4(style="padding-top: 5px;")
+                span(ng-hide="purchase.paymentUsed == 'check'") ${{formatMoneyStr(purchase.amount)}} (Ref no. {{purchase.cc_transId}})
+                span(ng-show="purchase.paymentUsed == 'check'") ${{formatMoneyStr(purchase.amount)}} (Check no. {{purchase.check_number}})
+            .form-group()
+              label.col-lg-3.control-label Client Owes {{huntCatalog.outfitter_name}}:
+              .col-lg-8(style="padding-top: 5px;")
+                span() ${{formatMoneyStr(purchase.clientOwes)}} = ${{formatMoneyStr(purchase.TOTAL_PRICE)}} (Total Client Price) - ${{formatMoneyStr(purchase.amountPaid)}} (Total Payments Paid)
+            div.collapse(id="main")
+              .form-group(ng-show="isRBO && purchase.options_totalToOutfitter")
+                label.col-lg-3.control-label Total Options to {{outfitter_vendor_title}}:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.options_totalToOutfitter)}}
+              .form-group(ng-show="isRBO && purchase.options_rbo_commissions_total")
+                label.col-lg-3.control-label Total Options Amount to Reps Commissions:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.options_rbo_commissions_total)}}
+              .form-group(ng-show="isRBO && purchase.ccFee > 0")
+                label.col-lg-3.control-label CC Fee (charged RBO on initial deposit):
+                .col-lg-4(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.ccFee)}}
+              .form-group(ng-show="isRBO")
+                label.col-lg-3.control-label RBO Commissions (Booking Fee) %{{purchase.percentActualComm}}:
+                .col-lg-4(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.commission)}}
+              .form-group(ng-show="isRBO")
+                label.col-lg-3.control-label Remaining Deposit for RBO to send {{outfitter_vendor_title}}:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.remainingDepositToSend)}}
+              .form-group(ng-show="isRBO")
+                label.col-lg-3.control-label
+                .col-lg-8(style="padding-top: 5px;")
+                  span() = ${{formatMoneyStr(purchase.amount)}} (Deposit) - ${{formatMoneyStr(purchase.commission)}} (RBO Comm) - ${{formatMoneyStr(purchase.options_rbo_commissions_total)}} (RBO Options Comm) - ${{formatMoneyStr(purchase.fee_processing)}} (RBO Prc Fee) - ${{formatMoneyStr(purchase.sales_tax)}} (RBO Sales Tax)
+              .form-group()
+                label.col-lg-3.control-label Client Owes {{huntCatalog.outfitter_name}}:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.clientOwes)}} = ${{formatMoneyStr(purchase.TOTAL_PRICE)}} (Total Client Price) - ${{formatMoneyStr(purchase.amountPaid)}} (Total Payments)
+              .form-group(ng-show="isRBO")
+                label.col-lg-3.control-label {{huntCatalog.outfitter_name}} Total:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.totalToOutfitter)}} = ${{formatMoneyStr(purchase.basePrice)}} (Item Price) + ${{formatMoneyStr(purchase.options_total)}} (Options) + ${{formatMoneyStr(purchase.tags_licenses)}} (Tags & Lic) + ${{formatMoneyStr(purchase.shipping)}} (Shipping) - ${{formatMoneyStr(purchase.commission)}} (Comm to RBO) - ${{formatMoneyStr(purchase.options_rbo_commissions_total)}} (Options Comm to RBO)
+              .form-group(ng-show="isRBO")
+                label.col-lg-3.control-label {{outfitter_vendor_title}} Name:
+                .col-lg-8(style="padding-top: 5px;")
+                  span {{huntCatalog.outfitter_name}}
+              .form-group(ng-show="purchase.options_descriptions")
+                label.col-lg-3.control-label Options:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() {{purchase.options_descriptions}}
+
+              .div(ng-show="full && isRBO")
+                .form-group()
+                  label.col-lg-3.control-label RBO Reps Commission Amount:
+                  .col-lg-4(style="padding-top: 5px;")
+                    span() ${{formatMoneyStr(purchase.rbo_reps_commission)}}
+                .form-group()
+                  label.col-lg-3.control-label RBO Overrides:
+                  .col-lg-4(style="padding-top: 5px;")
+                    span() ${{formatMoneyStr(purchase.overrides)}}
+                .form-group()
+                  label.col-lg-3.control-label RBO Reps Commission Amount + RBO Overrides:
+                  .col-lg-4(style="padding-top: 5px;")
+                    span() ${{formatMoneyStr(purchase.rbo_reps_commission + purchase.overrides)}}
+                .form-group()
+                  label.col-lg-3.control-label RBO Commission Margin:
+                  .col-lg-8(style="padding-top: 5px;")
+                    span() ${{formatMoneyStr(purchase.rbo_margin)}} = ${{formatMoneyStr(purchase.commission)}} (Comm to RBO) - ${{formatMoneyStr(purchase.rbo_repTotal)}} (Reps Amount) - ${{formatMoneyStr(purchase.overrides)}} (Overrides)
+                .form-group()
+                  label.col-lg-3.control-label RBO Net Total:
+                  .col-lg-8(style="padding-top: 5px;")
+                    span() ${{formatMoneyStr(purchase.rbo_margin + purchase.fee_processing + purchase.rbo_commission_rbo4 - purchase.ccFee)}} = ${{formatMoneyStr(purchase.rbo_margin)}} (RBO Margin) + ${{formatMoneyStr(purchase.fee_processing)}} (Processing Fee) + ${{formatMoneyStr(purchase.rbo_commission_rbo4)}} (RBO%) - ${{formatMoneyStr(purchase.ccFee)}} (3% CC Fee)
+
+
+          //User Header
+          fieldset.gmt
+            legend(data-toggle="collapse", data-target="#user") User Info:
+              a(ng-show="user.isAdmin", style="margin-left: 10px; font-size: medium;", href="#!/admin/masquerade/{{purchase.user._id}}") {{purchase.user.first_name}} {{purchase.user.last_name}}: {{purchase.user.clientId}}
+              span(ng-hide="user.isAdmin", style="margin-left: 10px; font-size: medium;") {{purchase.user.first_name}} {{purchase.user.last_name}}: {{purchase.user.clientId}}
+              a.btn.btn-default.pull-right.btn-sm(data-toggle="collapse", data-target="#user" aria-expanded="false") details
+            div.collapse(id="user")
+              .form-group.purchase.compact
+                label.col-lg-3.control-label Name:
+                .col-lg-4
+                  a.form-control.noStyle(ng-show="user.isAdmin", href="#!/admin/masquerade/{{purchase.user._id}}") {{purchase.user.first_name}} {{purchase.user.last_name}}
+                  span.form-control(ng-hide="user.isAdmin") {{purchase.user.first_name}} {{purchase.user.last_name}}
+              .form-group.purchase.compact
+                label.col-lg-3.control-label Client Id:
+                .col-lg-4
+                  span.form-control {{purchase.user.clientId}}
+              .form-group.purchase.compact
+                label.col-lg-3.control-label Email:
+                .col-lg-4
+                  span.form-control {{purchase.user.email}}
+              div(ng-show="isRBO && user.isAdmin")
+                .form-group.purchase.compact(ng-show="showReps()")
+                  label.col-lg-3.control-label User is Rep:
+                  .col-lg-4
+                    span.form-control(ng-show="purchase.user.isRep") Yes: {{purchase.user.repType}}
+                    span.form-control(ng-hide="purchase.user.isRep") No
+                .form-group.purchase.compact()
+                  label.col-lg-3.control-label User is member:
+                  .col-lg-4
+                    span.form-control(ng-show="purchase.user.isMember") Yes
+                    span.form-control(ng-hide="purchase.user.isMember") No
+                .form-group.purchase.compact
+                  label.col-lg-3.control-label Current Parent Name:
+                  .col-lg-4
+                    span.form-control {{purchase.user.parent.first_name}} {{purchase.user.parent.last_name}} ({{purchase.user.parent.clientId}})
+                .form-group(ng-show="full")
+                  label.col-lg-3.control-label(ng-show="purchase.userParentId != purchase.user.parentId", style="color:red;") Parent at time of purchase:
+                  label.col-lg-3.control-label(ng-show="purchase.userParentId == purchase.user.parentId") Parent at time of purchase:
+                  .col-lg-4(style="padding-top: 5px;")
+                    span.form-control {{purchase.userParent.name}} ({{purchase.userParent.clientId}})
+                  label.col-lg-1.control-label Change:
+                  .col-lg-3
+                    input.form-control( type='text', placeholder='Parent Client Id', ng-model="new_parent_cid", ng-blur="changeRep($event, 'parent', new_parent_cid)" )
+              div(ng-show="isRBO && !user.isAdmin && (user.isOutfitter || user.isVendor)")
+                .form-group.purchase.compact
+                  label.col-lg-3.control-label Shipping Address:
+                  .col-lg-4
+                    span.form-control {{purchase.user.shipping_address}}
+                .form-group.purchase.compact
+                  label.col-lg-3.control-label Shipping City:
+                  .col-lg-4
+                    span.form-control {{purchase.user.shipping_city}}
+                .form-group.purchase.compact
+                  label.col-lg-3.control-label Shipping State:
+                  .col-lg-4
+                    span.form-control {{purchase.user.shipping_state}}
+                .form-group.purchase.compact
+                  label.col-lg-3.control-label Shipping Postal:
+                  .col-lg-4
+                    span.form-control {{purchase.user.shipping_postal}}
+                .form-group.purchase.compact
+                  label.col-lg-3.control-label Shipping Country:
+                  .col-lg-4
+                    span.form-control {{purchase.user.shipping_country}}
+
+
+          //Purchase
+          fieldset.gmt(ng-show="tenantAdmin")
+            legend(data-toggle="collapse", data-target="#purchaseinfo") Purchase Info
+              a.btn.btn-default.pull-right.btn-sm(data-toggle="collapse", data-target="#purchaseinfo" aria-expanded="false") details
+            div.collapse(id="purchaseinfo")
+              .form-group.purchase.compact
+                label.col-lg-3.control-label Item:
+                .col-lg-8
+                  span.form-control {{huntCatalog.huntNumber}}: {{huntCatalog.title}}
+              .form-group.purchase.compact
+                label.col-lg-3.control-label Catalog Type:
+                .col-lg-8
+                  span.form-control {{huntCatalog.type}}
+              .form-group.purchase.compact
+                label.col-lg-3.control-label {{outfitter_vendor_title}} Name
+                .col-lg-8
+                  span.form-control {{huntCatalog.outfitter_name}}
+
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Price
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.basePrice" ng-blur="numbersChanged($event, purchase)")
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Options
+                .col-lg-4
+                  input.form-control(readonly=true, type='number', step="0.01", ng-model="purchase.options_total" ng-blur="numbersChanged($event, purchase)")
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Tags & Lic
+                .col-lg-4
+                  input.form-control(type='number', step="0.01", ng-model="purchase.tags_licenses" ng-blur="numbersChanged($event, purchase)")
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Shipping
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.shipping" ng-blur="numbersChanged($event, purchase)")
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Processing Fee
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.fee_processing" ng-blur="numbersChanged($event, purchase)")
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Sales Tax
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.sales_tax" ng-blur="numbersChanged($event, purchase)")
+              .form-group.purchase.compact(ng-show="isRBO")
+                label.col-lg-3.control-label Commission to RBO
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.commission" ng-blur="numbersChanged($event, purchase)")
+              .form-group.purchase.compact(ng-show="isRBO")
+                label.col-lg-3.control-label Reps Commission Amount
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.rbo_reps_commission" ng-blur="numbersChanged($event, purchase)")
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label(ng-show="purchase.refund_amount > 0", style="color:red;") Refund Amount
+                label.col-lg-3.control-label(ng-show="!purchase.refund_amount") Refund Amount
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.refund_amount")
+              .form-group.purchase.compact()
+                label(ng-show="purchase.purchase_cancelled > 0", style="color:red;").col-lg-3.control-label Purchased Cancelled/Refunded:
+                label(ng-show="!purchase.purchase_cancelled").col-lg-3.control-label Purchased Cancelled/Refunded:
+                .col-lg-4
+                  input.kendo-date-time-picker.form-control(id="refunddate" type='date', ng-model="purchase.purchase_cancelled" )
+              .form-group.purchase.compact(style="padding-top: 10px;")
+                label.col-lg-3.control-label Purchase Notes
+                .col-lg-8
+                  textarea.form-control.short(ng-model="purchase.purchaseNotes")
+
+
+          //Payment Methods
+          fieldset.gmt
+            legend(data-toggle="collapse", data-target="#paymentmethodinfo") Payment Method
+              a.btn.btn-default.pull-right.btn-sm(data-toggle="collapse", data-target="#paymentmethodinfo" aria-expanded="false") details
+            div.collapse(id="paymentmethodinfo")
+              .form-group.purchase.compact
+                label.col-lg-3.control-label Authorization Number:
+                .col-lg-4
+                  span.form-control {{purchase._id}}
+              .form-group.purchase.compact
+                label.col-lg-3.control-label Payment Used:
+                .col-lg-4
+                  span.form-control {{purchase.paymentUsed}}
+              .form-group.purchase.compact
+                label.col-lg-3.control-label Payment Method:
+                .col-lg-4
+                  span.form-control {{purchase.paymentMethod}}
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Bank Check #
+                .col-lg-4
+                  input.form-control( type='test', ng-model="purchase.check_number" )
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Name on Check:
+                .col-lg-4
+                  input.form-control( type='test', ng-model="purchase.check_name" )
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label() Name on Card:
+                .col-lg-4
+                  span.form-control {{purchase.cc_name}}
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label() Credit Card Number:
+                .col-lg-4
+                  span.form-control {{purchase.cc_number}}
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Transaction Id:
+                .col-lg-4
+                  span.form-control {{purchase.cc_transId}}
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Transaction Description:
+                .col-lg-4
+                  span.form-control {{purchase.cc_description}}
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Authorize.net Subscription Id:
+                .col-lg-4
+                  span.form-control {{purchase.cc_subscriptionId}}
+
+
+          //Payments
+          fieldset.gmt(ng-show="full || tenantAdmin")
+            legend(data-toggle="collapse", data-target="#paymentinfo") Payments
+              a.btn.btn-default.pull-right.btn-sm(data-toggle="collapse", data-target="#paymentinfo" aria-expanded="false") details
+            div.collapse(id="paymentinfo")
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Initial Deposit Paid
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.amount" )
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Total Payments
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.amountPaid" ng-blur="amountPaidChange($event, purchase)")
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label % Paid in Full
+                .col-lg-4
+                  span.form-control %{{purchase.percentPaid}}
+              .form-group.purchase.compact
+                label.col-lg-3.control-label Payment Plan:
+                .col-lg-4
+                  span.form-control {{huntCatalog.paymentPlan}}
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Payment Status:
+                .col-lg-4
+                  select.form-control( ng-model="purchase.status", ng-options="payment_status.value as payment_status.name for payment_status in payment_statuses" )
+                    option( value="" )
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Authorized Automatic Payments
+                .col-lg-4
+                  input.form-control( disabled='true' type='checkbox', ng-model="purchase.authorize_automatic_payments" )
+              .form-group.purchase.compact()
+                label().col-lg-3.control-label Next Payment Due Date
+                .col-lg-4
+                  input.kendo-date-time-picker.form-control(id="nextpmtdate" type='date', ng-model="purchase.next_payment_date" )
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label() Next Payment Amount
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.next_payment_amount")
+
+
+          //Commissions
+          fieldset.gmt(ng-show="full && isRBO")
+            legend(data-toggle="collapse", data-target="#commissionsinfo") Commissions Info
+              a.btn.btn-default.pull-right.btn-sm(data-toggle="collapse", data-target="#commissionsinfo" aria-expanded="false") details
+            .form-group.purchase.compact(style="padding-top: 10px;")
+              label.col-lg-3.control-label Commissions Paid
+              .col-lg-4
+                input.kendo-date-time-picker.form-control(id="commPaid" type='date', ng-model="purchase.commissionsPaid" )
+            div.collapse(id="commissionsinfo")
+              .form-group.purchase.compact(style="padding-top: 5px;")
+                label.col-lg-3.control-label Associate Adventure Advisor:
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.rbo_commission_rep0", ng-blur="numbersChanged($event, purchase)" )
+                .col-lg-3(style="padding-top: 5px;")
+                  | {{rep0.name}} ({{rep0.clientId}})
+              .form-group.purchase.compact(style="padding-top: 5px;")
+                label.col-lg-3.control-label Adventure Advisor:
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.rbo_commission_rep1", ng-blur="numbersChanged($event, purchase)" )
+                .col-lg-3(style="padding-top: 5px;")
+                  | {{rep1.name}} ({{rep1.clientId}})
+              .form-group.purchase.compact(style="padding-top: 5px;")
+                label.col-lg-3.control-label Senior Adventure Advisor:
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.rbo_commission_rep2", ng-blur="numbersChanged($event, purchase)" )
+                .col-lg-3(style="padding-top: 5px;")
+                  | {{rep2.name}} ({{rep2.clientId}})
+              .form-group.purchase.compact(style="padding-top: 5px;")
+                label.col-lg-3.control-label Regional Adventure Advisor:
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.rbo_commission_rep3", ng-blur="numbersChanged($event, purchase)" )
+                .col-lg-3(style="padding-top: 5px;")
+                  | {{rep3.name}} ({{rep3.clientId}})
+              .form-group.purchase.compact(style="padding-top: 5px;")
+                label.col-lg-3.control-label Agency Manager:
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.rbo_commission_rep4", ng-blur="numbersChanged($event, purchase)" )
+                .col-lg-3(style="padding-top: 5px;")
+                  | {{rep4.name}} ({{rep4.clientId}})
+              .form-group.purchase.compact(style="padding-top: 5px;")
+                label.col-lg-3.control-label Senior Agency Manager:
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.rbo_commission_rep5", ng-blur="numbersChanged($event, purchase)" )
+                .col-lg-3(style="padding-top: 5px;")
+                  | {{rep5.name}} ({{rep5.clientId}})
+              .form-group.purchase.compact(style="padding-top: 5px;")
+                label.col-lg-3.control-label Executive Agency Manager:
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.rbo_commission_rep6", ng-blur="numbersChanged($event, purchase)" )
+                .col-lg-3(style="padding-top: 5px;")
+                  | {{rep6.name}} ({{rep6.clientId}})
+              .form-group.purchase.compact(style="padding-top: 5px;")
+                label.col-lg-3.control-label Senior Executive Agency Manager:
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.rbo_commission_rep7", ng-blur="numbersChanged($event, purchase)" )
+                .col-lg-3(style="padding-top: 5px;")
+                  | {{rep7.name}} ({{rep7.clientId}})
+              .form-group.purchase.compact(style="padding-top: 5px;")
+                label.col-lg-3.control-label Outdoor Software Solutions Partner:
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.rbo_commission_repOSSP", ng-blur="numbersChanged($event, purchase)" )
+                .col-lg-3(style="padding-top: 5px;")
+                  | {{repOSSP.name}} ({{repOSSP.clientId}})
+              .form-group.purchase.compact(style="padding-top: 5px;")
+                label.col-lg-3.control-label Bonus or Split Commission:
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.rbo_commission_rbo4", ng-blur="numbersChanged($event, purchase)" )
+                .col-lg-3(style="padding-top: 5px;")
+                  | {{rbo4.name}} ({{rbo4.clientId}})
+              .form-group()
+                label.col-lg-3.control-label Total to Reps:
+                .col-lg-4(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.rbo_repTotal)}}
+              .form-group.purchase.compact(style="padding-top: 5px;")
+                label.col-lg-3.control-label RBO1:
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.rbo_commission_rbo1", ng-blur="numbersChanged($event, purchase)" )
+                .col-lg-3(style="padding-top: 5px;")
+                  | {{rbo1.name}} ({{rbo1.clientId}})
+              .form-group.purchase.compact(style="padding-top: 5px;")
+                label.col-lg-3.control-label RBO2:
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.rbo_commission_rbo2", ng-blur="numbersChanged($event, purchase)" )
+                .col-lg-3(style="padding-top: 5px;")
+                  | {{rbo2.name}} ({{rbo2.clientId}})
+              .form-group.purchase.compact(style="padding-top: 5px;")
+                label.col-lg-3.control-label RBO3:
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.rbo_commission_rbo3", ng-blur="numbersChanged($event, purchase)" )
+                .col-lg-3(style="padding-top: 5px;")
+                  | {{rbo3.name}} ({{rbo3.clientId}})
+              .form-group()
+                label.col-lg-3.control-label Total Overrides:
+                .col-lg-4(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.overrides)}}
+              .form-group.purchase.compact(style="padding-top: 15px;")
+                label.col-lg-3.control-label
+                .col-lg-4
+                  | Manually Override Commissions:
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label
+                .col-lg-4
+                  input.form-control( type='text', placeholder='AAA Client Id', ng-model="new_r0_cid", ng-blur="changeRep($event, 'r0', new_r0_cid)" )
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label
+                .col-lg-4
+                  input.form-control( type='text', placeholder='AA Client Id', ng-model="new_r1_cid", ng-blur="changeRep($event, 'r1', new_r1_cid)" )
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label
+                .col-lg-4
+                  input.form-control( type='text', placeholder='SAA Client Id', ng-model="new_r2_cid", ng-blur="changeRep($event, 'r2', new_r2_cid)" )
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label
+                .col-lg-4
+                  input.form-control( type='text', placeholder='RAA Client Id', ng-model="new_r3_cid", ng-blur="changeRep($event, 'r3', new_r3_cid)" )
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label
+                .col-lg-4
+                  input.form-control( type='text', placeholder='AM Client Id', ng-model="new_r4_cid", ng-blur="changeRep($event, 'r4', new_r4_cid)" )
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label
+                .col-lg-4
+                  input.form-control( type='text', placeholder='SAM Client Id', ng-model="new_r5_cid", ng-blur="changeRep($event, 'r5', new_r5_cid)" )
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label
+                .col-lg-4
+                  input.form-control( type='text', placeholder='EAM Client Id', ng-model="new_r6_cid", ng-blur="changeRep($event, 'r6', new_r6_cid)" )
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label
+                .col-lg-4
+                  input.form-control( type='text', placeholder='SEAM Client Id', ng-model="new_r7_cid", ng-blur="changeRep($event, 'r7', new_r7_cid)" )
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label
+                .col-lg-4
+                  input.form-control( type='text', placeholder='OSSP Client Id', ng-model="new_rossp_cid", ng-blur="changeRep($event, 'ossp', new_rossp_cid)" )
+
+
+          //Payments to Outfitters
+          fieldset.gmt(ng-show="huntCatalog.type == 'hunt'")
+            legend(data-toggle="collapse", data-target="#confirmationdetails") Confirmations
+              a.btn.btn-default.pull-right.btn-sm(data-toggle="collapse", data-target="#confirmationdetails" aria-expanded="false") details
+            .form-group.purchase.compact(style="padding-top: 10px;")
+              label.col-lg-3.control-label Hunt Start Date
+              .col-lg-4
+                input.kendo-date-time-picker.form-control(id="huntStart" type='date', ng-model="purchase.start_hunt_date" )
+            .form-group.purchase.compact(ng-show="isRBO", style="padding-top: 10px;")
+              label.col-lg-3.control-label Hunt Dates Confirmed by Outfitter
+              .col-lg-4
+                input.kendo-date-time-picker.form-control(id="comfirmPurchase" type='date', ng-model="purchase.purchase_confirmed_by_outfitter" )
+            .form-group.purchase.compact(ng-show="isRBO", style="padding-top: 10px;")
+              label.col-lg-3.control-label Client Final Confirmation Received
+              .col-lg-4
+                input.kendo-date-time-picker.form-control(id="notifyPurchase" type='date', ng-model="purchase.purchase_confirmed_by_client" )
+            div.collapse(id="confirmationdetails")
+              //.form-group.purchase.compact(style="padding-top: 10px;")
+                label.col-lg-3.control-label Hunt End Date
+                .col-lg-4
+                  input.kendo-date-time-picker.form-control(id="huntEnd" type='date', ng-model="purchase.end_hunt_date" )
+              .form-group.purchase.compact(ng-show="isRBO", style="padding-top: 10px;")
+                label.col-lg-3.control-label Confirmation Letter Sent to Outfitter
+                .col-lg-4
+                  input.kendo-date-time-picker.form-control(id="confirmOutfitter" type='date', ng-model="purchase.confirmation_sent_outfitter" )
+              .form-group.purchase.compact(ng-show="isRBO", style="padding-top: 10px;")
+                label.col-lg-3.control-label Confirmation Letter Sent to Client
+                .col-lg-4
+                  input.kendo-date-time-picker.form-control(id="confirmClient" type='date', ng-model="purchase.confirmation_sent_client" )
+              .form-group.purchase.compact(ng-show="isRBO", style="padding-top: 10px;")
+                label.col-lg-3.control-label
+                .col-lg-8
+                  button.btn.btn-primary.pull-left(ng-click="confirmationLetters($event)", style="margin-top: 15px;") Confirmation Letters
+
+          fieldset.gmt(ng-show="huntCatalog.type != 'hunt' && isRBO")
+            legend(data-toggle="collapse", data-target="#confirmationdetails") Confirmations
+              a.btn.btn-default.pull-right.btn-sm(data-toggle="collapse", data-target="#confirmationdetails" aria-expanded="false") details
+            .form-group.purchase.compact(ng-show="isRBO", style="padding-top: 10px;")
+              label.col-lg-3.control-label Vendor Confirmed
+              .col-lg-4
+                input.kendo-date-time-picker.form-control(id="comfirmPurchase" type='date', ng-model="purchase.purchase_confirmed_by_outfitter" )
+            .form-group.purchase.compact(ng-show="isRBO", style="padding-top: 10px;")
+              label.col-lg-3.control-label Client Confirmed
+              .col-lg-4
+                input.kendo-date-time-picker.form-control(id="notifyPurchase" type='date', ng-model="purchase.purchase_confirmed_by_client" )
+
+          //Accounting Header
+          fieldset(ng-show="full && isRBO").gmt
+            legend(data-toggle="collapse", data-target="#accoutinginfo") Accounting
+              a.btn.btn-default.pull-right.btn-sm(data-toggle="collapse", data-target="#accoutinginfo" aria-expanded="false") details
+            div.collapse(id="accoutinginfo")
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Payment Status:
+                .col-lg-4(style="padding-top: 5px;")
+                  select.form-control( ng-model="purchase.status", ng-options="payment_status.value as payment_status.name for payment_status in payment_statuses" )
+                    option( value="" )
+              .form-group()
+                label.col-lg-3.control-label Total Client Price:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.TOTAL_PRICE)}}
+              .form-group()
+                label.col-lg-3.control-label
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.basePrice)}} (Item Price) + ${{formatMoneyStr(purchase.options_total)}} (Options) + ${{formatMoneyStr(purchase.tags_licenses)}} (Tags & Lic) + ${{formatMoneyStr(purchase.shipping)}} (Shipping) + ${{formatMoneyStr(purchase.fee_processing)}} (Prc Fee) + ${{formatMoneyStr(purchase.sales_tax)}} (Sales Tax)
+              .form-group()
+                label.col-lg-3.control-label Client Initial Deposit Paid ({{purchase.paymentUsed}}):
+                .col-lg-4(style="padding-top: 5px;")
+                  span(ng-hide="purchase.paymentUsed == 'check'") ${{formatMoneyStr(purchase.amount)}} (Ref no. {{purchase.cc_transId}})
+                  span(ng-show="purchase.paymentUsed == 'check'") ${{formatMoneyStr(purchase.amount)}} (Check no. {{purchase.check_number}})
+              .form-group.purchase.compact(ng-show="purchase.paymentUsed == 'check'")
+                label.col-lg-3.control-label Name on Check:
+                .col-lg-4(style="padding-top: 5px;")
+                  span {{purchase.check_name}}
+              .form-group()
+                label.col-lg-3.control-label Client Owes {{huntCatalog.outfitter_name}}:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.clientOwes)}} = ${{formatMoneyStr(purchase.TOTAL_PRICE)}} (Total Client Price) - ${{formatMoneyStr(purchase.amountPaid)}} (Total Payments Paid)
+              .form-group(ng-show="isRBO")
+                label.col-lg-3.control-label RBO Commissions (Booking Fee) %{{purchase.percentActualComm}}:
+                .col-lg-4(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.commission)}}
+              .form-group(ng-show="isRBO")
+                label.col-lg-3.control-label Remaining Deposit for RBO to send {{outfitter_vendor_title}}:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.remainingDepositToSend)}}
+              .form-group(ng-show="isRBO")
+                label.col-lg-3.control-label
+                .col-lg-8(style="padding-top: 5px;")
+                  span() = ${{formatMoneyStr(purchase.amount)}} (Deposit) - ${{formatMoneyStr(purchase.commission)}} (RBO Comm) - ${{formatMoneyStr(purchase.options_rbo_commissions_total)}} (RBO Options Comm) - ${{formatMoneyStr(purchase.fee_processing)}} (RBO Prc Fee) - ${{formatMoneyStr(purchase.sales_tax)}} (RBO Sales Tax)
+              .form-group()
+                label.col-lg-3.control-label RBO Reps Commission Amount + RBO Overrides:
+                .col-lg-4(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.rbo_reps_commission + purchase.overrides)}}
+              .form-group()
+                label.col-lg-3.control-label RBO Commission Margin:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.rbo_margin)}} = ${{formatMoneyStr(purchase.commission)}} (Comm to RBO) - ${{formatMoneyStr(purchase.rbo_repTotal)}} (Reps Amount) - ${{formatMoneyStr(purchase.overrides)}} (Overrides)
+              .form-group(ng-show="isRBO")
+                label.col-lg-3.control-label Transfer Online to Booking or Product:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.remainingDepositToSend)}}
+              .form-group(ng-show="isRBO")
+                label.col-lg-3.control-label Transfer Online to Main:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.amount - purchase.remainingDepositToSend)}}
+              .form-group(ng-show="isRBO")
+                label.col-lg-3.control-label Transfer Main to Commissions:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.rbo_reps_commission + purchase.overrides)}}
+
+
+              .form-group.purchase()
+                label.col-lg-3.control-label Quickbooks Invoice Recorded:
+                .col-lg-1
+                  input.form-control(type='checkbox', ng-model="purchase.qb_invoice_recorded" )
+              .form-group.purchase()
+                label.col-lg-3.control-label Quickbooks Expense Recorded:
+                .col-lg-1
+                  input.form-control(type='checkbox', ng-model="purchase.qb_expense_bill_recorded" )
+              .form-group.purchase.compact(style="padding-top: 10px;")
+                label.col-lg-3.control-label Quickbooks Invoice Payment Reconciled:
+                .col-lg-1
+                  input.form-control(type='checkbox', ng-model="purchase.qb_invoice_payment_reconciled" )
+              .form-group.purchase.compact(style="padding-top: 10px;")
+                label.col-lg-3.control-label Quickbooks Expense Payment Paid:
+                .col-lg-1
+                  input.form-control(type='checkbox', ng-model="purchase.qb_expense_payment_paid" )
+              .form-group.purchase.compact(style="padding-top: 10px;")
+                label.col-lg-3.control-label Quickbooks Expense Payment Paid Date:
+                .col-lg-4
+                  input.kendo-date-time-picker.form-control(id="bookkeeping_amount" type='date', ng-model="purchase.qb_expense_payment_paid_date" )
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label Quickbooks Expense Payment Amount:
+                .col-lg-4
+                  input.form-control( type='number', step="0.01", ng-model="purchase.qb_expense_balance_due" )
+
+
+
+          fieldset.gmt(ng-show="user.isAdmin")
+            legend Admin Notes
+            .form-group.purchase.compact()
+              label.col-lg-3.control-label Admin Notes
+              .col-lg-8
+                textarea.form-control(ng-readonly="true", ng-model="purchase.adminNotes")
+                button.btn.btn-primary.pull-left(ng-click="addNote($event)", style="margin-top: 5px;") Add Note
+
+          // Files
+          //fieldset.gmt
+            legend Attached Files
+            .form-group.dropZone
+              label.col-lg-4.control-label Files (checks, payments, etc)
+              .col-lg-8
+                input#purchase_files(name="uploadedFiles" type="file" )
+
+            .form-group(ng-repeat="file in purchase.files")
+              label.col-lg-4.control-label {{file.originalName}}
+              .col-lg-8
+                img.form-control(ng-src="{{file.url}}" alt="{{file.originalName}}" style="width:100%;height:inherit;")
+
+          button.btn.btn-primary.pull-right(style="margin-top: 30px; margin-left: 15px;", ng-click="update($event, purchase, false)") Update
+          .div(ng-show="full")
+            button.btn.btn-primary.pull-right(style="margin-top: 30px;", ng-click="update($event, purchase, true)") Recalculate Commissions
+          button.btn.btn-primary.pull-left(style="margin-top: 30px;", ng-click="cancel($event)") Cancel
+

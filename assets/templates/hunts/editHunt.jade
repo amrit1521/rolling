@@ -1,0 +1,10 @@
+#selectHunts.container( ng-controller="HuntEdit" )
+  .page-header
+    .row
+      .col-lg-12.col-md-12
+        a.btn.btn-default.btn-sm( href="#", ng-click="back($event)" ) < Back
+        h4 Enter information to apply for:
+          strong  {{user.name}} &mdash; {{state.name}} &mdash; {{huntName}}
+  .row
+    .col-md-12
+      div( ng-include="huntTemplate" )

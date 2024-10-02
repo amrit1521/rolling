@@ -1,0 +1,107 @@
+div( ng-controller="HuntsColoradoHunts" )
+  div( ng-controller="HuntsColoradoElk" )
+
+    .invidualChoices( ng-show="!choice.group_id.length" )
+      .form-group
+        .col-lg-12
+          fieldset
+            legend First Choice
+            .col-md-12
+              span.col-md-1 E &mdash;
+              input.col-md-1( ng-model="choice.hunt_code1_1" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code1_2" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code1_3" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code1_4" )
+
+      .form-group
+        .col-lg-12
+          fieldset
+            legend Second Choice
+            .col-md-12
+              span.col-md-1 E &mdash;
+              input.col-md-1( ng-model="choice.hunt_code2_1" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code2_2" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code2_3" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code2_4" )
+
+      .form-group
+        .col-lg-12
+          fieldset
+            legend Third Choice
+            .col-md-12
+              span.col-md-1 E &mdash;
+              input.col-md-1( ng-model="choice.hunt_code3_1" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code3_2" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code3_3" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code3_4" )
+
+      .form-group
+        .col-lg-12
+          fieldset
+            legend Fourth Choice
+            .col-md-12
+              span.col-md-1 E &mdash;
+              input.col-md-1( ng-model="choice.hunt_code4_1" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code4_2" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code4_3" )
+              span.col-md-1 &mdash;
+              input.col-md-1( ng-model="choice.hunt_code4_4" )
+
+      .form-group( ng-init="choice.unsuccess = '1,REFUND'" )
+        .col-lg-12
+          fieldset
+            legend If ununsuccessful
+      .form-group
+        .col-sm-2
+          .radio
+            label
+              input( type='radio', ng-model="choice.unsuccess", value="2,LEFTOVER DRAW" )
+              |  LEFTOVER DRAW
+      .form-group
+        .col-sm-2
+          .radio
+            label
+              input( type='radio', ng-model="choice.unsuccess", value="7,ANTLERLESS ARCHERY" )
+              |  ANTLERLESS ARCHERY
+
+      .form-group
+        .col-sm-2
+          .radio
+            label
+              input( type='radio', ng-model="choice.unsuccess", value="3,EITHER-SEX ARCHERY" )
+              |  EITHER-SEX ARCHERY
+
+      .form-group
+        .col-sm-2
+          .radio
+            label
+              input( type='radio', ng-model="choice.unsuccess", value="4,ANTLERED ELK, 2ND SEASON" )
+              |  ANTLERED ELK, 2ND SEASON
+
+      .form-group
+        .col-sm-2
+          .radio
+            label
+              input( type='radio', ng-model="choice.unsuccess", value="5,ANTLERED ELK, 3RD SEASON" )
+              |  ANTLERED ELK, 3RD SEASON
+
+      .form-group
+        .col-sm-2
+          .radio
+            label
+              input( type='radio', ng-model="choice.unsuccess", value="1,REFUND" )
+              |  REFUND
+
+    .form-group( ng-include="'templates/hunts/group_id.html'" )
+    .form-group( ng-include="'templates/hunts/hunt_buttons.html'" )

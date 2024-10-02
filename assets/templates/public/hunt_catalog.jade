@@ -1,0 +1,58 @@
+#HuntCatalog.container( ng-controller="HuntCatalog" )
+  .row
+    .col-lg-11.col-md-11
+      img( src="img/spinner.gif", ng-show="loadingHuntCatalog" )
+      .well
+
+        form.form-horizontal(ng-submit="purchase($event, huntCatalog)" )
+          fieldset
+            legend {{huntCatalog.huntNumber}}:  {{huntCatalog.title}}
+              button.btn.btn-primary(ng-show="huntCatalog.status == 'available'", style="margin-left:20px; margin-bottom:5px;", ng-click="purchase($event, huntCatalog)") Purchase
+              span.pull-right(ng-show="huntCatalog.status") Status: {{huntCatalog.status}}
+          div.hunt_catalog_header(style='margin-bottom: 35px;')
+            button.btn.btn-secondary.pull-right(style="margin-left:5px; margin-top:5px;", ng-click="cancel($event)") View Hunt Catalog
+            button.btn.btn-secondary.pull-right(style="margin-left:5px; margin-top:5px;", ng-if="user._id", ng-click="sendEmail($event, huntCatalog)") Send Email
+          span.form-group(ng-show="huntCatalog.species && huntCatalog.type == 'hunt' ")
+            | {{huntCatalog.species}}
+          span.form-group(ng-show="huntCatalog.classification && huntCatalog.type == 'hunt' ")
+            | {{huntCatalog.classification}}
+          span.form-group(ng-show="huntCatalog.huntSpecialMessageAsHTML", ng-bind-html="huntCatalog.huntSpecialMessageAsHTML")
+          span.form-group(ng-show="huntCatalog.descriptionAsHTML", ng-bind-html="huntCatalog.descriptionAsHTML")
+          span.form-group(ng-show="huntCatalog.country")
+            | Country: {{huntCatalog.country}}
+          span.form-group(ng-show="huntCatalog.state")
+            | State: {{huntCatalog.state}}
+          span.form-group(ng-show="huntCatalog.area")
+            | Area: {{huntCatalog.area}}
+          span.form-group(ng-show="huntCatalog.weapon && (huntCatalog.type == 'hunt' || huntCatalog.type == 'course' )")
+            | Weapon: {{huntCatalog.weapon}}
+          //span.form-group(ng-show="huntCatalog.budgetRange")
+            | Budget: {{huntCatalog.budgetRange}}
+          div(ng-show="huntCatalog.paymentPlan != 'subscription_monthly' && huntCatalog.paymentPlan != 'subscription_yearly'")
+            span.form-group(ng-show="huntCatalog.price_total")
+              | Base Member Price: {{formatMoneyStr(huntCatalog.price_total)}}
+            span.form-group(ng-show="huntCatalog.price_nom && huntCatalog.memberDiscount")
+              | Base Non-Member Price: {{formatMoneyStr(huntCatalog.price_nom)}}
+          div(ng-show="huntCatalog.paymentPlan == 'subscription_monthly'")
+            span.form-group(ng-show="huntCatalog.price_total")
+              | Member Monthly Subscription: {{formatMoneyStr(huntCatalog.price_total)}}
+            span.form-group(ng-show="huntCatalog.price_nom && huntCatalog.memberDiscount")
+              | Non-Member Monthly Subscription: {{formatMoneyStr(huntCatalog.price_nom)}}
+          div(ng-show="huntCatalog.paymentPlan == 'subscription_yearly'")
+            span.form-group(ng-show="huntCatalog.price_total")
+              | Member Yearly Subscription: {{formatMoneyStr(huntCatalog.price_total)}}
+            span.form-group(ng-show="huntCatalog.price_nom && huntCatalog.memberDiscount")
+              | Non-Member Yearly Subscription: {{formatMoneyStr(huntCatalog.price_nom)}}
+          span.form-group(ng-show="huntCatalog.pricingNotesAsHTML")
+            | Pricing Options:
+          span.form-group(ng-show="huntCatalog.pricingNotesAsHTML", ng-bind-html="huntCatalog.pricingNotesAsHTML")
+          span.form-group(ng-show="huntCatalog.dateRange && (huntCatalog.type == 'hunt' || huntCatalog.type == 'course' )")
+            | Dates: {{huntCatalog.dateRange}}
+
+          .form-group(ng-repeat="media in huntCatalog.media")
+            img.form-control(ng-src="{{media.url}}" style="width:100%;height:inherit;")
+
+          div(ng-show="huntCatalog.media && huntCatalog.media.length > 0")
+            button.btn.btn-secondary.pull-left(style="margin-top: 30px; margin-left:5px;", ng-click="cancel($event)") View Hunt Catalog
+            button.btn.btn-secondary.pull-left(style="margin-top: 30px; margin-left:5px;", ng-if="user._id", ng-click="sendEmail($event, huntCatalog)") Send Email
+            button.btn.btn-primary.pull-right(ng-show="huntCatalog.status == 'available'", style="margin-top: 30px;", ng-click="purchase($event, huntCatalog)") Purchase

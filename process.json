@@ -1,0 +1,13 @@
+{
+  "apps" : [
+    {
+      "name"        : "gotmytag",
+      "script"      : "app.coffee",
+      "instances"   : "max",
+      "exec_mode"   : "cluster",
+      "env": {
+        "DISPLAY": ":1"
+      }
+    }
+  ]
+}

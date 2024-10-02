@@ -1,0 +1,14 @@
+{
+  "apps" : [
+    {
+      "name"        : "drawresult_hf",
+      "script"      : "scripts/batch_points.coffee",
+      "instances"   : 1,
+      "exec_mode"   : "cluster",
+      "args"        : "Wyoming 52c5fa9d1a80b40fd43f2fdd false -1 -1",
+      "env": {
+        "DISPLAY": ":1"
+      }
+    }
+  ]
+}

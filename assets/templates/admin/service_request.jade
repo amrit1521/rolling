@@ -1,0 +1,172 @@
+#AdminServiceRequest.container( ng-controller="ServiceRequest" )
+  .row
+    .col-lg-11.col-md-11
+      img( src="img/spinner.gif", ng-show="loadingServiceRequest" )
+      .well
+        form.form-horizontal( ng-submit="submit(serviceRequest)" )
+          fieldset
+            legend Service Request: {{serviceRequest.type}}
+
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Status
+            .col-lg-8
+              select.form-control( ng-model="serviceRequest.status", ng-change="statusChanged(serviceRequest.status)", ng-options="status.value as status.name for status in serviceStatus" )
+                option( value="" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Needs Follow-up
+            .col-lg-8
+              input.form-control(ng-readonly="true" type='checkbox', ng-model="serviceRequest.needsFollowup" )
+          .form-group(ng-show="serviceRequest.userId")
+            label.col-lg-4.control-label User
+            .col-lg-8
+              a.form-control( href="#!/admin/masquerade/{{serviceRequest.userId}}" ) {{serviceRequest.first_name}} {{serviceRequest.last_name}}
+              //input.form-control(ng-readonly="true" type='text', ng-model="serviceRequest.userName" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Date Created
+            .col-lg-8
+              input.form-control(ng-readonly="true", type='text', ng-model="serviceRequest.external_date_created" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Last Updated
+            .col-lg-8
+              input.form-control(ng-readonly="true" type='text', ng-model="serviceRequest.updatedAt" )
+          .form-group
+            label(ng-show="!isNewRequest").col-lg-4.control-label Type
+            label(ng-show="isNewRequest").col-lg-4.control-label Type of Request
+            .col-lg-8
+              select.form-control( ng-model="serviceRequest.type", ng-options="type.value as type.name for type in serviceTypes" )
+          .form-group(ng-show="serviceRequest.clientId && !isNewRequest")
+            label.col-lg-4.control-label Client Id
+            .col-lg-8
+              input.form-control(ng-readonly="true" type='text', ng-model="serviceRequest.clientId" )
+          .form-group(ng-show="serviceRequest.memberId && !isNewRequest")
+            label.col-lg-4.control-label Member Id
+            .col-lg-8
+              input.form-control(ng-readonly="true" type='text', ng-model="serviceRequest.memberId" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Source
+            .col-lg-8
+              input.form-control(ng-readonly="!isNewRequest" type='text', ng-model="serviceRequest.referral_source" )
+          .form-group(ng-hide="true")
+            label.col-lg-4.control-label Where did you hear about us?
+            .col-lg-8
+              select.form-control( ng-model="serviceRequest.referral_source", ng-options="source.value as source.name for source in serviceSources" )
+                option( value="Web" )
+          .form-group(ng-show="serviceRequest.message || isNewRequest")
+            label(ng-show="isNewRequest").col-lg-4.control-label How can we help you?
+            label(ng-hide="isNewRequest").col-lg-4.control-label Message From User
+            .col-lg-8
+              textarea.form-control.short(ng-readonly="!isNewRequest" ng-model="serviceRequest.message")
+          div(ng-show="serviceRequest.type == 'Purchase' && !isNewRequest")
+            .form-group()
+              label.col-lg-4.control-label Purchase Receipt
+              .col-lg-8
+                a.form-control(ng-readonly="true", href="#!/admin/purchase_edit/{{serviceRequest.purchase.purchaseId}}" ) {{serviceRequest.purchase.purchaseId}}
+            .form-group()
+              label.col-lg-4.control-label Hunt Catalog Number
+              .col-lg-8
+                a.form-control(ng-readonly="true", href="#!/admin/huntcatalog/{{serviceRequest.purchase.huntCatalogId}}" ) {{serviceRequest.purchase.huntCatalogNumber}}
+            .form-group()
+              label.col-lg-4.control-label Hunt Catalog Title
+              .col-lg-8
+                input.form-control(ng-readonly="true" type='text', ng-model="serviceRequest.purchase.huntCatalogTitle" )
+            .form-group()
+              label.col-lg-4.control-label Hunt Catalog Type
+              .col-lg-8
+                input.form-control(ng-readonly="true" type='text', ng-model="serviceRequest.purchase.huntCatalogType" )
+            div(ng-show="serviceRequest.purchase.huntCatalogType == 'hunt'")
+              .form-group
+                label.col-lg-4.control-label(ng-show = "serviceRequest.purchase_hunt.depositReceived") Deposit Received
+                label.col-lg-4.control-label(ng-hide = "serviceRequest.purchase_hunt.depositReceived", style="color:red;") Deposit Received
+                .col-lg-8
+                  input.kendo-date-time-picker.form-control(id="depositReceived" type='date', ng-model="serviceRequest.purchase_hunt.depositReceived" )
+              .form-group
+                label.col-lg-4.control-label(ng-show = "serviceRequest.purchase_hunt.client_doc_sent") Client Agreement Sent
+                label.col-lg-4.control-label(ng-hide = "serviceRequest.purchase_hunt.client_doc_sent", style="color:red;") Client Agreement Sent
+                .col-lg-8
+                  input.kendo-date-time-picker.form-control(id="client_doc_sent" type='date', ng-model="serviceRequest.purchase_hunt.client_doc_sent" )
+              .form-group
+                label.col-lg-4.control-label(ng-show = "serviceRequest.purchase_hunt.outfitter_doc_sent") Outfitter Agreement Sent
+                label.col-lg-4.control-label(ng-hide = "serviceRequest.purchase_hunt.outfitter_doc_sent", style="color:red;") Outfitter Agreement Sent
+                .col-lg-8
+                  input.kendo-date-time-picker.form-control(id="outfitter_doc_sent" type='date', ng-model="serviceRequest.purchase_hunt.outfitter_doc_sent" )
+              .form-group
+                label.col-lg-4.control-label(ng-show = "serviceRequest.purchase_hunt.outfitter_payment_sent") Money Transferred to Outfitter
+                label.col-lg-4.control-label(ng-hide = "serviceRequest.purchase_hunt.outfitter_payment_sent", style="color:red;") Money Transferred to Outfitter
+                .col-lg-8
+                  input.kendo-date-time-picker.form-control(id="outfitter_payment_sent" type='date', ng-model="serviceRequest.purchase_hunt.outfitter_payment_sent" )
+
+          div(ng-show="serviceRequest.type == 'Request Hunt Info'")
+            .form-group
+              label.col-lg-4.control-label What Species do you want to hunt?
+              .col-lg-8
+                input.form-control( type='text', ng-model="serviceRequest.species" )
+            .form-group
+              label.col-lg-4.control-label Where?
+              .col-lg-8
+                input.form-control( type='text', ng-model="serviceRequest.location" )
+            .form-group
+              label.col-lg-4.control-label(ng-hide="isNewRequest") Weapons
+              label.col-lg-4.control-label(ng-hide="!isNewRequest") Weapons? (Archery, Rifle, Muzzleloader)
+              .col-lg-8
+                input.form-control( type='text', ng-model="serviceRequest.weapon" )
+            .form-group(ng-hide="isNewRequest")
+              label.col-lg-4.control-label Budget
+              .col-lg-8
+                input.form-control( type='text', ng-model="serviceRequest.budget" )
+            .form-group(ng-hide="!isNewRequest")
+              label.col-lg-4.control-label Budget?
+              .col-lg-8
+                select.form-control( ng-model="serviceRequest.budget", ng-options="budget.value as budget.name for budget in serviceBudgets" )
+                  option( value="" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Contact Phone
+            .col-lg-8
+              input.form-control( type='text', ng-model="serviceRequest.phone" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Contact Email
+            .col-lg-8
+              input.form-control( type='text', ng-model="serviceRequest.email" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Contact Address
+            .col-lg-8
+              input.form-control( type='text', ng-model="serviceRequest.address" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Contact City
+            .col-lg-8
+              input.form-control( type='text', ng-model="serviceRequest.city" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Contact State
+            .col-lg-8
+              input.form-control( type='text', ng-model="serviceRequest.state" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Contact Zip
+            .col-lg-8
+              input.form-control( type='text', ng-model="serviceRequest.postal" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Contact Country
+            .col-lg-8
+              input.form-control( type='text', ng-model="serviceRequest.country" )
+          .form-group(ng-show="!isNewRequest && serviceRequest.contactDiffs")
+            label.col-lg-4.control-label Contact differs from RADS User
+            .col-lg-8
+              textarea.form-control.short(ng-model="serviceRequest.contactDiffs" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Special Offers Requested
+            .col-lg-8
+              input.form-control(ng-readonly="true" type='checkbox', ng-model="serviceRequest.specialOffers" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Newsletter Requested
+            .col-lg-8
+              input.form-control(ng-readonly="true" type='checkbox', ng-model="serviceRequest.newsletter" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Last Follow-Up On
+            .col-lg-8
+              input.kendo-date-time-picker.form-control(id="lastFollowedUpAt" type='date', ng-model="serviceRequest.lastFollowedUpAt" )
+          .form-group(ng-hide="isNewRequest")
+            label.col-lg-4.control-label Notes
+            .col-lg-8
+              textarea.form-control(ng-readonly="true", ng-model="serviceRequest.notes")
+              button.btn.btn-primary.pull-left(ng-click="addNote($event)", style="margin-top: 5px;") Add Note
+
+          button.btn.btn-primary.pull-right(style="margin-top: 30px;") Save
+          button.btn.btn-primary.pull-left(style="margin-top: 30px;", ng-click="cancel()") Cancel

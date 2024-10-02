@@ -1,0 +1,59 @@
+#appdatespage
+    form
+        h1 Utah
+        .submission-dates
+          .submission-date
+            label(for='datepicker') Big Game Submit Date:
+            input.datepicker(type='date', placeholder='mm/dd/yyyy')
+            input.timepicker(type='time', placeholder='00:00:00')
+            input.submission-button(type='submit', name='biggame', value='Test Run')
+            br
+            br
+            label(for='datepicker1') Sportsmans Submit Date:
+            input.datepicker(type='date', placeholder='mm/dd/yyyy')
+            input.timepicker(type='time', placeholder='00:00:00')
+            input.submission-button(type='submit', name='sportsmans', value='Test Run')
+            br
+            br
+            label(for='datepicker2') Cougar Submit Date:
+            input.datepicker(type='date', placeholder='mm/dd/yyyy')
+            input.timepicker(type='time', placeholder='00:00:00')
+            input.submission-button(type='submit', name='cougar', value='Test Run')
+            br
+            br
+            label(for='datepicker3') Turkey Submit Date:
+            input.datepicker(type='date', placeholder='mm/dd/yyyy')
+            input.timepicker(type='time', placeholder='00:00:00')
+            input.submission-button(type='submit', name='turkey', value='Test Run')
+            br
+            br
+            label(for='datepicker4') Bear Submit Date:
+            input.datepicker(type='date', placeholder='mm/dd/yyyy')
+            input.timepicker(type='time', placeholder='00:00:00')
+            input.submission-button(type='submit', name='bear', value='Test Run')
+            br
+            br
+            label(for='datepicker5') Antlerless Submit Date:
+            input.datepicker(type='date', placeholder='mm/dd/yyyy')
+            input.timepicker(type='time', placeholder='00:00:00')
+            input.submission-button(type='submit', name='antlerless', value='Test Run')
+            br
+            br
+            label(for='datepicker6') Send Email Date:
+            input.datepicker(type='date', placeholder='mm/dd/yyyy')
+            input.timepicker(type='time', placeholder='00:00:00')
+            input.submission-button(type='submit', name='sendMail', value='Test Run')
+            br
+            br
+          div(style='clear: both;')
+          .email-button
+            textarea#emailtxtarea(rows='8', cols='35%')
+              | To:{{targetEmail}}
+              | From:{{senderEmail}}
+              | Subject{{huntSubject}}
+              | Hello{{hunterName}},
+              | Your applications for {{stateName}} has been submitted.
+              | Thanks,
+              | GotMyTag Team
+            br
+            input(type='submit', name='sendMail', value='Send Mail')

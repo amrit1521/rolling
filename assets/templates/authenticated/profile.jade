@@ -1,0 +1,478 @@
+#Profile.container
+  .row
+    .col-lg-11.col-md-11
+      .well
+        form.form-horizontal( ng-submit="submit(user)" )
+          fieldset
+            legend Profile Quick View
+              button.btn.btn-primary.pull-right Update
+              div
+                span.form-control To view and make changes to the full user profile, please do so on their&nbsp;
+                  a( href="#", ng-click="gotoRRADS($event)") user dashboard profile page
+
+            fieldset.address
+              legend Edit Profile
+              .form-group()
+                label.col-lg-4.control-label Client Id:
+                .col-lg-8
+                  span.form-control {{user.clientId }}
+                  //input.form-control(ng-readonly="true" type='text', ng-model="user.clientId" )
+              .form-group
+                label.col-lg-4.control-label( for='inputFirstName' ) Name
+                .col-lg-8
+                  input#inputFirstName.form-control( type='text', placeholder="First Name", ng-model="user.first_name" )
+                .col-lg-8.col-lg-offset-4
+                  input#inputMiddleName.form-control( type='text', placeholder="Middle Name", ng-model="user.middle_name" )
+                .col-lg-8.col-lg-offset-4
+                  input#inputLastName.form-control( type='text', placeholder="Last Name", ng-model="user.last_name" )
+                .col-lg-8.col-lg-offset-4
+                  input#inputSuffixName.form-control( type='text', placeholder="Suffix i.e.: Jr", ng-model="user.suffix" )
+
+              .form-group
+                label.col-lg-4.control-label( for='inputEmail' ) Email
+                .col-lg-8
+                  input#inputEmail.form-control( type='email', placeholder='Email', ng-model="user.email" )
+              .form-group
+                label.col-lg-4.control-label( for='inputEmail' ) Phone
+                .col-lg-8
+                  input#inputCell.form-control( type='phone', placeholder='Cell Phone', ng-model="user.phone_cell" )
+              .form-group(ng-show="user.parentId")
+                label.col-lg-4.control-label Parent:
+                .col-lg-8(style="padding-top: 5px;")
+                  span(ng-show="user.parent_clientId") {{user.parent_name}} ({{user.parent_clientId}})
+                  span(ng-hide="user.parent_clientId") {{user.parent_name}}
+              .form-group(ng-show="adminFullEdit()")
+                label.col-lg-4.control-label()
+                .col-lg-8
+                  a.btn.btn-default( href="#!/changeparent" ) Reassign Parent
+              .form-group()
+                label.col-lg-4.control-label() Password
+                .col-lg-8
+                  a.btn.btn-default( href="#!/changepassword" ) change password
+              div(ng-show="!isRBO() && adminTenantEdit()")
+                .form-group
+                  label.col-lg-4.control-label Is Outfitter:
+                  .col-lg-1
+                    input.form-control( type='checkbox', ng-model="user.isOutfitter", ng-change="setOutfitterDefaults()" )
+                .form-group
+                  label.col-lg-4.control-label Is Vendor:
+                  .col-lg-1
+                    input.form-control( type='checkbox', ng-model="user.isVendor", ng-change="setVendorDefaults()" )
+              div(ng-show="isRBO() && adminFullEdit()")
+                .form-group
+                  label.col-lg-4.control-label Is Outfitter:
+                  .col-lg-1
+                    input.form-control( type='checkbox', ng-model="user.isOutfitter", ng-change="setOutfitterDefaults()" )
+                .form-group
+                  label.col-lg-4.control-label Is Vendor:
+                  .col-lg-1
+                    input.form-control( type='checkbox', ng-model="user.isVendor", ng-change="setVendorDefaults()" )
+                .form-group
+                  label.col-lg-4.control-label(for='paymentForm' ) Secure Payment Form Sent
+                  .col-lg-8
+                    input#paymentForm.kendo-date-time-picker.form-control(type='date', ng-model="user.payment_form_sent" )
+                .form-group
+                  label.col-lg-4.control-label(for='paymentFormR' ) Secure Payment Form Received
+                  .col-lg-8
+                    input#paymentFormR.kendo-date-time-picker.form-control(type='date', ng-model="user.payment_form_received" )
+                .form-group()
+                  label.col-lg-4.control-label DB Id:
+                  .col-lg-8
+                    span.form-control {{user._id }}
+
+            fieldset.address(ng-show="user.isOutfitter && adminTenantEdit()")
+              legend Outfitter info
+              .form-group
+                label.col-lg-4.control-label Status
+                .col-lg-8
+                  select.form-control( ng-model="user.status", ng-options="status.value as status.name for status in outfitterStatus" )
+                    option( value="" )
+              .form-group
+                label.col-lg-4.control-label Vetted By
+                .col-lg-8
+                  input.form-control(ng-model="user.outfitter_vetted_by" )
+              .form-group
+                label.col-lg-4.control-label(for='vettedDate' ) Vetted Date
+                .col-lg-8
+                  input#vettedDate.kendo-date-time-picker.form-control(type='date', ng-model="user.outfitter_vetted_date" )
+              .form-group
+                label.col-lg-4.control-label Business Email
+                .col-lg-8
+                  input.form-control( type='email', placeholder='Send purchase notifications to this email', ng-model="user.business_email" )
+              .form-group
+                label.col-lg-4.control-label Business Phone
+                .col-lg-8
+                  input.form-control( type='tel', ng-model="user.business_phone" )
+              .form-group
+                label.col-lg-4.control-label Default Commission %
+                .col-lg-8
+                  input#commission.form-control(placeholder='15', ng-model="user.commission" )
+                  //select.form-control( ng-model="user.commission", ng-options="commission.value as commission.name for commission in outfitterComissions" )
+                    option( value="" )
+              //.form-group
+                label.col-lg-4.control-label(for='contractEnd' ) Contract Ends
+                .col-lg-8
+                  input#contractEnd.kendo-date-time-picker.form-control(type='date', ng-model="user.contractEnd" )
+
+            fieldset.address(ng-show="user.isVendor && adminTenantEdit()")
+              legend Vendor info
+              .form-group
+                label.col-lg-4.control-label Status
+                .col-lg-8
+                  select.form-control( ng-model="user.status", ng-options="status.value as status.name for status in outfitterStatus" )
+                    option( value="" )
+              .form-group
+                label.col-lg-4.control-label Approved By
+                .col-lg-8
+                  input.form-control(ng-model="user.vendor_vetted_by" )
+              .form-group
+                label.col-lg-4.control-label(for='vettedDateV' ) Approved Date
+                .col-lg-8
+                  input#vettedDateV.kendo-date-time-picker.form-control(type='date', ng-model="user.vendor_vetted_date" )
+              .form-group()
+                label.col-lg-4.control-label Show on Brands Page:
+                .col-lg-1
+                  input.form-control( type='checkbox', ng-model="user.vendor_isFeatured" )
+              .form-group
+                label.col-lg-4.control-label Use External Link
+                .col-lg-8
+                  input.form-control(ng-model="user.vendor_external_link" )
+              .form-group
+                label.col-lg-4.control-label Orders Email
+                .col-lg-8
+                  input.form-control( type='email', placeholder='Send purchase notifications to this email', ng-model="user.business_email" )
+              .form-group
+                label.col-lg-4.control-label Business Phone
+                .col-lg-8
+                  input.form-control( type='tel', ng-model="user.business_phone" )
+              .form-group
+                label.col-lg-4.control-label Contact Name
+                .col-lg-8
+                  input.form-control( type='tel', ng-model="user.vendor_contact_name" )
+              .form-group
+                label.col-lg-4.control-label Contact Email
+                .col-lg-8
+                  input.form-control( type='email', ng-model="user.vendor_contact_email" )
+              .form-group
+                label.col-lg-4.control-label Contact Phone
+                .col-lg-8
+                  input.form-control( type='tel', ng-model="user.vendor_contact_phone" )
+              .form-group
+                label.col-lg-4.control-label(for='pricingConf' ) Written Confirmation of Vendor Pricing received
+                .col-lg-8
+                  input#pricingConf.kendo-date-time-picker.form-control(type='date', ng-model="user.vendor_pricing_confirmed" )
+              .form-group
+                label.col-lg-4.control-label Shipping Method
+                .col-lg-8
+                  select.form-control( ng-model="user.vendor_shipping_method", ng-options="method.value as method.name for method in shippingMethods" )
+                    option( value="" )
+              .form-group
+                label.col-lg-4.control-label Vendor Payment Process
+                .col-lg-8
+                  select.form-control( ng-model="user.vendor_rbo_payment_process", ng-options="method.value as method.name for method in paymentProcess" )
+                    option( value="" )
+              .form-group
+                label.col-lg-4.control-label Vendor Payment Method
+                .col-lg-8
+                  select.form-control( ng-model="user.vendor_rbo_payment_method", ng-options="method.value as method.name for method in paymentMethods" )
+                    option( value="" )
+              .form-group
+                label.col-lg-4.control-label Vendor Order Process
+                .col-lg-8
+                  input.form-control(ng-model="user.vendor_rbo_order_process", placeholder='Default automated email from us')
+              .form-group
+                label.col-lg-4.control-label Vendor Order Confirmation Process
+                .col-lg-8
+                  input.form-control(ng-model="user.vendor_rbo_order_confirmed_process", placeholder='Email from vendor to end customer and copy us' )
+              .form-group
+                label.col-lg-4.control-label Vendor Returns Process
+                .col-lg-8
+                  input.form-control(ng-model="user.vendor_rbo_return_process", placeholder='We email vendor, vendor contacts customer with return info, vendor receives the return and notifies us, we refund the customer.' )
+
+
+            fieldset.address(ng-show="isRBO() && adminFullEdit()")
+              legend Rep Subscription
+              .form-group()
+                label.col-lg-4.control-label Is Rep:
+                .col-lg-1
+                  input.form-control( type='checkbox', ng-model="user.isRep", ng-change="repInfoChanged()" )
+              .form-group()
+                label.col-lg-4.control-label Rep Type:
+                .col-lg-8
+                  select.form-control( ng-model="user.repType", ng-options="repType.value as repType.name for repType in repTypes", ng-change="repInfoChanged()" )
+                    option( value="" )
+              .form-group()
+                label.col-lg-4.control-label Rep Status:
+                .col-lg-8
+                  select.form-control( ng-model="user.repStatus", ng-options="repStatus.value as repStatus.name for repStatus in repStatuses" )
+                    option( value="" )
+              .form-group()
+                label.col-lg-4.control-label Rep Subscription Started:
+                .col-lg-8
+                  input.kendo-date-time-picker.form-control(id="repStarted" type='date', ng-model="user.repStarted" )
+              .form-group()
+                label.col-lg-4.control-label Rep Next Payment:
+                .col-lg-8
+                  input.kendo-date-time-picker.form-control(id="repNextPayment" type='date', ng-model="user.rep_next_payment" )
+              .form-group()
+                label.col-lg-4.control-label Rep Next Payment Amount
+                .col-lg-8
+                  input.form-control( type='number', step="0.01", ng-model="user.rep_next_payment_amount")
+              .form-group()
+                label.col-lg-4.control-label Rep Subscription Expires:
+                .col-lg-8
+                  input.kendo-date-time-picker.form-control(id="repExpires" type='date', ng-model="user.repExpires" )
+
+            fieldset.address(ng-show="isRBO() && adminFullEdit()")
+              legend Membership Subscription
+              .form-group()
+                label.col-lg-4.control-label Is Member:
+                .col-lg-1
+                  input.form-control( type='checkbox', ng-model="user.isMember" )
+              .form-group()
+                label.col-lg-4.control-label Membership Type:
+                .col-lg-8
+                  select.form-control( ng-model="user.memberType", ng-options="memberType.value as memberType.name for memberType in memberTypes" )
+                    option( value="" )
+              .form-group()
+                label.col-lg-4.control-label Membership Status:
+                .col-lg-8
+                  select.form-control( ng-model="user.memberStatus", ng-options="memberStatus.value as memberStatus.name for memberStatus in memberStatuses" )
+                    option( value="" )
+              .form-group()
+                label.col-lg-4.control-label Membership Started:
+                .col-lg-8
+                  input.kendo-date-time-picker.form-control(id="memberStarted" type='date', ng-model="user.memberStarted" )
+              .form-group()
+                label.col-lg-4.control-label Membership Expires:
+                .col-lg-8
+                  input.kendo-date-time-picker.form-control(id="memberExpires" type='date', ng-model="user.memberExpires" )
+              .form-group()
+                label.col-lg-4.control-label Membership Next Payment Amount
+                .col-lg-8
+                  input.form-control( type='number', step="0.01", ng-model="user.membership_next_payment_amount")
+
+            fieldset.address(ng-hide="adminFullEdit() || !isRBO()")
+              legend Rep Subscription
+              .form-group(ng-show="user.isRep")
+                label.col-lg-4.control-label Rep Type:
+                .col-lg-8
+                  span.form-control {{user.repType }}
+              .form-group(ng-show="user.repStatus")
+                label.col-lg-4.control-label Rep Status:
+                .col-lg-8
+                  span.form-control {{user.repStatus }}
+              .form-group(ng-show="user.isRep")
+                label.col-lg-4.control-label Rep Subscription Expires:
+                .col-lg-8
+                  span.form-control {{user.repExpires | date:'MM/dd/yyyy'}}
+
+            fieldset.address(ng-hide="adminFullEdit() || !isRBO()")
+              legend Membership Subscription
+              .form-group(ng-show="user.isMember")
+                label.col-lg-4.control-label Member:
+                .col-lg-8
+                  span.form-control Yes
+              .form-group(ng-show="user.memberStatus")
+                label.col-lg-4.control-label Member status:
+                .col-lg-8
+                  span.form-control {{user.memberStatus }}
+              .form-group(ng-show="user.isMember")
+                label.col-lg-4.control-label Membership Expires:
+                .col-lg-8
+                  span.form-control {{user.memberExpires | date:'MM/dd/yyyy'}}
+
+
+
+            // Mailing Address
+            fieldset.address
+              legend Mailing Address
+              .form-group
+                label.col-lg-4.control-label Address
+                .col-lg-8
+                  input.form-control( type='address', placeholder="Street", ng-model="user.mail_address" )
+              .form-group
+                label.col-lg-4.control-label City
+                .col-lg-8
+                  input.form-control( type='city', placeholder="City", ng-model="user.mail_city" )
+              .form-group
+                label.col-lg-4.control-label State
+                .col-lg-8
+                  select.form-control( ng-model="user.mail_state", ng-options="state for state in states" )
+                    option( value="" ) State
+              .form-group
+                label.col-lg-4.control-label Zip Code
+                .col-lg-8
+                  input.form-control( type='text', placeholder="Zip Code", ng-model="user.mail_postal" )
+              .form-group
+                label.col-lg-4.control-label Country
+                .col-lg-8
+                  select.form-control( ng-model="user.mail_country", ng-options="country for country in countries" )
+                    option( value="" ) Country
+
+
+            // Physical Address
+            fieldset.address
+              legend Physical Address
+              .form-group
+                label.col-lg-4.control-label Address
+                .col-lg-8
+                  input.form-control( type='address', placeholder="Street", ng-model="user.physical_address" )
+              .form-group
+                label.col-lg-4.control-label City
+                .col-lg-8
+                  input.form-control( type='city', placeholder="City", ng-model="user.physical_city" )
+              .form-group
+                label.col-lg-4.control-label State
+                .col-lg-8
+                  select.form-control( ng-model="user.physical_state", ng-options="state for state in states" )
+                    option( value="" ) State
+              .form-group
+                label.col-lg-4.control-label Zip Code
+                .col-lg-8
+                  input.form-control( type='text', placeholder="Zip Code", ng-model="user.physical_postal" )
+              .form-group
+                label.col-lg-4.control-label Country
+                .col-lg-8
+                  select.form-control( ng-model="user.physical_country", ng-options="country for country in countries" )
+                    option( value="" ) Country
+
+            fieldset.address(ng-show="isRBO() && adminFullEdit()")
+              legend Authorize.net Profile
+              .form-group
+                label.col-lg-4.control-label Customer Profile Id
+                .col-lg-8
+                  input.form-control(ng-model="user.payment_customerProfileId" )
+              .form-group
+                label.col-lg-4.control-label Payment Profile Id (for recurring billing)
+                .col-lg-8
+                  input.form-control(ng-model="user.payment_recurring_paymentProfileId" )
+
+            fieldset.address(ng-show="isRBO() && adminFullEdit()")
+              legend QB Profile
+              .form-group
+                label.col-lg-4.control-label QB Customer Id
+                .col-lg-8
+                  input.form-control(ng-model="user.qb_customer_id" )
+
+            fieldset.address(ng-show="isRBO() && adminFullEdit()")
+              legend Admin
+              .form-group()
+                label.col-lg-4.control-label Admin Notes
+                .col-lg-8
+                  textarea.form-control(ng-model="user.internalNotes")
+              .form-group.dropZone
+                label.col-lg-4.control-label Files (contract, info, etc)
+                .col-lg-8
+                  input#files(name="uploadedFiles" type="file" )
+              .form-group(ng-repeat="file in user.files")
+                label.col-lg-4.control-label {{file.originalName}}
+                .col-lg-8
+                  img.form-control(ng-src="{{file.url}}" alt="{{file.originalName}}" style="width:100%;height:inherit;")
+
+
+
+          // State Specific Info
+          //fieldset.address(ng-cloak, ng-show="isRBO() && adminEdit()")
+            legend State Specific Information
+            fieldset
+              legend Alaska
+              //.form-group
+                label.col-lg-4.control-label AK Username (email)
+                .col-lg-8
+                  input.form-control( type='text', placeholder="AK username", ng-model="user.akUsername" )
+              //.form-group
+                label.col-lg-4.control-label AK Password
+                .col-lg-8
+                  input.form-control( type='password', placeholder="AK Password", ng-model="user.akPasswordTmp" )
+              .form-group
+                label.col-lg-4.control-label Hunting License # (most recent)
+                .col-lg-8
+                  input.form-control( type='text', placeholder="AK Most Recent Lic #", ng-model="user.alaska_license" )
+              .form-group
+                label.col-lg-4.control-label Hunting license above was for year:
+                .col-lg-8
+                  input.form-control( type='text', placeholder="4 digit Year of above hunting license number", ng-model="user.alaska_license_year" )
+              legend Arizona
+              .form-group
+                label.col-lg-4.control-label AZ Username (email)
+                .col-lg-8
+                  input.form-control( type='text', placeholder="AZ email", ng-model="user.azUsername" )
+              .form-group
+                label.col-lg-4.control-label AZ Password
+                .col-lg-8
+                  input.form-control( type='password', placeholder="AZ Password", ng-model="user.azPasswordTmp" )
+              legend Colorado
+              .form-group
+                label.col-lg-4.control-label CO Username
+                .col-lg-8
+                  input.form-control( type='text', placeholder="CO Username", ng-model="user.coUsername" )
+              .form-group
+                label.col-lg-4.control-label CO Password
+                .col-lg-8
+                  input.form-control( type='password', placeholder="CO Password", ng-model="user.coPasswordTmp" )
+              legend Idaho
+              .form-group
+                label.col-lg-4.control-label ID Username
+                .col-lg-8
+                  input.form-control( type='text', placeholder="ID Username", ng-model="user.idUsername" )
+              .form-group
+                label.col-lg-4.control-label ID Password
+                .col-lg-8
+                  input.form-control( type='password', placeholder="ID Password", ng-model="user.idPasswordTmp" )
+              .form-group
+                label.col-lg-4.control-label Hunting License # (most recent)
+                .col-lg-8
+                  input.form-control( type='text', placeholder="ID Most Recent Lic #", ng-model="user.idaho_license" )
+              .form-group
+                label.col-lg-4.control-label Hunting license above was for year:
+                .col-lg-8
+                  input.form-control( type='text', placeholder="4 digit Year of above hunting license number", ng-model="user.idaho_license_year" )
+              legend Montana
+              .form-group
+                label.col-lg-4.control-label MT Username
+                .col-lg-8
+                  input.form-control( type='text', placeholder="MT Username", ng-model="user.mtUsername" )
+              .form-group
+                label.col-lg-4.control-label MT Password
+                .col-lg-8
+                  input.form-control( type='password', placeholder="MT Password", ng-model="user.mtPasswordTmp" )
+              legend Nevada
+              .form-group
+                label.col-lg-4.control-label NV Username
+                .col-lg-8
+                  input.form-control( type='text', placeholder="NV Username", ng-model="user.nvUsername" )
+              .form-group
+                label.col-lg-4.control-label NV Password
+                .col-lg-8
+                  input.form-control( type='password', placeholder="NV Password", ng-model="user.nvPasswordTmp" )
+              legend New Mexico
+              .form-group
+                label.col-lg-4.control-label NM Username
+                .col-lg-8
+                  input.form-control( type='text', placeholder="NM Username", ng-model="user.nmUsername" )
+              .form-group
+                label.col-lg-4.control-label NM Password
+                .col-lg-8
+                  input.form-control( type='password', placeholder="NM Password", ng-model="user.nmPasswordTmp" )
+              legend South Dakota
+              .form-group
+                label.col-lg-4.control-label SD Username
+                .col-lg-8
+                  input.form-control( type='text', placeholder="SD Username", ng-model="user.sdUsername" )
+              .form-group
+                label.col-lg-4.control-label SD Password
+                .col-lg-8
+                  input.form-control( type='password', placeholder="SD Password", ng-model="user.sdPasswordTmp" )
+              legend Washington
+              .form-group
+                label.col-lg-4.control-label WA Username
+                .col-lg-8
+                  input.form-control( type='text', placeholder="WA Username", ng-model="user.waUsername" )
+              .form-group
+                label.col-lg-4.control-label WA Password
+                .col-lg-8
+                  input.form-control( type='password', placeholder="WA Password", ng-model="user.waPasswordTmp" )
+
+
+          button.btn.btn-primary.center-block Update

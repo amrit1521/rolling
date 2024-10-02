@@ -1,0 +1,63 @@
+.container(ng-controller="RBO_REP_COMMISSIONS")
+  .page-header
+    h3 Welcome {{user.first_name}},
+    h4 congratulations and welcome to the {{user.repType}} Rolling Bones Family.
+  .row
+    .col-md-12
+      p.lead
+        | Reports: Commissions
+
+
+  .row
+    .col-md-12
+      form.form-inline
+        .pull-left
+          .form-group(style="margin-bottom: 15px; margin-right: 30px;")
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="this_week", ng-change="setDateRange(dateFilterType)", style="margin-right:5px;")
+              | This Week
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="this_month", ng-change="setDateRange(dateFilterType)", style="margin-right:5px;", checked="true")
+              | This Month
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="this_year", ng-change="setDateRange(dateFilterType)", style="margin-right:5px;")
+              | This Year
+          .form-group(style="margin-bottom: 15px; margin-right: 10px;")
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="last_week", ng-change="setDateRange(dateFilterType)", style="margin-right:5px;")
+              | Last Week
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="last_month", ng-change="setDateRange(dateFilterType)", style="margin-right:5px;")
+              | Last Month
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="last_year", ng-change="setDateRange(dateFilterType)", style="margin-right:5px;")
+              | Last Year
+          .form-group(style="margin-bottom: 15px; margin-right: 30px;")
+            label.control-label(style="margin-left: 5px;")
+              input(type="radio", ng-model="dateFilterType", value="all", ng-change="setDateRange(dateFilterType)", style="margin-right:5px;")
+              | All
+
+  .row
+    .col-md-12
+      form.form-horizontal
+        .pull-left
+          .form-group
+            label.col-lg-5.control-label Purchase Start Date
+            .col-lg-7
+              input.kendo-date-time-picker.form-control(id="startDate" type='date', ng-model="startDate" )
+          .form-group
+            label.col-lg-5.control-label Purchase End Date
+            .col-lg-7
+              input.kendo-date-time-picker.form-control(id="endDate" type='date', ng-model="endDate" )
+          .form-group()
+            .col-lg-7.col-lg-offset-5
+              button.btn.btn-primary.pull-left(style="width: 100%;", ng-click="submit($event)") Submit
+
+  .row
+    .col-md-12
+      img( src="img/spinner.gif", ng-show="loading" )
+
+
+  .row
+    .col-md-12
+      div#repCommissionsGrid

@@ -1,0 +1,14 @@
+.container( ng-controller="FGOdds" )
+  .page-header
+    h2 Fish & Game Draw Odds
+  .row
+    .col-lg-6.col-md-6( style="float: right;" )
+      img.rounded( src='img/elk1.jpg', style='max-width: 100%; float: right; width: 400px;' )
+    .col-lg-6.col-md-6
+      p
+        b Click on any link below to go where that state gives odds of drawing data
+      p.feed.inline-buttons
+        a.btn.btn-default.col-lg-5.col-sm-12.col-xs-12( ng-repeat="state in states | orderBy:'name'", ng-show="state.oddsUrl", target="_blank", href='{{state.oddsUrl}}' ) {{state.name}}
+
+      div
+        a.btn.btn-primary.col-xs-12.col-sm-6.col-md-4( href="#!/setup", ng-show="isPhoneNotAuthed()" ) Setup

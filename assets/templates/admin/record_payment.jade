@@ -1,0 +1,129 @@
+#purchase.container( ng-controller="RecordPayment" )
+  //Production
+  script(src="https://js.authorize.net/v1/Accept.js", type = "text/javascript", charset="utf-8")
+  //Sandbox
+  //script(src="https://jstest.authorize.net/v1/Accept.js", type = "text/javascript", charset="utf-8")
+  .row
+    .col-lg-11.col-md-11
+      .col-md-12(ng-show="show_saving")
+        img( src="img/spinner.gif", style="margin-right: 10px;")
+        | Saving...
+
+      .well()
+        h3.page-header() Record Payment Received
+        div(style="margin-bottom:15px")
+          span()
+            | Please enter the original invoice number you would like to apply payment.
+        form.form-horizontal( ng-submit="update($event, payment)" )
+          fieldset.gmt
+            legend Original Invoice
+            div()
+              .form-group()
+                label.col-lg-3.control-label Original Invoice #:
+                .col-lg-4
+                  input.form-control( type='text', ng-model="originalInvoiceNumber", ng-blur="findOriginalPurchase($event, originalInvoiceNumber)" )
+              .form-group.purchase.compact(ng-show="apply_payment_user")
+                label.col-lg-3.control-label Client:
+                .col-lg-8
+                  span.form-control {{apply_payment_user.name}} ({{apply_payment_user.clientId}}), {{apply_payment_user.email}}
+              .form-group.purchase.compact(ng-show="apply_payment_purchase_object")
+                label.col-lg-3.control-label Item:
+                .col-lg-8
+                  span.form-control {{apply_payment_purchase_object.huntCatalog_number}} {{apply_payment_purchase_object.huntCatalog_title}}
+              .form-group.purchase.compact(ng-show="apply_payment_purchase_object")
+                label.col-lg-3.control-label Outfitter:
+                .col-lg-8
+                  span.form-control {{apply_payment_purchase_object.huntCatalog_outfitter}}
+              .form-group.purchase.compact(ng-show="apply_payment_purchase_object")
+                label.col-lg-3.control-label Total Price:
+                .col-lg-4
+                  span.form-control ${{formatMoneyStr(apply_payment_purchase_object.amountTotal)}}
+              .form-group.purchase.compact(ng-show="apply_payment_purchase_object")
+                label.col-lg-3.control-label Total paid to date:
+                .col-lg-4
+                  span.form-control ${{formatMoneyStr(apply_payment_purchase_object.amountPaid)}}
+              .form-group.purchase.compact(ng-show="apply_payment_purchase_object")
+                label.col-lg-3.control-label Total owed:
+                .col-lg-4
+                  span.form-control ${{formatMoneyStr(apply_payment_purchase_object.amountTotal - apply_payment_purchase_object.amountPaid)}}
+
+
+          fieldset.gmt
+            legend Record Payment
+            .form-group.purchase.compact(style="padding-top: 10px;")
+              label.col-lg-3.control-label Payment Type
+              .col-lg-4
+                select.form-control( ng-model="payment.specific_type", ng-options="type.value as type.name for type in paymentTypes" )
+            div(ng-hide="payment.specific_type == 'card'")
+              .form-group.purchase.compact(style="padding-top: 10px;")
+                label.col-lg-3.control-label Payment Received
+                .col-lg-4
+                  input.kendo-date-time-picker.form-control(id="paymentReceived" type='date', ng-model="payment.paidOn" )
+              .form-group.purchase.compact(style="padding-top: 10px;")
+                label.col-lg-3.control-label(ng-show="payment.specific_type == 'check'") Name on Check:
+                label.col-lg-3.control-label(ng-show="payment.specific_type != 'check'") Name:
+                .col-lg-4
+                  input.form-control( type='text', ng-model="payment.name")
+              .form-group.purchase.compact(style="padding-top: 10px;")
+                label.col-lg-3.control-label(ng-show="payment.specific_type == 'check'") Check #:
+                label.col-lg-3.control-label(ng-show="payment.specific_type != 'check'") Reference Number (optional):
+                .col-lg-4
+                  input.form-control( type='text', ng-model="payment.referenceNumber")
+
+            div(ng-show="payment.specific_type == 'card'")
+              .form-group.purchase(style="padding-top: 10px;")
+                label.col-lg-3.control-label() Name on Card
+                .col-lg-4
+                  input#inputName.form-control( placeholder='Name on Card', ng-model="payment.card.name", required='required' )
+              .form-group.purchase
+                label.col-lg-3.control-label( for='inputNumber' ) Credit Card Number
+                .col-lg-4
+                  input#inputNumber.form-control( placeholder='Credit Card Number', ng-model="payment.card.number", required='required' )
+              .form-group.purchase
+                label.col-lg-3.control-label( for='inputVerificationCode' ) Credit Card Verification Code
+                .col-lg-4
+                  input#inputVerificationCode.form-control( placeholder='Credit Card Verification Code', ng-model="payment.card.code", required='required' )
+              .form-group.purchase
+                label.col-lg-3.control-label( for='inputExpiration' ) Expiration Date
+                .col-lg-2
+                  select#inputExpiration.form-control( ng-model="payment.card.month", ng-options="month.value as month.name for month in months", required='required' )
+                    option( value="" ) Month
+                .col-lg-2
+                  select.form-control( ng-model="payment.card.year", ng-options="year for year in years", required='required' )
+                    option( value="" ) Year
+              .form-group.purchase
+                label.col-lg-3.control-label Card Holder Address:
+                .col-lg-4
+                  input.form-control(ng-model="payment.card.address1", required='required')
+              .form-group.purchase
+                label.col-lg-3.control-label Card Holder City:
+                .col-lg-4
+                  input.form-control(ng-model="payment.card.city", required='required')
+              .form-group.purchase
+                label.col-lg-3.control-label Card Holder State:
+                .col-lg-4
+                  select.form-control( ng-model="payment.card.state", ng-options="state for state in states", required='required' )
+                    option( value="" )
+              .form-group.purchase
+                label.col-lg-3.control-label Card Holder Country:
+                .col-lg-4
+                  select.form-control( ng-model="payment.card.country", ng-options="country for country in countries", required='required' )
+                    option( value="United States" )
+              .form-group.purchase
+                label.col-lg-3.control-label() Card Holder Zip Code
+                .col-lg-4
+                  input.form-control( placeholder='Billing Zip Code', ng-model="payment.card.postal", required='required' )
+            .form-group.purchase.compact(style="padding-top: 10px;")
+              label.col-lg-3.control-label Payment Amount
+              .col-lg-4
+                input.form-control( type='number', step="0.01", ng-model="payment.amount")
+            .form-group.purchase.compact(style="padding-top: 10px;")
+              label.col-lg-3.control-label Notes
+              .col-lg-4
+                textarea.form-control.short(ng-model="payment.notes")
+
+
+          button.btn.btn-primary.pull-right(ng-show="payment.specific_type == 'card'", style="margin-top: 30px; margin-left: 15px;", ng-click="submitPayment($event, payment)") Submit Payment
+          button.btn.btn-primary.pull-right(ng-hide="payment.specific_type == 'card'", style="margin-top: 30px; margin-left: 15px;", ng-click="update($event, payment)") Save
+          button.btn.btn-primary.pull-left(style="margin-top: 30px;", ng-click="cancel($event)") Cancel
+

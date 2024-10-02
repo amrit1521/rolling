@@ -1,0 +1,36 @@
+.groups( ng-show="hunt.groupable" )
+
+  .form-group( ng-hide="groupMembers" )
+    .col-lg-12
+      fieldset
+        legend Groups
+        .col-md-12
+          label.pull-left Leader's {{state.idTitle}}:
+          input.col-md-2( ng-change="checkGroupId(choice.group_id)", ng-model="choice.group_id", style="margin-left: 10px; margin-right: 10px;" )
+          span
+            span( ng-show="groupLimit2" ) Limit of 2 per group
+            |  (Please use the group leaders {{state.name}} {{state.idTitle}}) All group members must use this same number.
+
+  .groupChoices( ng-show="showGroupChoices()" )
+    .form-group
+      .col-lg-12
+        fieldset
+          legend Group Choices
+          .group-choices( ng-show="groupChoices" )
+            .col-md-3( ng-repeat="choice in groupChoices" )
+              label {{choice.name}}
+              span  - {{choice.value}}
+
+          .group-choices( ng-show="groupLookup" ) Searching for the group leader &nbsp;
+            img( src="img/ajax-loader.gif" )
+
+          .group-not-found( ng-show="groupNotFound" ) Unable to find the group
+          .group-waiting( ng-show="groupWaiting" ) Waiting for the group leader to select the hunt options
+
+
+  .groupChoices( ng-show="groupMembers" )
+    .form-group
+      .col-lg-12
+        fieldset
+          legend Group Members
+          .col-md-3( ng-repeat="member in groupMembers" ) {{member.name}}

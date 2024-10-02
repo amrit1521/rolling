@@ -1,0 +1,40 @@
+#AdminUserImport.container( ng-controller="ImportUsers" )
+  .page-header
+    h3 Batch User Import
+  .row
+    .col-md-12
+      form.form-inline(style="margin-bottom: 15px;")
+        fieldset
+          legend Please select the .csv or comma delimited file containing the users you wish to import.
+          .col-lg-6
+            input#files(name="uploadedFiles" type="file" )
+          .col-lg-10
+            span(ng-show="show_error") Failed Process file: {{errorMessage}}
+
+  .row()
+    .col-md-12
+      img( src="img/spinner.gif", ng-show="loading" )
+
+  .row()
+    span(ng-show="total_entries > 0") Found: {{total_entries}} total entries.
+  .row()
+    span(ng-show="users_missing_email.length > 0") Found: {{users_missing_email.length}} entries missing an email address.  These users will be skipped.
+  .row()
+    span(ng-show="users_alreadyExists_email.length > 0") Found: {{users_alreadyExists_email.length}} entries that already exist in the system with the same email address. These users will be skipped.
+  .row()
+    span(ng-show="users_alreadyExists_clientId.length > 0") Found: {{users_alreadyExists_clientId.length}} entries that already exist in the system with the same client id. These users will be skipped.
+  .row()
+    span(ng-show="users_alreadyExists_other.length > 0") Found: {{users_alreadyExists_other.length}} entries that already exist in the system with the same user id. These users will be skipped.
+  .row()
+    span(ng-show="users_new.length > 0") Found: {{users_new.length}} entries ready to import as new users.
+
+  .row()
+    h3(ng-show="showGrid") Please review and validate the following information looks correct before proceeding.
+  .row()
+    div#UsersImportGrid(ng-show="showGrid")
+  .row(ng-show="showGrid && !processing")
+    button.btn.btn-primary.pull-right(style="margin-top: 30px;", ng-click="submit($event)") Import {{items.length}} Users
+    button.btn.btn-primary.pull-left(style="margin-top: 30px;", ng-click="cancel($event)") Cancel
+  .row(ng-show="showGrid && processing")
+    h3() Creating new users...
+    img( src="img/spinner.gif", ng-show="processing" )

@@ -1,0 +1,7 @@
+.form-group.select-list
+
+  select.form-control( ng-model="hunt.choice.ch_choice_1", ng-options="option.value + ' ' + option.area + ' ' + option.permitsAvailable + ' ' + option.start + ' ' + option.end for option in huntOptions[hunt._id] | orderBy: 'value'" )
+    option( value="" )
+
+  select.form-control( ng-model="hunt.choice.ch_choice_2", ng-options="option.value + ' ' + option.area + ' ' + option.permitsAvailable + ' ' + option.start + ' ' + option.end for option in huntOptions[hunt._id] | orderBy: 'value'" )
+    option( value="" )

@@ -1,0 +1,22 @@
+.modal-header
+  h3 Test Run Results
+.modal-body
+  .result-display
+    div( ng-bind-html="testResultSafe", ng-hide="showCreditCard" )
+    div( ng-include="'templates/authenticated/credit_card_form.html'", ng-show="showCreditCard" )
+
+.modal-footer
+
+  // Right side in reverse order from how they appear
+  button.btn.btn-primary.pull-right(ng-click='ok(cardSelection, card)') Checkout&nbsp;
+    img( src="img/ajax-loader.gif", ng-show="application.batchRunning" )
+
+  .form-group.pull-right
+    select#creditCard.form-control.btn-info( ng-model="cardSelection", ng-options="cardInfo.name for cardInfo in cards" )
+
+  button.btn.btn-default.pull-right( ng-show="application.hasReceipt", ng-click="viewReceipts($event, application)" ) View Receipts
+  a.btn.btn-default.pull-right( href="{{license}}", target="_blank", ng-show="application.licenseUrls", ng-repeat="license in application.licenseUrls") View License # {{$index}}
+  button.btn.btn-danger.pull-right( ng-show="application.errors", ng-click="viewErrors($event, application)" ) View Errors
+
+  // Left side
+  button.btn.btn-default.pull-left(ng-click='cancel()') Close

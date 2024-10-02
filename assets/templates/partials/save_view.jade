@@ -1,0 +1,37 @@
+.modal-header
+  h3 Save View
+.modal-body
+  .row
+    .col-lg-11.col-md-11
+      .well
+        form.form-horizontal( ng-submit="submit(card)" )
+
+          fieldset
+            legend Details
+              .checkbox
+                label
+                  input( type='checkbox', ng-model="newView" )
+                  | Create a new view
+            .form-group
+              label.col-lg-2.control-label( for='name' ) Name
+              .col-lg-4
+                input#name.form-control(ng-model="customView.name" )
+            .form-group
+              label.col-lg-2.control-label Description
+              .col-lg-4
+                textarea.form-control.short(ng-model="customView.description" )
+            div( ng-show="user.isAdmin" )
+              .form-group
+                .col-lg-offset-2.col-lg-4
+                  .checkbox
+                    label
+                      input( type='checkbox', ng-model="customView.admin_only" )
+                      | This view is for Admin users only
+
+
+.modal-footer
+  button.btn.btn-primary.pull-right(ng-show="newView", ng-click='save($event, newView, customView)') Save new view
+  button.btn.btn-primary.pull-right(ng-hide="newView", ng-click='save($event, newView, customView)') Save
+  button.btn.btn-default.pull-left(ng-click='cancel($event)') Cancel
+
+

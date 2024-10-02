@@ -1,0 +1,215 @@
+#purchase.container( ng-controller="PurchaseReceipt" )
+  .row
+    .col-lg-11.col-md-11
+      .col-md-12(ng-hide="foundReceipt")
+        img( src="img/spinner.gif", style="margin-right: 10px;")
+        | Retrieving receipt...
+
+      .well(ng-show="foundReceipt")
+        h3.page-header Receipt
+        div(style="margin-bottom:15px")
+          span(style="font-size: large")
+            | Congratulations!
+          | &nbsp; {{congratsText}}
+          div(style="margin-top:5px")
+            | {{nextStepText}}
+          div(style="margin-top:5px")
+            | Please print this page and keep a hard copy as your receipt.
+
+        form.form-horizontal(style="margin-top:5px")
+          fieldset
+            legend Your Order Receipt:
+          .form-group.purchase
+            label.col-lg-3.control-label Purchase Date:
+            .col-lg-8
+              span.form-control {{purchase.createdAt | date: "MM/dd/yyyy"}}
+          .form-group.purchase
+            label.col-lg-3.control-label Item:
+            .col-lg-8
+              span.form-control {{huntCatalog.huntNumber}}, {{huntCatalog.title}}
+          .form-group.purchase()
+            label.col-lg-3.control-label(ng-show="huntCatalog.type == 'hunt' && huntCatalog.paymentPlan != 'subscription_monthly' && huntCatalog.paymentPlan != 'subscription_yearly'") Base Price:
+            label.col-lg-3.control-label(ng-show="huntCatalog.type != 'hunt' && huntCatalog.paymentPlan != 'subscription_monthly' && huntCatalog.paymentPlan != 'subscription_yearly'") Price:
+            label.col-lg-3.control-label(ng-show="huntCatalog.paymentPlan == 'subscription_monthly'") Monthly Subscription:
+            label.col-lg-3.control-label(ng-show="huntCatalog.paymentPlan == 'subscription_yearly'") Yearly Subscription:
+            .col-lg-8
+              span.form-control ${{formatMoneyStr(purchase.totalPrice)}}
+              div(ng-show="huntCatalog.type == 'hunt'", style="margin-left:15px;")
+                | *The hunt price is subject to change, and does not include add-ons or upgrades provided as options by the outfitter.
+          .form-group.purchase.note(ng-show="purchase.pricingNotesAsHTML")
+            label.col-lg-3.control-label Pricing Options:
+            .col-lg-8
+              span.form-control(style="display:table;" ng-bind-html="huntCatalog.pricingNotesAsHTML")
+          .form-group.purchase
+            label.col-lg-3.control-label Authorization Number:
+            .col-lg-8
+              span.form-control {{purchase._id}}
+          .form-group.purchase(ng-show="purchase.paymentMethod == 'cc'")
+            label.col-lg-3.control-label Transaction Id:
+            .col-lg-8
+              span.form-control {{purchase.cc_transId}}
+          //backwards compatibility only.  CC fees no longer charged
+          .form-group.purchase(ng-show="purchase.paymentMethod == 'cc' && purchase.cc_fee && purchase.cc_fee > 0 && huntCatalog.paymentPlan.indexOf('subscription') == -1")
+            label.col-lg-3.control-label Today's Down Payment:
+            .col-lg-8
+              span.form-control ${{formatMoneyStr(purchase.amount)}}
+          //backwards compatibility only.  CC fees no longer charged
+          .form-group.purchase(ng-show="purchase.paymentMethod == 'cc' && purchase.cc_fee && purchase.cc_fee > 0")
+            label.col-lg-3.control-label Credit Card Transaction Fee:
+            .col-lg-8
+              span.form-control ${{formatMoneyStr(purchase.cc_fee)}}
+          .form-group.purchase
+            label.col-lg-3.control-label() Today's Payment Total:
+            .col-lg-8
+              span.form-control ${{formatMoneyStr(totalAmount)}}
+          .form-group.purchase(ng-show="purchase.purchaseNotesAsHTML")
+            label.col-lg-3.control-label Purchase Notes:
+            .col-lg-8
+              span.form-control(style="display:table;" ng-bind-html="purchase.purchaseNotesAsHTML")
+          .form-group.purchase(ng-show="purchase.monthlyPayment")
+            label.col-lg-3.control-label Estimated Monthly Payment:
+            .col-lg-8
+              span.form-control ${{purchase.monthlyPaymentStr}}
+
+          fieldset(ng-show="huntCatalog.species || huntCatalog.area || huntCatalog.state || huntCatalog.country || (huntCatalog.dateRange && huntCatalog.dateRange != '12/31/1969 - 12/31/1969') ")
+            legend Details
+            .form-group.purchase.compact(ng-show="huntCatalog.area || huntCatalog.state || huntCatalog.country")
+              label.col-lg-3.control-label Location:
+              .col-lg-8
+                span.form-control
+                  div(ng-show="huntCatalog.area && huntCatalog.state")
+                    span {{huntCatalog.area}}, {{huntCatalog.state}}
+                  div(ng-show="!huntCatalog.area && huntCatalog.state")
+                    span {{huntCatalog.state}}
+                  div(ng-hide="huntCatalog.state")
+                    span {{huntCatalog.country}}
+            .form-group.purchase.compact(ng-show="huntCatalog.dateRange && huntCatalog.dateRange != '12/31/1969 - 12/31/1969'")
+              label.col-lg-3.control-label Dates:
+              .col-lg-8
+                span.form-control {{huntCatalog.dateRange}}
+            .form-group.purchase.compact(ng-show="huntCatalog.species")
+              label.col-lg-3.control-label Species:
+              .col-lg-8
+                span.form-control {{huntCatalog.species}}
+
+          fieldset(style="margin-top: 15px;")
+            legend Account Holder Information
+            .form-group.purchase.compact(ng-show="purchase.user.memberId")
+              label.col-lg-3.control-label Member Number:
+              .col-lg-8
+                span.form-control {{purchase.user.memberId}}
+            .form-group.purchase.compact(ng-hide="purchase.user.memberId")
+              label.col-lg-3.control-label Member Number:
+              .col-lg-8
+                span.form-control Not a member
+            .form-group.purchase.compact
+              label.col-lg-3.control-label Name:
+              .col-lg-8
+                span.form-control {{purchase.user.first_name}} {{purchase.user.last_name}}
+            .form-group.purchase.compact
+              label.col-lg-3.control-label Email:
+              .col-lg-8
+                span.form-control {{purchase.user.email}}
+            .form-group.purchase.compact(ng-show="user.phone_cell")
+              label.col-lg-3.control-label Cell Phone:
+              .col-lg-8
+                span.form-control {{purchase.user.phone_cell}}
+            .form-group.purchase.compact(ng-show="purchase.user.phone_day")
+              label.col-lg-3.control-label Phone:
+              .col-lg-8
+                span.form-control {{purchase.user.phone_day}}
+            .form-group.purchase.compact(ng-hide="purchase.user.phone_cell || purchase.user.phone_day")
+              label.col-lg-3.control-label Phone:
+            .form-group.purchase.compact
+              label.col-lg-3.control-label Mailing Address:
+              .col-lg-8
+                span.form-control {{purchase.user.mail_address}}
+            .form-group.purchase.compact
+              label.col-lg-3.control-label City:
+              .col-lg-8
+                span.form-control {{purchase.user.mail_city}}
+            .form-group.purchase.compact
+              label.col-lg-3.control-label State:
+              .col-lg-8
+                span.form-control {{purchase.user.mail_state}}
+            .form-group.purchase.compact
+              label.col-lg-3.control-label Country:
+              .col-lg-8
+                span.form-control {{purchase.user.mail_country}}
+            .form-group.purchase.compact
+              label.col-lg-3.control-label Zip:
+              .col-lg-8
+                span.form-control {{purchase.user.mail_postal}}
+
+
+
+          fieldset(style="margin-top: 15px;")
+            legend Payment Method
+            .form-group.purchase.compact(ng-show="purchase.paymentMethod == 'cc'")
+              label.col-lg-3.control-label() Payment Method:
+              .col-lg-8
+                span.form-control Credit Card
+            .form-group.purchase.compact(ng-show="purchase.paymentMethod == 'check'")
+              label.col-lg-3.control-label() Payment Method:
+              .col-lg-8
+                span.form-control Bank Check
+            .form-group.purchase.compact
+              label.col-lg-3.control-label() Billing Email:
+              .col-lg-8
+                span.form-control {{purchase.cc_email}}
+            .form-group.purchase.compact
+              label.col-lg-3.control-label() Billing Phone:
+              .col-lg-8
+                span.form-control {{purchase.cc_phone}}
+
+            .div(ng-show="purchase.paymentMethod == 'cc'")
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label() Name on Card:
+                .col-lg-8
+                  span.form-control {{purchase.cc_name}}
+              .form-group.purchase.compact()
+                label.col-lg-3.control-label() Credit Card Number:
+                .col-lg-8
+                  span.form-control {{purchase.cc_number}}
+              .form-group.purchase
+                label.col-lg-3.control-label() Amount Charged to Card:
+                .col-lg-8
+                  span.form-control ${{formatMoneyStr(totalAmount)}}
+              .form-group.purchase(ng-show="huntCatalog.paymentPlan == 'subscription_monthly'")
+                label.col-lg-3.control-label() Monthly Subscription Payment:
+                .col-lg-8
+                  | Your credit card will be charged ${{formatMoneyStr(totalAmount)}} each month for this service.  You can cancel at anytime by contacting us. {{tenantURL}}
+              .form-group.purchase(ng-show="huntCatalog.paymentPlan == 'subscription_yearly'")
+                label.col-lg-3.control-label() Yearly Subscription Payment:
+                .col-lg-8
+                  | Your credit card will be charged ${{formatMoneyStr(totalAmount)}} each year for this service.  You can cancel at anytime by contacting us. {{tenantURL}}
+
+
+            .div(ng-show="purchase.paymentMethod == 'check'")
+              .form-group.purchase.compact
+                label.col-lg-3.control-label Instructions:
+                .col-lg-8
+                  span.form-control(style="display:table;" ng-bind="PAYMENT_BY_CHECK_INSTRUCTIONS")
+              .form-group.purchase.compact
+                label.col-lg-3.control-label() Check Number:
+                .col-lg-8
+                  span.form-control {{purchase.check_number}}
+              .form-group.purchase.compact
+                label.col-lg-3.control-label() Name of person on check:
+                .col-lg-8
+                  span.form-control {{purchase.check_name}}
+              .form-group.purchase.compact(style="margin-top: 15px;")
+                label.col-lg-3.control-label() Check total amount:
+                .col-lg-8
+                  span.form-control ${{formatMoneyStr(totalAmount)}}
+
+
+            .form-group.purchase.compact(ng-show="huntCatalog.type == 'hunt'")
+              label.col-lg-3.control-label(style="font-size: small;") Refund Policy:
+              .col-lg-8
+                span.form-control(style="font-size: small;") Deposit 80% refundable 1 year prior to hunt date.  40% refundable 6 months prior to hunt date.  No refunds under 6 months of the hunt date.
+
+
+
+          button.btn.btn-primary.pull-left(style="margin-top: 30px;", ng-click="return($event, 'huntcatalogs')") View Hunt Catalog
+          button.btn.btn-primary.pull-right(style="margin-top: 30px;", ng-click="return($event, 'purchases')") View My Orders

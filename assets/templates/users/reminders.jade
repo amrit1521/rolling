@@ -1,0 +1,62 @@
+.container( ng-controller="Reminder" )
+  .row
+    .col-md-6
+      form.form-vertical( ng-submit="submit()" )
+        fieldset
+          legend Reminder Setup
+          div
+            .checkbox.gmt-whole
+              label
+                input( type="checkbox", ng-model="user.reminders.stateswpoints" )
+                | Send reminders for states I have points in
+          br
+
+          span Additionally, choose the states for which you want to receive reminders
+          table.table.table-striped
+            tbody
+              tr( ng-repeat="state in states | orderBy:'name' track by state._id" )
+                td
+                  .checkbox.gmt-whole
+                    label
+                      input( type="checkbox", ng-checked="inStates(state)", ng-click="checkState($event, state)", value="{{state.name}}" )
+                      | {{state.name}}
+
+        fieldset
+          legend Choose your reminders
+
+          table.table.table-striped
+            tbody
+              tr
+                td
+                  .checkbox.gmt-whole
+                    label
+                      input( type="checkbox", ng-checked="inTypes('app-start')", ng-click="checkType('app-start')" )
+                      | Remind me when the application period starts
+              tr
+                td
+                  .checkbox.gmt-whole
+                    label
+                      input( type="checkbox", ng-checked="inTypes('app-end')", ng-click="checkType('app-end')" )
+                      | Remind me 2 days before the end of the application period
+
+        fieldset
+          legend Choose your methods of notification
+
+          table.table.table-striped
+            tbody
+              tr
+                td
+                  .checkbox.gmt-whole
+                    label
+                      input( type="checkbox", ng-model="reminders.text" )
+                      | Text Message
+                    input.form-control( ng-show="reminders.text", type="phone", ng-model="user.phone_cell", placeholder="Enter your mobile number" )
+              tr
+                td
+                  .checkbox.gmt-whole
+                    label
+                      input( type="checkbox", ng-model="reminders.email" )
+                      | Email
+                    input.form-control( ng-show="reminders.email", type="email", ng-model="user.email", placeholder="Enter your email address" )
+
+        button.btn.btn-primary.center-block Submit

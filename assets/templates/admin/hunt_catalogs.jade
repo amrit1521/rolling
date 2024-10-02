@@ -1,0 +1,18 @@
+#AdminHuntCatalogs.container( ng-controller="AdminHuntCatalogs" )
+  .form-group.pull-right
+    a.btn.btn-default(ng-show="user.isAdmin || user.userType == 'tenant_manager'", href="#!/admin/huntcatalog/new" ) Add New Item
+  .page-header
+    h3 Admin Hunt Catalog
+  .row
+    .col-md-12
+      img( src="img/spinner.gif", ng-show="loadingHuntCatalogs" )
+      form.form-inline
+        .form-group(ng-hide="loadingHuntCatalogs", style="margin-top: 10px;")
+          .col-md-push-1
+            select#savedViews.form-control.col-md-12(ng-show="customViews && customViews.length > 0", ng-model="customView", ng-change="loadGridView(customView)", ng-options="view as view.name for view in customViews" )
+              option( value="" ) Select a Category
+
+      div#huntCatalogsGrid
+
+
+

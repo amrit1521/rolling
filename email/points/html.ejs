@@ -1,0 +1,47 @@
+<% include ../head %>
+
+<%- header %>
+<br>
+<%
+var point, state;
+for ( var i = 0; i < states.length; i++ ) {
+  state = states[i];
+%>
+  <p>
+    <div><strong><%= state.name %></strong></div>
+    <% if (state.points && state.points.length) { %>
+    <table class="table table-striped table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>Hunt</th>
+          <th># Points</th>
+          <th>Hunt Area</th>
+          <th>Applied Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%
+        for ( var j = 0; j < state.points.length; j++ ) {
+          point = state.points[j];
+        %>
+        <tr>
+          <td><%= point.name %></td>
+          <td><%= point.count %></td>
+          <td><%= point.area? point.area: ''  %></td>
+          <td><%= point.lastPoint? point.lastPoint: '' %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <% } else { %>
+    <div class="row">
+      <div>
+        <div><br>No results found</div>
+      </div>
+    </div>
+    <% } %>
+  <p>
+<% } %>
+<br>
+<%- footer %>
+<% include ../foot %>

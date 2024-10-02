@@ -1,0 +1,10 @@
+{
+  "apps" : [
+    {
+      "name"        : "Xvfb",
+      "interpreter" : "none",
+      "script"      : "Xvfb",
+      "args"        : ":99"
+    }
+  ]
+}

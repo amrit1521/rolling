@@ -1,0 +1,265 @@
+#Profile.container
+  .row
+    .col-lg-11.col-md-11
+      .well
+        form.form-horizontal( ng-submit="submit(user)" )
+          fieldset
+            legend My Hunting Profile
+              button.btn.btn-primary.pull-right(ng-hide="pageIsReadOnly()") Save
+              span.form-group(style="font-size:15px; margin:0px;")
+                | Client Id: {{user.clientId}}
+
+
+            .form-group(style="margin-left: 0px; margin-right: 0px;")
+              button.btn.btn-primary.pull-left( style="margin-left: 10px;", ng-click="huntCatalog($event)") Browse Available Hunts and Products
+              button.btn.btn-primary.pull-right( style="margin-left: 10px;", ng-click="sendEmail($event)") Send Update Email
+
+
+            // Power of Attorney
+            fieldset.address(ng-show="showApplicationService")
+              legend Application Service
+              div(ng-show="user.powerOfAttorney")
+                .form-group
+                  label.form-control-wide( for='inputpoabox' )
+                    input#inputpoabox(type='checkbox', ng-model="user.powerOfAttorney", ng-click="powerOfAttorneyClick()", ng-disabled="pageIsReadOnly()")
+                    |  I give {{tenantOfficialName}} permission to apply for hunts in my behalf
+                | Thank you for using our Application Services. Please select the states you want to apply for hunts and enter your hunting preferences in the notes below.
+              div(ng-hide="user.powerOfAttorney")
+                .form-group
+                  label.form-control-wide( for='applicationcheckbox' )
+                    input#applicationcheckbox(type='checkbox', ng-model="applicationService", ng-disabled="pageIsReadOnly()")
+                    |  Apply for hunts in my behalf
+                div(ng-show="applicationService")
+                  .form-group
+                    textarea.form-control-tall(readonly)
+                      | POWER OF ATTORNEY KNOW ALL MEN BY THESE PRESENTS, that
+                      | Full name: {{user.name}}
+                      | of the State of: {{user.mail_state}}
+                      | Be it known, that the above applicant, GRANTOR, does hereby make and grant a limited power of attorney to {{tenantOfficialName}} or representatives of {{tenantOfficialName}} and any other authorized representative of {{tenantOfficialName}} and does thereupon constitute and appoint said individuals as my attorney-in-fact. My attorney-in-fact shall have limited powers and authority to do and undertake such acts as herein described on my behalf that I could do personally, with full power of substitution and revocation. Granted are the powers to execute such special hunting license and permit applications and endorsement of such license and permit funds or could do if personally present, with full power of substitution.  Granted is the power to charge my credit card for payment, reimbursement or refund of such license and permit funds. My attorney-in-fact hereby accepts this appointment subject to its terms and agrees to act and perform in said fiduciary capacity consistent with my best interests as he, in his discretion, deems advisable, and I affirm and ratify all acts so undertaken. This power-of-attorney shall be revoked by disability of the Grantor, and shall otherwise continue in full force and effect until revoked by Grantor in writing.
+                      | By clicking the acceptance button immediately following these terms and conditions you acknowledge your agreement to these terms and conditions.
+                  .form-group
+                    label.form-control-wide( for='inputpoabox' )
+                      input#inputpoabox(type='checkbox', ng-model="user.powerOfAttorney", ng-click="powerOfAttorneyClick()", ng-disabled="pageIsReadOnly()")
+                      |  I give {{tenantOfficialName}} permission to apply for hunts in my behalf
+
+            fieldset.address
+              legend General Hunting Preference Notes
+              .form-group
+                label.form-control-wide( for='gen_notes') Notes:
+                  textarea.form-control-tall#gen_notes(ng-model="clientState.gen_notes", ng-readonly="pageIsReadOnly()")
+
+            fieldset.address
+              legend Alaska
+              .form-group
+                label.form-control-wide( for='ak_notes') Notes:
+                  textarea.form-control-tall#ak_notes(ng-model="clientState.ak_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='ak_check' )
+                  input#ak_check(type='checkbox', ng-model="clientState.ak_check", ng-click="powerOfAttorneyCheck('ak')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Arizona
+              .form-group
+                label.form-control-wide( for='az_notes') Notes:
+                  textarea.form-control-tall#az_notes(ng-model="clientState.az_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='az_check' )
+                  input#az_check(type='checkbox', ng-model="clientState.az_check", ng-click="powerOfAttorneyCheck('az')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend California
+              .form-group
+                label.form-control-wide( for='ca_notes') Notes:
+                  textarea.form-control-tall#ca_notes(ng-model="clientState.ca_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='ca_check' )
+                  input#ca_check(type='checkbox', ng-model="clientState.ca_check", ng-click="powerOfAttorneyCheck('ca')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Colorado
+              .form-group
+                label.form-control-wide( for='co_notes') Notes:
+                  textarea.form-control-tall#co_notes(ng-model="clientState.co_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='co_check' )
+                  input#co_check(type='checkbox', ng-model="clientState.co_check", ng-click="powerOfAttorneyCheck('co')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Florida
+              .form-group
+                label.form-control-wide( for='fl_notes') Notes:
+                  textarea.form-control-tall#fl_notes(ng-model="clientState.fl_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='fl_check' )
+                  input#fl_check(type='checkbox', ng-model="clientState.fl_check", ng-click="powerOfAttorneyCheck('fl')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Idaho
+              .form-group
+                label.form-control-wide( for='id_notes') Notes:
+                  textarea.form-control-tall#id_notes(ng-model="clientState.id_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='id_check' )
+                  input#id_check(type='checkbox', ng-model="clientState.id_check", ng-click="powerOfAttorneyCheck('id')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Iowa
+              .form-group
+                label.form-control-wide( for='ia_notes') Notes:
+                  textarea.form-control-tall#ia_notes(ng-model="clientState.ia_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='ia_check' )
+                  input#ia_check(type='checkbox', ng-model="clientState.ia_check", ng-click="powerOfAttorneyCheck('ia')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Kansas
+              .form-group
+                label.form-control-wide( for='ks_notes') Notes:
+                  textarea.form-control-tall#ks_notes(ng-model="clientState.ks_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='ks_check' )
+                  input#ks_check(type='checkbox', ng-model="clientState.ks_check", ng-click="powerOfAttorneyCheck('ks')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Kentucky
+              .form-group
+                label.form-control-wide( for='ky_notes') Notes:
+                  textarea.form-control-tall#ky_notes(ng-model="clientState.ky_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='ky_check' )
+                  input#ky_check(type='checkbox', ng-model="clientState.ky_check", ng-click="powerOfAttorneyCheck('ky')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Montana
+              .form-group
+                label.form-control-wide( for='mt_notes') Notes:
+                  textarea.form-control-tall#mt_notes(ng-model="clientState.mt_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='mt_check' )
+                  input#mt_check(type='checkbox', ng-model="clientState.mt_check", ng-click="powerOfAttorneyCheck('mt')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend New Mexico
+              .form-group
+                label.form-control-wide( for='nm_notes') Notes:
+                  textarea.form-control-tall#nm_notes(ng-model="clientState.nm_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='nm_check' )
+                  input#nm_check(type='checkbox', ng-model="clientState.nm_check", ng-click="powerOfAttorneyCheck('nm')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Nevada
+              .form-group
+                label.form-control-wide( for='nv_notes') Notes:
+                  textarea.form-control-tall#nv_notes(ng-model="clientState.nv_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='nv_check' )
+                  input#nv_check(type='checkbox', ng-model="clientState.nv_check", ng-click="powerOfAttorneyCheck('nv')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend North Dakota
+              .form-group
+                label.form-control-wide( for='nd_notes') Notes:
+                  textarea.form-control-tall#nd_notes(ng-model="clientState.nd_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='nd_check' )
+                  input#nd_check(type='checkbox', ng-model="clientState.nd_check", ng-click="powerOfAttorneyCheck('nd')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Oregon
+              .form-group
+                label.form-control-wide( for='ore_notes') Notes:
+                  textarea.form-control-tall#ore_notes(ng-model="clientState.ore_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='ore_check' )
+                  input#ore_check(type='checkbox', ng-model="clientState.ore_check", ng-click="powerOfAttorneyCheck('ore')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Pennsylvania
+              .form-group
+                label.form-control-wide( for='pa_notes') Notes:
+                  textarea.form-control-tall#pa_notes(ng-model="clientState.pa_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='pa_check' )
+                  input#pa_check(type='checkbox', ng-model="clientState.pa_check", ng-click="powerOfAttorneyCheck('pa')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend South Dakota
+              .form-group
+                label.form-control-wide( for='sd_notes') Notes:
+                  textarea.form-control-tall#sd_notes(ng-model="clientState.sd_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='sd_check' )
+                  input#sd_check(type='checkbox', ng-model="clientState.sd_check", ng-click="powerOfAttorneyCheck('sd')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Texas
+              .form-group
+                label.form-control-wide( for='tx_notes') Notes:
+                  textarea.form-control-tall#tx_notes(ng-model="clientState.tx_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='tx_check' )
+                  input#tx_check(type='checkbox', ng-model="clientState.tx_check", ng-click="powerOfAttorneyCheck('tx')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Utah
+              .form-group
+                label.form-control-wide( for='ut_notes') Notes:
+                  textarea.form-control-tall#ut_notes(ng-model="clientState.ut_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='ut_check' )
+                  input#ut_check(type='checkbox', ng-model="clientState.ut_check", ng-click="powerOfAttorneyCheck('ut')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Vermont
+              .form-group
+                label.form-control-wide( for='vt_notes') Notes:
+                  textarea.form-control-tall#vt_notes(ng-model="clientState.vt_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='vt_check' )
+                  input#vt_check(type='checkbox', ng-model="clientState.vt_check", ng-click="powerOfAttorneyCheck('vt')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Washington
+              .form-group
+                label.form-control-wide( for='wa_notes') Notes:
+                  textarea.form-control-tall#wa_notes(ng-model="clientState.wa_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='wa_check' )
+                  input#wa_check(type='checkbox', ng-model="clientState.wa_check", ng-click="powerOfAttorneyCheck('wa')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+            fieldset.address
+              legend Wyoming
+              .form-group
+                label.form-control-wide( for='wy_notes') Notes:
+                  textarea.form-control-tall#wy_notes(ng-model="clientState.wy_notes", ng-readonly="pageIsReadOnly()")
+              .form-group(ng-show="showApplicationService")
+                label.form-control-wide( for='wy_check' )
+                  input#wy_check(type='checkbox', ng-model="clientState.wy_check", ng-click="powerOfAttorneyCheck('wy')", ng-disabled="pageIsReadOnly()")
+                  |  Apply me for
+
+
+          div
+            a.btn.btn-default.pull-left( ng-click="cancel($event)") Cancel
+            button.btn.btn-default.pull-right Save
+

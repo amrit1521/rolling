@@ -1,0 +1,14 @@
+.modal-header
+  h3 If everything looks correct. Press "OK"
+  span Note: The actual application has not yet been purchased.  Un-select 'review before purchase' to complete the purchase of this application.
+.modal-body
+  .result-display
+    iframe( ng-src="{{pageUrl}}", style="width: 100%; height: 100%" )
+
+.modal-footer
+
+  // Right side in reverse order from how they appear
+  button.btn.btn-primary.pull-right(ng-click='ok()') Ok
+
+  // Left side
+  //button.btn.btn-default.pull-left(ng-click='cancel()') Stop

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+	</head>
+	<body>
+
+		<div class="container">
+		    <div class="row">
+		    	<div class="col-lg-6">
+					<form id="createAccount" class="form-horizontal">
+			    		<fieldset>
+			    			<legend>Create State Account API</legend>
+
+
+							<div class="form-group">
+								<label for="inputUserId" class="col-sm-3 control-label">User Id</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="inputUserId" placeholder="Unique User Id" value="594021102edbe346a41a63ad">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="inputState" class="col-sm-3 control-label">State</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="inputState" placeholder="State full proper name" value="Arizona">
+								</div>
+							</div>
+
+							<button class="btn btn-primary pull-right">Create AZ Portal Account</button>
+			    		</fieldset>
+					</form>
+		    	</div>
+		    </div>
+
+		    <div class="row" id="result">
+		    </div>
+
+		    <div class="row" id="error">
+		    </div>
+
+		</div>
+
+		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
+
+		<script>
+			APITOKEN = "[PUT THE API TOKEN HERE]";
+			APITOKEN = "setWafomheeuveaUisootryadeefoyfojSwietjbeohfyVeaMGlethctVeuefybirrRwcBWUwgatkonugeweUfiydPbnucdisijryetiytpcgliTpsetnaJiUElesoOaeUawakcsOCjschHAhstraweltwmlwhBnejnixJnDyobekeorisarjaokoejjyacverysootnhvGg1rlaDfbOeo2btOrzcnmDDgyesouppJotyaJBicetmyco";
+			APIDOMAIN = "https://www.gotmytag.com:5001/api/v1/";
+
+			jQuery(document).ready(function () {
+				jQuery('#createAccount').on('submit', function () {
+					var apiUrl, data;
+
+					jQuery('#error').empty();
+					jQuery('#result').empty();
+
+                    apiUrl = APIDOMAIN + "stateaccount";
+					data = {
+						token: APITOKEN,
+						userId: jQuery('#inputUserId').val(),
+						state: jQuery('#inputState').val(),
+					};
+
+					jQuery.ajax({
+						"type": "POST",
+						"url": apiUrl,
+						"data": data,
+						"success": function (data, status, request) {
+							var i, table, tbody, result;
+							console.log("data:", data);
+							console.log("status:", status);
+							console.log("request:", request);
+
+							if (!data.results) {
+								jQuery('#result').append('<h1>Request failed</h1>');
+								return;
+							}
+							else {
+								jQuery('#result').append('<div><span><h1>Request processed successfully</h1></span></div>');
+								jQuery('#result').append('<div><span>' + JSON.stringify(data) + '</span></div>');
+								return;
+							}
+
+						},
+						"error": function (request, status, err) {
+							console.log("request:", request);
+							console.log("status:", status);
+							console.log("err:", err);
+							var error;
+							error = jQuery('#error');
+							error.append('<div><h3>Error status code</h3><span>' + request.status + '</span></div>');
+							error.append('<div><h3>Error message</h3><span class="error">' + request.responseText + '</span></div>');
+						}
+					});
+
+					return false;
+				});
+			});
+		</script>
+	</body>
+</html>

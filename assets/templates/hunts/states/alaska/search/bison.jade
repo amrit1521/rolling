@@ -1,0 +1,103 @@
+.form-group.select-list
+
+  div
+    select.form-control( ng-model="hunt.choice.SelectedHuntId1", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+      option( value="" ) 1st Choice
+
+    .form-group
+      select.form-control( ng-model="hunt.choice.GuideType1")
+        option( value="" ) 1: Guide Type
+        option( value="Unguided" ) Unguided
+        option( value="Registered Alaska Guide" ) Registered Alaska Guide
+        option( value="2nd Degree Kindred" ) 2nd Degree Kindred
+
+      label Guide/Kin Name
+        input.form-control( ng-model="hunt.choice.GuideName1" type="text" )
+
+      label Guide Code
+        input.form-control( ng-model="hunt.choice.GuideConfirmCode1" type="text" )
+
+  div
+    select.form-control( ng-model="hunt.choice.SelectedHuntId2", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+      option( value="" ) 2nd Choice
+
+    .form-group
+      select.form-control( ng-model="hunt.choice.GuideType2")
+        option( value="" ) 2: Guide Type
+        option( value="Unguided" ) Unguided
+        option( value="Registered Alaska Guide" ) Registered Alaska Guide
+        option( value="2nd Degree Kindred" ) 2nd Degree Kindred
+
+      label Guide/Kin Name
+        input.form-control( ng-model="hunt.choice.GuideName2" type="text" )
+
+      label Guide Code
+        input.form-control( ng-model="hunt.choice.GuideConfirmCode2" type="text" )
+
+  div
+    select.form-control( ng-model="hunt.choice.SelectedHuntId3", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+      option( value="" ) 3rd Choice
+
+    .form-group
+      select.form-control( ng-model="hunt.choice.GuideType3")
+        option( value="" ) 3: Guide Type
+        option( value="Unguided" ) Unguided
+        option( value="Registered Alaska Guide" ) Registered Alaska Guide
+        option( value="2nd Degree Kindred" ) 2nd Degree Kindred
+
+      label Guide/Kin Name
+        input.form-control( ng-model="hunt.choice.GuideName3" type="text" )
+
+      label Guide Code
+        input.form-control( ng-model="hunt.choice.GuideConfirmCode3" type="text" )
+
+  div
+    select.form-control( ng-model="hunt.choice.SelectedHuntId4", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+      option( value="" ) 4th Choice
+
+    .form-group
+      select.form-control( ng-model="hunt.choice.GuideType4")
+        option( value="" ) 4: Guide Type
+        option( value="Unguided" ) Unguided
+        option( value="Registered Alaska Guide" ) Registered Alaska Guide
+        option( value="2nd Degree Kindred" ) 2nd Degree Kindred
+
+      label Guide/Kin Name
+        input.form-control( ng-model="hunt.choice.GuideName4" type="text" )
+
+      label Guide Code
+        input.form-control( ng-model="hunt.choice.GuideConfirmCode4" type="text" )
+
+  div
+    select.form-control( ng-model="hunt.choice.SelectedHuntId5", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+      option( value="" ) 5th Choice
+
+    .form-group
+      select.form-control( ng-model="hunt.choice.GuideType5")
+        option( value="" ) 5: Guide Type
+        option( value="Unguided" ) Unguided
+        option( value="Registered Alaska Guide" ) Registered Alaska Guide
+        option( value="2nd Degree Kindred" ) 2nd Degree Kindred
+
+      label Guide/Kin Name
+        input.form-control( ng-model="hunt.choice.GuideName5" type="text" )
+
+      label Guide Code
+        input.form-control( ng-model="hunt.choice.GuideConfirmCode5" type="text" )
+
+  div
+    select.form-control( ng-model="hunt.choice.SelectedHuntId6", ng-options="option.value as option.name for option in huntOptions[hunt._id] | orderBy:'name'" )
+      option( value="" ) 6th Choice
+
+    .form-group
+      select.form-control( ng-model="hunt.choice.GuideType6")
+        option( value="" ) 6: Guide Type
+        option( value="Unguided" ) Unguided
+        option( value="Registered Alaska Guide" ) Registered Alaska Guide
+        option( value="2nd Degree Kindred" ) 2nd Degree Kindred
+
+      label Guide/Kin Name
+        input.form-control( ng-model="hunt.choice.GuideName6" type="text" )
+
+      label Guide Code
+        input.form-control( ng-model="hunt.choice.GuideConfirmCode6" type="text" )

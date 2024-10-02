@@ -1,0 +1,12 @@
+.form-group.select-list
+
+  .inline-group
+    .form-group
+      label Hunt
+      select.form-control(ng-disabled="huntNotEditable(hunt)",  ng-model="hunt.choice.comboHuntArea1", ng-options="area as area for (area, types) in huntOptions[hunt._id][0].options.comboHuntArea1 | orderBy:'value'", ng-change="(hunt.choice.comboHuntArea1.length > 0)? hunt.choice.comboType1 = '1': hunt.choice.comboType1 = null" )
+        option( value="" )
+      //input( type="hidden", ng-model="hunt.choice.comboType1" )
+    .form-group
+      label Type
+      select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.comboType1", ng-options="type as type for type in huntOptions[hunt._id][0].options.comboHuntArea1[hunt.choice.comboHuntArea1] | orderBy:'value'" )
+        option( value="" )

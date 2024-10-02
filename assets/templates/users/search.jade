@@ -1,0 +1,62 @@
+#UsersSearch.container( ng-controller="UsersSearch" )
+  .online-status( ng-class="{connected: connected, disconnected: !connected}" )
+    //span( ng-show="connected" ) Connected
+    //span( ng-hide="connected" ) Offline
+  .page-header
+    h3( ng-hide="outfitters" ) User Search
+    h3( ng-show="outfitters" ) Outfitter Search
+  .row
+    .col-md-12
+      form.form-inline( ng-submit="runSearch(search)" )
+
+        .form-group
+          input.form-control( type='text', placeholder="search text ...", ng-model='search.text', ng-keypress='runSearch(search)' )
+        .form-group.pull-right(ng-hide="outfitters")
+          a.btn.btn-default( href="#!/admin/users/new" ) Add New User
+        .form-group.pull-right(ng-show="outfitters")
+          a.btn.btn-default( href="#!/admin/outfitter/new" ) Add New Outfitter
+        .form-group
+          button.btn.btn-primary Search
+        .form-group
+          button.btn.btn-primary(ng-click="showAllUsers()") Show All
+        img(src='img/arrow_spinner.gif', ng-show="loadingUsers")
+
+      .form-group(ng-show="user.isAdmin && !outfitters")
+        label( for='inputCheckbox', style="margin-top: 10px;")
+          input(type='checkbox', ng-click="toggleFilterMyUsersOnly()")
+          |  Show my users only
+      .form-group(ng-show="user.isAdmin && outfitters")
+        label( for='inputCheckbox', style="margin-top: 10px;")
+          input(type='checkbox', ng-click="toggleFilterMyUsersOnly()")
+          |  Show my outfitters only
+
+
+      div#grid(ng-show='!isHuntinFool', style="margin-top: 30px;")
+
+table.search-results.table.table-striped.table-hover(ng-show='results && isHuntinFool')
+  thead
+    tr
+      th Name
+      th.hidden-xs Client ID
+      th Member ID
+      th.hidden-xs Member Type
+      th.hidden-xs Zip
+      th.hidden-xs Phone #
+      th Email
+      th( ng-show="user.isAdmin" ) Re-send Email
+      th.hidden-xs Message
+  tbody
+    tr( ng-repeat='row in results | orderBy:\'name\'' )
+      td
+        a( href="#!/admin/masquerade/{{row._id}}" ) {{row.first_name}} {{row.last_name}} {{row.suffix}}
+      td.hidden-xs {{row.clientId}}
+      td {{row.memberId}}
+      td.hidden-xs {{row.memberType}}
+      td.hidden-xs {{row.mail_postal}}
+      td.hidden-xs {{row.phone}}
+      td {{row.email}}
+      td( ng-show="user.isAdmin" )
+        a.btn.btn-default( ng-click="sendEmail($event, row)", ng-if="row.email.length" ) Resend Email
+      td.hidden-xs
+        // a.btn.btn-default( ng-click="sendMessage($event, row)", ng-if="row._id=='53a32576f584aca2aa1e7b63'" ) Send Message
+        a.btn.btn-default( ng-click="sendMessage($event, row)", ng-if="row.devices.length" ) Send Message

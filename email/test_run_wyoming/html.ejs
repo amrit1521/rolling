@@ -1,0 +1,42 @@
+<% include ../head %>
+<br>
+<table>
+
+  <thead>
+    <tr>
+      <th>License</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>Party</th>
+      <th>Price</th>
+    </tr>
+  </thead>
+
+  <tbody>
+<%
+var item;
+for (var i = 0; i < items.length; i++) {
+  item = items[i];
+%>
+    <tr>
+      <td><%= item.license %></td>
+      <td><%= item['1'] %></td>
+      <td><%= item['2'] %></td>
+      <td><%= item['3'] %></td>
+      <td><%= item.party %></td>
+      <td><%= item.price %></td>
+    </tr>
+<% } %>
+  </tbody>
+
+  <tfoot>
+    <tr>
+      <td>Total</td>
+      <td><%= total %></td>
+    </tr>
+  </tfoot>
+</table>
+
+<br>
+<% include ../foot %>

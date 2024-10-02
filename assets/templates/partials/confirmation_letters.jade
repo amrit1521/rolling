@@ -1,0 +1,123 @@
+.modal-header
+  h3 Review and Confirm Outfitter and Client Confirmation Letters
+  span Please verify this information is correct and click "Send Confirmation Letters" to proceed.
+.modal-body
+  .row
+    .col-lg-11.col-md-11
+      .well
+        form.form-horizontal()
+          fieldset
+            legend Outfitter details
+            .form-group.purchase
+              label.col-lg-3.control-label Outfitter Name:
+              .col-lg-8
+                a.form-control.noStyle(href="#!/admin/masquerade/{{huntCatalog.outfitter._id}}") {{huntCatalog.outfitter_name}}
+            .form-group.purchase
+              label.col-lg-3.control-label Outfitter Phone:
+              .col-lg-8
+                span.form-control {{huntCatalog.outfitter.business_phone}}
+            .form-group.purchase
+              label.col-lg-3.control-label Outfitter Email:
+              .col-lg-8
+                span.form-control {{huntCatalog.outfitter.business_email}}
+            .form-group.purchase
+              label.col-lg-3.control-label Outfitter Address:
+              .col-lg-8
+                span.form-control {{huntCatalog.outfitter.mail_address}}, {{huntCatalog.outfitter.mail_city}}, {{huntCatalog.outfitter.mail_state}}, {{huntCatalog.outfitter.mail_postal}},
+
+          fieldset()
+            legend Hunt details
+            .form-group.purchase
+              label.col-lg-3.control-label Hunt:
+              .col-lg-8
+                span.form-control {{huntCatalog.title}} {{huntCatalog.huntNumber}}
+            .form-group.purchase
+              label.col-lg-3.control-label Hunt Start Date:
+              .col-lg-8
+                span.form-control {{purchase.start_hunt_date}}
+            .form-group.purchase
+              label.col-lg-3.control-label Hunt End Date:
+              .col-lg-8
+                span.form-control {{purchase.end_hunt_date}}
+            .form-group.purchase
+              label.col-lg-3.control-label Outfitter Confirmed On:
+              .col-lg-8
+                span.form-control {{purchase.purchase_confirmed_by_outfitter}}
+
+          fieldset()
+            legend Client  details
+            .form-group.purchase
+              label.col-lg-3.control-label Client Name:
+              .col-lg-8
+                span.form-control {{purchase.user.first_name}} {{purchase.user.last_name}}
+            .form-group.purchase
+              label.col-lg-3.control-label Client Id:
+              .col-lg-8
+                span.form-control {{purchase.user.clientId}}
+            .form-group.purchase
+              label.col-lg-3.control-label Client Email:
+              .col-lg-8
+                span.form-control {{purchase.user.email}}
+            .form-group.purchase
+              label.col-lg-3.control-label Client Phone:
+              .col-lg-8
+                span.form-control {{purchase.user.phone_cell}}
+            .form-group.purchase
+              label.col-lg-3.control-label Client Address:
+              .col-lg-8
+                span.form-control {{purchase.user.mail_address}}, {{purchase.user.mail_city}}, {{purchase.user.mail_state}}, {{purchase.user.mail_postal}},
+
+          fieldset()
+            legend Financial Details
+            div()
+              .form-group()
+                label.col-lg-3.control-label Invoice #:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() {{purchase.invoiceNumber}}
+              .form-group()
+                label.col-lg-3.control-label Purchase Date:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() {{purchase.createdAt | date: "MM/dd/yyyy"}}
+              .form-group()
+                label.col-lg-3.control-label Total Client Price:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.TOTAL_PRICE)}}
+              .form-group()
+                label.col-lg-3.control-label
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.basePrice)}} (Item Price) + ${{formatMoneyStr(purchase.tags_licenses)}} (Tags & Lic) + ${{formatMoneyStr(purchase.shipping)}} (Shipping) + ${{formatMoneyStr(purchase.fee_processing)}} (RBO Prc Fee) + ${{formatMoneyStr(purchase.sales_tax)}} (RBO Sales Tax)
+              .form-group()
+                label.col-lg-3.control-label Client Deposit Paid ({{purchase.paymentMethod}}):
+                .col-lg-4(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.amount)}}
+              .form-group()
+                label.col-lg-3.control-label RBO Commissions (Booking Fee) %{{purchase.percentActualComm}}:
+                .col-lg-4(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.commission)}}
+              .form-group()
+                label.col-lg-3.control-label Remaining Deposit for RBO to send Outfitter:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.remainingDepositToSend)}}
+              .form-group()
+                label.col-lg-3.control-label
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.amount)}} (Deposit) - ${{formatMoneyStr(purchase.commission)}} (RBO Comm) - ${{formatMoneyStr(purchase.fee_processing)}} (RBO Prc Fee) - ${{formatMoneyStr(purchase.sales_tax)}} (RBO Sales Tax)
+              .form-group()
+                label.col-lg-3.control-label Client Owes {{huntCatalog.outfitter_name}}:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.clientOwes)}} = ${{formatMoneyStr(purchase.TOTAL_PRICE)}} (Total Client Price) - ${{formatMoneyStr(purchase.amountPaid)}} (Total Payments)
+              //.form-group()
+                label.col-lg-3.control-label {{huntCatalog.outfitter_name}} Total:
+                .col-lg-8(style="padding-top: 5px;")
+                  span() ${{formatMoneyStr(purchase.totalToOutfitter)}} = ${{formatMoneyStr(purchase.basePrice)}} (Item Price) + ${{formatMoneyStr(purchase.tags_licenses)}} (Tags & Lic) + ${{formatMoneyStr(purchase.shipping)}} (Shipping) - ${{formatMoneyStr(purchase.commission)}} (Comm to RBO)
+
+
+.modal-footer
+  button.btn.btn-primary.pull-right(ng-show="!sending", ng-click='submitLetters($event, "both")') Send Confirmation Letters
+  button.btn.btn-primary.pull-right(ng-show="!sending", ng-click='submitLetters($event, "outfitter")', style="margin-left: 10px;") Send To Outfitter Only
+  button.btn.btn-primary.pull-right(ng-show="!sending", ng-click='submitLetters($event, "client")') Send To Client Only
+  img.pull-right(src='img/spinner.gif', ng-show="sending")
+  span.pull-right(ng-show="sending && sendType=='both'" style="margin-top: 5px;") Sending outfitter and client letters...
+  span.pull-right(ng-show="sending && sendType=='outfitter'" style="margin-top: 5px;") Sending outfitter letter...
+  span.pull-right(ng-show="sending && sendType=='client'" style="margin-top: 5px;") Sending client letter...
+  button.btn.btn-default.pull-left(ng-click='cancel($event)') Cancel

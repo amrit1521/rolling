@@ -1,0 +1,130 @@
+#AdminReminders.container( ng-controller="AdminRemindersOld" )
+  .page-header
+    a.btn.btn-default.pull-right( ng-click="addReminder($event)" ) Add +
+    .checkbox.pull-right( style="display: inline-block; padding-right: 1em;" )
+      label
+        input.checkbox( type="checkbox", ng-true-value="1", ng-false-value="0", ng-click="showAll()", ng-model="viewMode" )
+        | show all
+    h3 Manage Reminders
+  .row
+    .col-lg-12.col-md-12
+
+      table.table.table-striped.table-hover( ng-show='reminders.length' )
+        thead
+          tr
+            th Description
+            th Has Sheep
+            th Draw Result Successful
+            th Draw Result Unsuccessful
+            th State
+            th Start
+            th End
+            th
+        tbody(ng-repeat="reminder in reminders | orderBy:'state'")
+          tr
+            td( style="max-width: 200px;" )
+              a( ng-hide="reminder.editing" ) {{reminder.title}}
+              input.form-control( type="text", ng-model="reminder.title", ng-show="reminder.editing" )
+            td
+              a( ng-hide="reminder.editing" ) {{(reminder.isSheep)? 'true': 'false'}}
+              input.form-control( type='checkbox', ng-model="reminder.isSheep", ng-show="reminder.editing" )
+            td
+              a( ng-hide="reminder.editing" ) {{(reminder.isDrawResultSuccess)? 'true': 'false'}}
+              input.form-control( type='checkbox', ng-model="reminder.isDrawResultSuccess", ng-show="reminder.editing" ng-change="getTestDraws(reminder)")
+            td
+              a( ng-hide="reminder.editing" ) {{(reminder.isDrawResultUnsuccess)? 'true': 'false'}}
+              input.form-control( type='checkbox', ng-model="reminder.isDrawResultUnsuccess", ng-show="reminder.editing" ng-change="getTestDraws(reminder)")
+            td
+              span( ng-hide="reminder.editing" ) {{reminder.state}}
+              select.form-control( ng-model="reminder.state", ng-show="reminder.editing", ng-options="state for state in states" )
+                option( value="" ) State
+            td
+              span( ng-hide="reminder.editing" ) {{reminder.start | nicedate}}
+              input.form-control( type="date", name="start", ng-model="reminder.start", ng-show="reminder.editing" )
+            td
+              span( ng-hide="reminder.editing" ) {{reminder.end | nicedate}}
+              input.form-control( type="date", name="end", ng-model="reminder.end", ng-show="reminder.editing" )
+            td
+              a( ng-hide="reminder.editing || reminder.saving", ng-click="edit(reminder)" ).btn.btn-primary Edit
+              a( ng-hide="reminder.editing || reminder.saving", ng-click="delete(reminder)", style="margin-left: 5px;" ).btn.btn-primary Delete
+              a( ng-hide="reminder.editing || reminder.saving", ng-click="test(reminder)", style="margin-left: 5px;" ).btn.btn-primary Test
+              a( ng-show="(!reminder.editing && !reminder.saving) && (reminder.isDrawResultSuccess == true || reminder.isDrawResultUnsuccess == true)", ng-click="send(reminder)", style="margin-left: 5px;" ).btn.btn-primary Preview
+              a( ng-show="reminder.editing", ng-click="save(reminder)" ).btn.btn-primary Save
+              a( ng-show="reminder.editing", ng-click="cancel(reminder)", style="margin-left: 5px;" ).btn.btn-primary Cancel
+              span( ng-show="reminder.saving" ) Saving&nbsp;
+                img( src="/img/ajax-loader.gif" )
+          
+          tr(ng-show="reminder.editing")
+              td(colspan="6")
+                .message-input
+                  p
+                    label Email Start Subject
+                    textarea.form-control( ng-model="reminder.startSubject" )
+
+                .message-input
+                  p
+                    label Text Start
+                    textarea.form-control( ng-model="reminder.txtStart" )
+
+                .message-input
+                  p
+                    label Text End
+                    textarea.form-control( ng-model="reminder.txtEnd" )
+
+                .message-input
+                  p
+                    label App Start
+                    textarea.form-control( ng-model="reminder.appStart" )
+
+                .message-input
+                  p
+                    label App End
+                    textarea.form-control( ng-model="reminder.appEnd" )
+
+                .message-input
+                  p
+                    label Email Start Plain Text
+                    textarea.form-control( ng-model="reminder.emailStartText" )
+
+                .message-input
+                  p
+                    label Email Start HTML Text
+                    textarea.form-control( ng-model="reminder.emailStart" )
+
+                .message-input
+                  p
+                    label Email End Subject
+                    textarea.form-control( ng-model="reminder.endSubject" )
+
+                .message-input
+                  p
+                    label Email End Plain Text
+                    textarea.form-control( ng-model="reminder.emailEndText" )
+
+                .message-input
+                  p
+                    label Email End HTML Text
+                    textarea.form-control( ng-model="reminder.emailEnd" )
+
+                .message-input
+                  p
+                    label Test User
+                    select#selectUser.form-control( ng-model="reminder.testUserId", ng-options="testUser._id as testUser.displayName for testUser in testUsersOptions" )
+                      option( value="" )
+
+                .message-input(ng-show="reminder.isDrawResultSuccess == true || reminder.isDrawResultUnsuccess == true && false")
+                  p
+                    label Don't Send the following (comma delimited)
+                    textarea.form-control( ng-model="reminder.filter" )
+
+                .message-input(ng-show="reminder.isDrawResultSuccess == true || reminder.isDrawResultUnsuccess == true")
+                  p
+                    label Test Draw Result
+                    select#selectDrawresult.form-control( ng-model="reminder.testDrawResultId", ng-options="testDraw._id as testDraw.displayName for testDraw in testDrawOptions" )
+                      option( value="" )
+                .message-input(ng-show="reminder.testLastMsg && reminder.testLastMsg.length > 0")
+                  p
+                    label Last test send status
+                    textarea.form-control( ng-model="reminder.testLastMsg", ng-readonly="true", style="min-height:50px")
+
+

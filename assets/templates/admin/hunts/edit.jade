@@ -1,0 +1,35 @@
+.container( ng-controller="AdminHuntsEdit" )
+  .page-header
+    .row
+      .col-lg-12.col-md-12
+        a.btn.btn-default.btn-sm( href="#!/admin/state/hunts/{{state._id}}" ) < Back
+  .row
+    .col-lg-6.col-md-6
+      .well
+        form.form-horizontal( ng-submit="submit(hunt)" )
+          fieldset
+            legend
+              span( ng-hide="huntId" ) Add a {{state.name}} Hunt
+              span( ng-show="huntId" ) Edit the {{hunt.name}} Hunt
+            .form-group
+              label.col-lg-4.control-label( for='inputName' ) Name
+              .col-lg-8
+                input#inputName.form-control( type='text', placeholder="Hunt Name", ng-model="hunt.name" )
+            .form-group
+              .col-lg-offset-4.col-lg-8
+                .checkbox
+                  label
+                    input( type='checkbox', ng-model="hunt.active" )
+                    | Active
+            .form-group
+              .col-lg-offset-4.col-lg-8
+                .checkbox
+                  label
+                    input( type='checkbox', ng-model="hunt.groupable" )
+                    | Can have groups
+            .form-group
+              label.col-lg-4.control-label( for='inputParam' ) Params
+              .col-lg-8
+                input#inputParam.form-control( type='text', placeholder="Hunt Params", ng-model="hunt.params" )
+
+            button.btn.btn-primary.col-lg-offset-4.col-lg-8.col-md-12.col-sm-12.col-xs-12 Save

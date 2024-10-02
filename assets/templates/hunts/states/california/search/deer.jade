@@ -1,0 +1,10 @@
+.form-group.select-list
+
+  select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.FirstChoice", ng-options="option.value as option.value + ' ' + option.name for option in huntOptions[hunt._id] | orderBy:'value'" )
+    option( value="" )
+
+  select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.SecondChoice", ng-options="option.value as option.value + ' ' + option.name for option in huntOptions[hunt._id] | orderBy:'value'" )
+    option( value="" )
+
+  select.form-control( ng-disabled="huntNotEditable(hunt)", ng-model="hunt.choice.ThirdChoice", ng-options="option.value as option.value + ' ' + option.name for option in huntOptions[hunt._id] | orderBy:'value'" )
+    option( value="" )
